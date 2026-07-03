@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Unified ELISA Laboratory Analyzer</title>
+    <style>
+        :root {
+            /* Shared Colors */
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --warning: #dc2626;
+            --warning-bg: #fee2e2;
+            
+            /* OPC Theme (Blue) */
+            --opc-primary: #1e3a8a;
+            --opc-secondary: #2563eb;
+            --opc-hover: #1d4ed8;
+            --opc-light: #eff6ff;
+
+            /* PYR Theme (Emerald) */
+            --pyr-primary: #064e3b;
+            --pyr-secondary: #059669;
+            --pyr-hover: #047857;
+            --pyr-light: #ecfdf5;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 10px;
+            box-sizing: border-box;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1000px;
+            box-sizing: border-box;
+            margin-bottom: 2rem;
+        }
+
+        /* --- TAB NAVIGATION --- */
+        .tab-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            background: var(--border);
+            padding: 0.5rem;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active-opc { background: var(--card-bg); color: var(--opc-secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .tab-btn.active-pyr { background: var(--card-bg); color: var(--pyr-secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* --- CARD & LAYOUT --- */
+        .calculator-card {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0, 0.1);
+            box-sizing: border-box;
+        }
+
+        #opc-tab .calculator-card { border-top: 6px solid var(--opc-secondary); }
+        #pyr-tab .calculator-card { border-top: 6px solid var(--pyr-secondary); }
+
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { margin: 0; font-size: 1.85rem; line-height: 1.2;}
+        #opc-tab .header h1 { color: var(--opc-primary); }
+        #pyr-tab .header h1 { color: var(--pyr-primary); }
+        .header p { margin: 0.5rem 0 0; font-size: 0.95rem; color: var(--text-muted); }
+
+        .section-title {
+            font-size: 1.1rem; border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem; margin: 1.5rem 0 1rem; font-weight: 600;
+        }
+        #opc-tab .section-title { color: var(--opc-secondary); }
+        #pyr-tab .section-title { color: var(--pyr-secondary); }
+
+        /* --- GRIDS & INPUTS --- */
+        .grid-inputs-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .grid-inputs-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+        .grid-settings { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; margin-bottom: 1rem; align-items: center; }
+        
+        .input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.85rem; }
+        .input-group input {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border);
+            border-radius: 6px; font-size: 1rem; box-sizing: border-box;
+            -webkit-appearance: none;
+        }
+        #opc-tab .input-group input:focus { outline: none; border-color: var(--opc-secondary); }
+        #pyr-tab .input-group input:focus { outline: none; border-color: var(--pyr-secondary); }
+        
+        #pyr-tab .highlight-input input { border: 2px solid var(--pyr-secondary); background-color: var(--pyr-light); font-weight: bold; }
+
+        /* --- RESPONSIVE TABLE --- */
+        .table-responsive {
+            width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
+            margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px;
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 600; font-size: 0.9rem; color: var(--text-muted); white-space: nowrap; }
+        #opc-tab th { background-color: var(--opc-light); }
+        #pyr-tab th { background-color: var(--pyr-light); }
+        
+        td input { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem;}
+        
+        .cell-result { font-family: monospace; font-weight: bold; font-size: 0.95rem; }
+        .status-high { color: var(--warning); }
+        .status-low { color: var(--success); }
+        .status-neutral { color: #f59e0b; }
+
+        /* --- BUTTONS --- */
+        button {
+            width: 100%; padding: 1rem; color: white; border: none; border-radius: 8px; 
+            font-size: 1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s ease; 
+            margin-bottom: 0.5rem; touch-action: manipulation;
+        }
+        #opc-tab .btn-run { background-color: var(--opc-secondary); }
+        #opc-tab .btn-run:hover { background-color: var(--opc-hover); }
+        #pyr-tab .btn-run { background-color: var(--pyr-secondary); }
+        #pyr-tab .btn-run:hover { background-color: var(--pyr-hover); }
+
+        .btn-add { background-color: #f1f5f9; color: var(--text-main); border: 1px dashed var(--border); margin-bottom: 1.5rem;}
+        .btn-add:hover { background-color: #e2e8f0; }
+        .btn-remove { background-color: transparent; color: var(--warning); padding: 0.5rem; font-size: 1.2rem; cursor: pointer; margin: 0;}
+        
+        .btn-export { background-color: var(--text-main); margin-top: 1rem; display: none; }
+
+        /* --- VALIDATION & SUMMARY --- */
+        .validation-banner {
+            display: none; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;
+            font-weight: 600; text-align: center;
+        }
+        .banner-valid { background-color: var(--success-bg); color: var(--success); border: 1px solid #bbf7d0; }
+        .banner-invalid { background-color: var(--warning-bg); color: var(--warning); border: 1px solid #fecaca; }
+        
+        .report-summary-box { display: none; padding: 1.25rem; border-radius: 8px; margin-top: 1.5rem; }
+        #opc-tab .report-summary-box { background-color: var(--opc-light); border-left: 4px solid var(--opc-secondary); }
+        #pyr-tab .report-summary-box { background-color: var(--pyr-light); border-left: 4px solid var(--pyr-secondary); }
+
+        .report-header { display: none; }
+
+        /* --- MOBILE MEDIA QUERIES --- */
+        @media screen and (max-width: 768px) {
+            .calculator-card { padding: 1.5rem; }
+            .grid-inputs-3 { grid-template-columns: 1fr; }
+            .grid-inputs-5 { grid-template-columns: repeat(2, 1fr); }
+            .grid-inputs-5 .input-group:last-child { grid-column: span 2; } 
+            .grid-settings { grid-template-columns: 1fr; gap: 0.5rem; align-items: flex-start;}
+            .grid-settings p { padding-top: 0.5rem !important; }
+            .tab-controls { flex-direction: column; }
+        }
+
+        @media screen and (max-width: 480px) {
+            .calculator-card { padding: 1.25rem 1rem; border-radius: 12px; }
+            .header h1 { font-size: 1.5rem; }
+            .grid-inputs-5 { grid-template-columns: 1fr; }
+            .grid-inputs-5 .input-group:last-child { grid-column: span 1; }
+        }
+
+        /* --- PRINT SETTINGS --- */
+        @media print {
+            @page { margin: 15mm; }
+            body { background-color: white; padding: 0; color: black; }
+            .app-container { max-width: 100%; margin: 0; }
+            .calculator-card { box-shadow: none; border: none !important; padding: 0; }
+            
+            /* Hide UI controls and inactive tabs */
+            .no-print, button, .header, .validation-banner, .tab-controls, .tab-content:not(.active) { display: none !important; }
+            
+            .report-header {
+                display: block; text-align: center; margin-bottom: 2rem;
+                padding-bottom: 1rem; border-bottom: 2px solid #000;
+            }
+            .report-header h2 { margin: 0 0 0.5rem 0; font-size: 1.5rem; color: black; }
+            .report-header p { margin: 0 0 0.25rem 0; color: #333; font-size: 0.95rem; }
+            
+            td input, .input-group input { 
+                border: none !important; background: transparent !important; 
+                padding: 0 !important; font-family: inherit; font-size: 1rem; color: black;
+            }
+            
+            .table-responsive { border: none; overflow: visible; }
+            table { border: 1px solid #000; min-width: 100%; }
+            th { border-bottom: 2px solid #000; background-color: #f0f0f0 !important; color: black; -webkit-print-color-adjust: exact; }
+            td { border-bottom: 1px solid #ccc; }
+            
+            .report-summary-box {
+                display: block; margin-top: 2rem; padding: 1.5rem; border-left: none !important;
+                border: 1px solid #000; background-color: #f9f9f9 !important;
+                -webkit-print-color-adjust: exact; page-break-inside: avoid;
+            }
+            .report-summary-box h3 { margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
+            .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="tab-controls no-print">
+        <button class="tab-btn active-opc" onclick="switchTab('opc')">Organophosphates / Carbamates</button>
+        <button class="tab-btn" onclick="switchTab('pyr')">Synthetic Pyrethroids</button>
+    </div>
+
+    <div id="opc-tab" class="tab-content active">
+        <div class="calculator-card">
+            <div class="header">
+                <h1>Organophosphate & Carbamate</h1>
+                <p>Qualitative ELISA (Inhibition > 20% Threshold)</p>
+            </div>
+
+            <div class="report-header">
+                <h2>Analytical Laboratory Report</h2>
+                <p><strong>Assay:</strong> Organophosphates & Carbamates (Competitive ELISA)</p>
+                <p class="reportDateStr"></p>
+            </div>
+
+            <form id="opcForm">
+                <div class="section-title">Calibration & Controls</div>
+                <div class="grid-inputs-3">
+                    <div class="input-group">
+                        <label>Zero Standard (B₀) OD₄₅₀</label>
+                        <input type="number" id="opc-b0" step="any" placeholder="1.850" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Negative Control OD</label>
+                        <input type="number" id="opc-neg" step="any" placeholder="1.790" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Positive Control OD</label>
+                        <input type="number" id="opc-pos" step="any" placeholder="0.850" required>
+                    </div>
+                </div>
+
+                <div id="opc-validation" class="validation-banner">
+                    <span id="opc-val-status"></span><br>
+                    <span id="opc-val-details" style="font-size: 0.85rem; font-weight: normal;"></span>
+                </div>
+
+                <div class="section-title">Batch Samples</div>
+                <div class="table-responsive">
+                    <table id="opc-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Sample ID</th>
+                                <th style="width: 20%;">OD₄₅₀</th>
+                                <th style="width: 15%;">B/B₀ (%)</th>
+                                <th style="width: 15%;">Inhibition</th>
+                                <th style="width: 20%;">Assessment</th>
+                                <th style="width: 5%;" class="no-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="opc-body">
+                            <tr class="sample-row">
+                                <td><input type="text" class="opc-id" value="OPC-001" required></td>
+                                <td><input type="number" step="any" class="opc-od" placeholder="0.000" required></td>
+                                <td class="cell-result res-binding">-</td>
+                                <td class="cell-result res-inhibition">-</td>
+                                <td class="cell-result res-status">-</td>
+                                <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'opc')">✕</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" class="btn-add no-print" onclick="addRow('opc')">+ Add Another Sample</button>
+                <button type="submit" class="btn-run no-print">Run OPC Analysis</button>
+            </form>
+
+            <div id="opc-summary" class="report-summary-box">
+                <h3>Batch Summary</h3>
+                <div class="summary-grid">
+                    <div><strong>Assay Principle:</strong> Qualitative Inhibition (20% Cutoff)</div>
+                    <div><strong>Total Samples:</strong> <span id="opc-repTotal">-</span></div>
+                    <div><strong>QC Status:</strong> <span id="opc-repStatus">-</span></div>
+                    <div><strong>Positive Results:</strong> <span id="opc-repPos">-</span></div>
+                    <div><strong>Negative Results:</strong> <span id="opc-repNeg">-</span></div>
+                </div>
+            </div>
+
+            <button type="button" id="opc-export" class="btn-export no-print" onclick="window.print()">🖨️ Export / Save Report as PDF</button>
+        </div>
+    </div>
+
+
+    <div id="pyr-tab" class="tab-content">
+        <div class="calculator-card">
+            <div class="header">
+                <h1>Synthetic Pyrethroids</h1>
+                <p>Quantitative Logit-Log & LOQ</p>
+            </div>
+
+            <div class="report-header">
+                <h2>Analytical Laboratory Report</h2>
+                <p><strong>Assay:</strong> Synthetic Pyrethroids (Quantitative Logit-Log ELISA)</p>
+                <p class="reportDateStr"></p>
+            </div>
+
+            <form id="pyrForm">
+                <div class="section-title">Assay Parameters</div>
+                <div class="grid-settings">
+                    <div class="input-group highlight-input">
+                        <label>Limit of Quant. (LOQ) ppm</label>
+                        <input type="number" id="pyr-loq" step="any" value="0.005" required>
+                    </div>
+                    <div class="input-group">
+                        <p style="margin:0; padding-top:1.2rem; font-size:0.85rem; color:var(--text-muted);">
+                            <em>Values below this limit report as &lt; LOQ.</em>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="section-title">Standard Curve (Calibration)</div>
+                <div class="grid-inputs-5">
+                    <div class="input-group">
+                        <label>Zero (0 ppm)</label>
+                        <input type="number" id="pyr-std0" step="any" placeholder="1.850" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Std 1 (0.001)</label>
+                        <input type="number" id="pyr-std1" step="any" placeholder="1.550" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Std 2 (0.0025)</label>
+                        <input type="number" id="pyr-std2" step="any" placeholder="1.200" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Std 3 (0.0075)</label>
+                        <input type="number" id="pyr-std3" step="any" placeholder="0.700" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Std 4 (0.02)</label>
+                        <input type="number" id="pyr-std4" step="any" placeholder="0.350" required>
+                    </div>
+                </div>
+
+                <div id="pyr-validation" class="validation-banner mt-3">
+                    <span id="pyr-val-status"></span><br>
+                    <span id="pyr-val-details" style="font-size: 0.85rem; font-weight: normal;"></span>
+                </div>
+
+                <div class="section-title">Sample Analysis</div>
+                <div class="table-responsive">
+                    <table id="pyr-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Sample ID</th>
+                                <th style="width: 20%;">OD₄₅₀</th>
+                                <th style="width: 15%;">B/B₀ (%)</th>
+                                <th style="width: 15%;">ppm</th>
+                                <th style="width: 20%;">Result</th>
+                                <th style="width: 5%;" class="no-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pyr-body">
+                            <tr class="sample-row">
+                                <td><input type="text" class="pyr-id" value="PYR-001" required></td>
+                                <td><input type="number" step="any" class="pyr-od" placeholder="0.000" required></td>
+                                <td class="cell-result res-binding">-</td>
+                                <td class="cell-result res-conc">-</td>
+                                <td class="cell-result res-interp">-</td>
+                                <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'pyr')">✕</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" class="btn-add no-print" onclick="addRow('pyr')">+ Add Another Sample</button>
+                <button type="submit" class="btn-run no-print">Calculate PYR</button>
+            </form>
+
+            <div id="pyr-summary" class="report-summary-box">
+                <h3>Calibration & Run Summary</h3>
+                <div class="summary-grid">
+                    <div><strong>Limit of Quantification (LOQ):</strong> <span id="pyr-repLOQ">-</span> ppm</div>
+                    <div><strong>Total Samples Analyzed:</strong> <span id="pyr-repTotal">-</span></div>
+                    <div><strong>Regression Model:</strong> Logit-Log</div>
+                    <div><strong>Run Status:</strong> <span id="pyr-repStatus">-</span></div>
+                    <div><strong>Curve Linearity (R²):</strong> <span id="pyr-repR2">-</span></div>
+                    <div><strong>Curve Slope (m):</strong> <span id="pyr-repSlope">-</span></div>
+                </div>
+            </div>
+
+            <button type="button" id="pyr-export" class="btn-export no-print" onclick="window.print()">🖨️ Export / Save Report as PDF</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- TAB LOGIC ---
+    function switchTab(target) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.getElementById(target + '-tab').classList.add('active');
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active-opc');
+            btn.classList.remove('active-pyr');
+        });
+        
+        if(target === 'opc') {
+            document.querySelector("button[onclick=\"switchTab('opc')\"]").classList.add('active-opc');
+        } else {
+            document.querySelector("button[onclick=\"switchTab('pyr')\"]").classList.add('active-pyr');
+        }
+    }
+
+    // --- ROW MANAGEMENT ---
+    let counts = { opc: 1, pyr: 1 };
+    
+    function addRow(type) {
+        counts[type]++;
+        const idPrefix = type === 'opc' ? 'OPC' : 'PYR';
+        const autoId = `${idPrefix}-${counts[type].toString().padStart(3, '0')}`;
+        const tbody = document.getElementById(`${type}-body`);
+        const tr = document.createElement('tr');
+        tr.className = 'sample-row';
+        
+        if (type === 'opc') {
+            tr.innerHTML = `
+                <td><input type="text" class="opc-id" value="${autoId}" required></td>
+                <td><input type="number" step="any" class="opc-od" placeholder="0.000" required></td>
+                <td class="cell-result res-binding">-</td>
+                <td class="cell-result res-inhibition">-</td>
+                <td class="cell-result res-status">-</td>
+                <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'opc')">✕</button></td>
+            `;
+        } else {
+            tr.innerHTML = `
+                <td><input type="text" class="pyr-id" value="${autoId}" required></td>
+                <td><input type="number" step="any" class="pyr-od" placeholder="0.000" required></td>
+                <td class="cell-result res-binding">-</td>
+                <td class="cell-result res-conc">-</td>
+                <td class="cell-result res-interp">-</td>
+                <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'pyr')">✕</button></td>
+            `;
+        }
+        tbody.appendChild(tr);
+    }
+
+    function removeRow(btn, type) {
+        const tbody = document.getElementById(`${type}-body`);
+        if (tbody.children.length > 1) {
+            btn.closest('tr').remove();
+        }
+    }
+
+    // --- SET DATE UTILITY ---
+    function updateDates() {
+        const dStr = `<strong>Date Generated:</strong> ${new Date().toLocaleString()}`;
+        document.querySelectorAll('.reportDateStr').forEach(el => el.innerHTML = dStr);
+    }
+
+    // --- OPC LOGIC (Qualitative) ---
+    function calcInhibition(od, b0) { return 100 - ((od / b0) * 100); }
+
+    document.getElementById('opcForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateDates();
+
+        const b0 = parseFloat(document.getElementById('opc-b0').value);
+        const neg = parseFloat(document.getElementById('opc-neg').value);
+        const pos = parseFloat(document.getElementById('opc-pos').value);
+
+        const negInh = calcInhibition(neg, b0);
+        const posInh = calcInhibition(pos, b0);
+        
+        let valid = true;
+        let errs = [];
+        if (negInh > 20) { valid = false; errs.push(`Neg Ctrl Too High`); }
+        if (posInh < 30) { valid = false; errs.push(`Pos Ctrl Too Low`); }
+
+        const banner = document.getElementById('opc-validation');
+        banner.style.display = 'block';
+        if (valid) {
+            banner.className = "validation-banner banner-valid";
+            document.getElementById('opc-val-status').innerText = "✓ Assay Valid";
+            document.getElementById('opc-val-details').innerText = `Pos Inh: ${posInh.toFixed(1)}% | Neg Inh: ${negInh.toFixed(1)}%`;
+            document.getElementById('opc-repStatus').innerText = "VALID";
+        } else {
+            banner.className = "validation-banner banner-invalid";
+            document.getElementById('opc-val-status').innerText = "⚠ Assay Invalid";
+            document.getElementById('opc-val-details').innerText = errs.join(" | ");
+            document.getElementById('opc-repStatus').innerText = "INVALID QC";
+        }
+
+        let total = 0, posCount = 0, negCount = 0;
+        document.getElementById('opc-body').querySelectorAll('tr').forEach(row => {
+            const odInput = row.querySelector('.opc-od').value;
+            if(!odInput) return;
+            total++;
+
+            const od = parseFloat(odInput);
+            const bind = (od / b0) * 100;
+            const inh = 100 - bind;
+
+            row.querySelector('.res-binding').innerText = bind.toFixed(1) + '%';
+            row.querySelector('.res-inhibition').innerText = inh.toFixed(1) + '%';
+
+            const statCell = row.querySelector('.res-status');
+            if (inh > 20) {
+                statCell.innerText = "POSITIVE";
+                statCell.className = "cell-result res-status status-high";
+                posCount++;
+            } else {
+                statCell.innerText = "NEGATIVE";
+                statCell.className = "cell-result res-status status-low";
+                negCount++;
+            }
+        });
+
+        document.getElementById('opc-repTotal').innerText = total;
+        document.getElementById('opc-repPos').innerText = posCount;
+        document.getElementById('opc-repNeg').innerText = negCount;
+        document.getElementById('opc-summary').style.display = 'block';
+        document.getElementById('opc-export').style.display = 'block';
+    });
+
+
+    // --- PYRETHROID LOGIC (Quantitative Logit-Log) ---
+    const STD_CONCS = [0.001, 0.0025, 0.0075, 0.02];
+    function getLogit(y) {
+        if (y >= 1) y = 0.999;
+        if (y <= 0) y = 0.001;
+        return Math.log(y / (1 - y));
+    }
+
+    document.getElementById('pyrForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateDates();
+
+        const loq = parseFloat(document.getElementById('pyr-loq').value);
+        const b0 = parseFloat(document.getElementById('pyr-std0').value);
+        const stds = [
+            parseFloat(document.getElementById('pyr-std1').value),
+            parseFloat(document.getElementById('pyr-std2').value),
+            parseFloat(document.getElementById('pyr-std3').value),
+            parseFloat(document.getElementById('pyr-std4').value)
+        ];
+
+        let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+        let points = [];
+
+        for (let i = 0; i < 4; i++) {
+            let y = getLogit(stds[i] / b0);
+            let x = Math.log(STD_CONCS[i]);
+            sumX += x; sumY += y; sumXY += (x * y); sumX2 += (x * x);
+            points.push({x: x, y: y});
+        }
+
+        const m = (4 * sumXY - sumX * sumY) / (4 * sumX2 - sumX * sumX);
+        const c = (sumY - m * sumX) / 4;
+
+        let ssTot = 0, ssRes = 0;
+        const meanY = sumY / 4;
+        for (let p of points) {
+            ssTot += Math.pow(p.y - meanY, 2);
+            ssRes += Math.pow(p.y - (m * p.x + c), 2);
+        }
+        const r2 = 1 - (ssRes / ssTot);
+
+        const banner = document.getElementById('pyr-validation');
+        banner.style.display = 'block';
+        let rStatus = "";
+        
+        if (r2 >= 0.95) {
+            banner.className = "validation-banner banner-valid";
+            rStatus = "VALID (R² >= 0.95)";
+            document.getElementById('pyr-val-status').innerText = "✓ Excellent Curve Fit";
+        } else {
+            banner.className = "validation-banner banner-invalid";
+            rStatus = "INVALID (Poor Linearity)";
+            document.getElementById('pyr-val-status').innerText = "⚠ Poor Curve Linearity";
+        }
+        document.getElementById('pyr-val-details').innerText = `R² = ${r2.toFixed(4)} | Slope = ${m.toFixed(3)}`;
+
+        let total = 0;
+        document.getElementById('pyr-body').querySelectorAll('tr').forEach(row => {
+            const odInput = row.querySelector('.pyr-od').value;
+            if (!odInput) return;
+            total++;
+
+            const od = parseFloat(odInput);
+            const bind = od / b0;
+            const conc = Math.exp((getLogit(bind) - c) / m);
+
+            row.querySelector('.res-binding').innerText = (bind * 100).toFixed(1) + '%';
+            
+            let cCell = row.querySelector('.res-conc');
+            let iCell = row.querySelector('.res-interp');
+            
+            if (od > b0 * 0.99) {
+                cCell.innerText = "< 0.001"; cCell.className = "cell-result res-conc status-low";
+                iCell.innerText = "< LOQ"; iCell.className = "cell-result res-interp status-low";
+            } else if (od < stds[3] * 0.9) {
+                cCell.innerText = "> 0.02"; cCell.className = "cell-result res-conc status-high";
+                if (loq < 0.02) {
+                    iCell.innerText = "Quantifiable (>ULOQ)"; iCell.className = "cell-result res-interp status-high";
+                } else {
+                    iCell.innerText = "RETEST"; iCell.className = "cell-result res-interp status-neutral";
+                }
+            } else {
+                cCell.innerText = conc.toFixed(4);
+                if (conc < loq) {
+                    cCell.className = "cell-result res-conc status-low";
+                    iCell.innerText = "< LOQ"; iCell.className = "cell-result res-interp status-low";
+                } else {
+                    cCell.className = "cell-result res-conc status-high";
+                    iCell.innerText = "Quantifiable"; iCell.className = "cell-result res-interp status-high";
+                }
+            }
+        });
+
+        document.getElementById('pyr-repLOQ').innerText = loq;
+        document.getElementById('pyr-repTotal').innerText = total;
+        document.getElementById('pyr-repStatus').innerText = rStatus;
+        document.getElementById('pyr-repR2').innerText = r2.toFixed(4);
+        document.getElementById('pyr-repSlope').innerText = m.toFixed(4);
+        
+        document.getElementById('pyr-summary').style.display = 'block';
+        document.getElementById('pyr-export').style.display = 'block';
+    });
+</script>
+</body>
+</html>
