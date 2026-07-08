@@ -26,7 +26,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: Tahoma, 'Segoe UI', sans-serif;
             font-size: 12px; /* Standard Win7 system size (9pt) */
             background: var(--win-desktop);
             background-attachment: fixed;
@@ -108,7 +108,7 @@
             cursor: pointer;
             background: linear-gradient(to bottom, #f9f9f9 0%, #e3e3e3 100%);
             color: var(--win-text);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: Tahoma, 'Segoe UI', sans-serif;
             margin: 0;
             box-shadow: inset 0 1px 0 #fff;
         }
@@ -121,15 +121,21 @@
             border-bottom: 1px solid #ffffff; /* Seamless integration with content */
             font-weight: normal;
         }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
         
         .tab-content-area {
             background: #ffffff;
             border: 1px solid var(--win-border);
             padding: 20px;
-            display: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .tab-content-area.active { display: block; }
 
         .btn-reset {
             background: linear-gradient(to bottom, #f2f2f2 0%, #ebebeb 49%, #dddddd 50%, #cfcfcf 100%);
@@ -276,7 +282,7 @@
             @page { margin: 10mm; }
             body { 
                 background: white; padding: 0; color: black; 
-                font-size: 10pt; font-family: 'Segoe UI', sans-serif;
+                font-size: 10pt; font-family: Tahoma, 'Segoe UI', sans-serif;
                 -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
             }
             .app-container { max-width: 100%; margin: 0; border: none; box-shadow: none; background: white;}
@@ -319,7 +325,6 @@
 
 <div class="app-container">
     
-    <!-- Faux Aero Title Bar -->
     <div class="aero-titlebar no-print">
         <div style="display: flex; align-items: center; gap: 6px;">
             <span style="font-size: 14px;">🔬</span>
@@ -333,7 +338,6 @@
     </div>
 
     <div class="aero-content">
-        <!-- Top Controls & Native Tabs -->
         <div class="header-controls no-print">
             <div class="tab-controls">
                 <button class="tab-btn active-tab" onclick="switchTab('opc')">Organophosphates / Carbamates</button>
@@ -342,11 +346,8 @@
             <button class="btn-reset" onclick="clearCacheAndReset()">Reset Application</button>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 1: ORGANOPHOSPHATES & CARBAMATES (OPC) -->
-        <!-- ========================================== -->
         <div id="opc-tab" class="tab-content active">
-            <div class="tab-content-area active">
+            <div class="tab-content-area">
                 <div class="header">
                     <h1>Organophosphate & Carbamate</h1>
                     <p>Qualitative ELISA (Inhibition > 20% Threshold)</p>
@@ -355,6 +356,7 @@
 
                 <div class="report-header">
                     <h2>Analytical Laboratory Report</h2>
+                    <p><strong>Section:</strong> Chemical Contaminants Section</p>
                     <p><strong>Assay:</strong> Organophosphates & Carbamates (Competitive ELISA)</p>
                     <p class="reportDateStr"></p>
                 </div>
@@ -447,11 +449,8 @@
         </div>
 
 
-        <!-- ========================================== -->
-        <!-- TAB 2: SYNTHETIC PYRETHROIDS (PYR)         -->
-        <!-- ========================================== -->
         <div id="pyr-tab" class="tab-content">
-            <div class="tab-content-area active">
+            <div class="tab-content-area">
                 <div class="header">
                     <h1>Synthetic Pyrethroids</h1>
                     <p>Quantitative Logit-Log & LOQ</p>
@@ -460,6 +459,7 @@
 
                 <div class="report-header">
                     <h2>Analytical Laboratory Report</h2>
+                    <p><strong>Section:</strong> Chemical Contaminants Section</p>
                     <p><strong>Assay:</strong> Synthetic Pyrethroids (Quantitative Logit-Log ELISA)</p>
                     <p class="reportDateStr"></p>
                 </div>
@@ -560,7 +560,6 @@
                     </div>
                 </div>
 
-                <!-- CHART CONTAINER -->
                 <div id="chartContainer" class="chart-wrapper">
                     <canvas id="logitChart"></canvas>
                 </div>
@@ -1024,11 +1023,11 @@
                             return label + ': [' + context.parsed.x.toFixed(2) + ', ' + context.parsed.y.toFixed(2) + ']';
                         }
                     }},
-                    legend: { position: 'top', labels: { font: { family: "'Segoe UI', Tahoma, sans-serif" } } }
+                    legend: { position: 'top', labels: { font: { family: "Tahoma, 'Segoe UI', sans-serif" } } }
                 },
                 scales: {
-                    x: { title: { display: true, text: 'ln(Concentration)', font: { family: "'Segoe UI', Tahoma, sans-serif", weight: 'bold' } } },
-                    y: { title: { display: true, text: 'Logit (B/B₀)', font: { family: "'Segoe UI', Tahoma, sans-serif", weight: 'bold' } } }
+                    x: { title: { display: true, text: 'ln(Concentration)', font: { family: "Tahoma, 'Segoe UI', sans-serif", weight: 'bold' } } },
+                    y: { title: { display: true, text: 'Logit (B/B₀)', font: { family: "Tahoma, 'Segoe UI', sans-serif", weight: 'bold' } } }
                 }
             }
         });
