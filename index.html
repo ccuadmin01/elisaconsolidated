@@ -7,247 +7,311 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #16a34a;
-            --success-bg: #dcfce7;
-            --warning: #dc2626;
-            --warning-bg: #fee2e2;
+            /* Windows 7 Color Palette */
+            --win-desktop: radial-gradient(circle at center, #358bc7 0%, #004073 100%);
+            --win-glass: rgba(185, 209, 234, 0.4);
+            --win-glass-border: rgba(255, 255, 255, 0.6);
+            --win-bg: #f0f0f0;
+            --win-border: #8e8f8f;
+            --win-text: #000000;
+            --win-text-muted: #666666;
+            --win-input-bg: #ffffff;
+            --win-input-border: #abadb3;
+            --win-input-focus: #569de5;
             
-            --opc-primary: #1e3a8a;
-            --opc-secondary: #2563eb;
-            --opc-hover: #1d4ed8;
-            --opc-light: #eff6ff;
-
-            --pyr-primary: #064e3b;
-            --pyr-secondary: #059669;
-            --pyr-hover: #047857;
-            --pyr-light: #ecfdf5;
+            /* Status Colors */
+            --success: #008000;
+            --warning: #cc0000;
+            --neutral: #d2691e;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-size: 12px; /* Standard Win7 system size (9pt) */
+            background: var(--win-desktop);
+            background-attachment: fixed;
+            color: var(--win-text);
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
             margin: 0;
-            padding: 20px 10px;
+            padding: 30px 10px;
             box-sizing: border-box;
         }
 
+        /* --- WINDOWS 7 AERO WINDOW --- */
         .app-container {
             width: 100%;
             max-width: 1050px;
             box-sizing: border-box;
             margin-bottom: 2rem;
+            /* Aero Glass Effect */
+            background: var(--win-glass);
+            border: 1px solid var(--win-glass-border);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.4), inset 0 0 3px rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 6px;
         }
 
-        /* --- TAB NAVIGATION --- */
-        .tab-controls {
+        .aero-titlebar {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            background: var(--border);
-            padding: 0.5rem;
-            border-radius: 12px;
+            justify-content: space-between;
+            align-items: center;
+            height: 28px;
+            padding: 0 8px;
+            color: white;
+            text-shadow: 0 0 3px #000, 0 0 5px #000, 0 0 8px #000;
+            font-size: 13px;
+            font-weight: normal;
+            margin-bottom: 6px;
+            cursor: default;
+            user-select: none;
         }
+        
+        .aero-controls { display: flex; gap: 4px; }
+        .aero-btn {
+            width: 26px; height: 18px; border: 1px solid rgba(255,255,255,0.5); border-radius: 3px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 49%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.2) 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .aero-btn.close { background: linear-gradient(to bottom, #e08b8b 0%, #c43e3e 49%, #9e1717 50%, #b82b2b 100%); border-color: #6a1a1a;}
+
+        .aero-content {
+            background-color: var(--win-bg);
+            border: 1px solid var(--win-border);
+            border-radius: 3px;
+            padding: 15px;
+            box-shadow: inset 0 1px 0 #ffffff;
+        }
+
+        /* --- TAB NAVIGATION (Property Sheet Style) --- */
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: -1px; /* Overlap border */
+            position: relative;
+            z-index: 2;
+        }
+        
+        .tab-controls { display: flex; gap: 2px; }
 
         .tab-btn {
-            flex: 1;
-            padding: 1rem;
-            font-size: 1.05rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
+            padding: 5px 12px;
+            font-size: 12px;
+            border: 1px solid var(--win-border);
+            border-bottom: none;
+            border-radius: 3px 3px 0 0;
             cursor: pointer;
-            background: transparent;
-            color: var(--text-muted);
-            transition: all 0.2s ease;
-            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, #f9f9f9 0%, #e3e3e3 100%);
+            color: var(--win-text);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            box-shadow: inset 0 1px 0 #fff;
         }
+        .tab-btn:hover:not(.active-tab) { background: linear-gradient(to bottom, #ffffff 0%, #edf4fc 100%); }
 
-        .tab-btn.active-opc { background: var(--card-bg); color: var(--opc-secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tab-btn.active-pyr { background: var(--card-bg); color: var(--pyr-secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* --- CARD & LAYOUT --- */
-        .calculator-card {
-            background-color: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0, 0.1);
-            box-sizing: border-box;
+        .tab-btn.active-tab { 
+            background: #ffffff; 
+            padding-top: 7px; /* Pops up slightly */
+            margin-top: -2px;
+            border-bottom: 1px solid #ffffff; /* Seamless integration with content */
+            font-weight: normal;
         }
+        
+        .tab-content-area {
+            background: #ffffff;
+            border: 1px solid var(--win-border);
+            padding: 20px;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-content-area.active { display: block; }
 
-        #opc-tab .calculator-card { border-top: 6px solid var(--opc-secondary); }
-        #pyr-tab .calculator-card { border-top: 6px solid var(--pyr-secondary); }
+        .btn-reset {
+            background: linear-gradient(to bottom, #f2f2f2 0%, #ebebeb 49%, #dddddd 50%, #cfcfcf 100%);
+            border: 1px solid #707070; color: #000; padding: 4px 10px; border-radius: 3px;
+            font-size: 12px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+            margin-bottom: 5px; font-family: inherit;
+        }
+        .btn-reset:hover { border-color: #3c7fb1; background: linear-gradient(to bottom, #eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%); }
 
-        .header { text-align: center; margin-bottom: 2rem; }
-        .header h1 { margin: 0; font-size: 1.85rem; line-height: 1.2;}
-        #opc-tab .header h1 { color: var(--opc-primary); }
-        #pyr-tab .header h1 { color: var(--pyr-primary); }
-        .header p { margin: 0.5rem 0 0; font-size: 0.95rem; color: var(--text-muted); }
+        /* --- TYPOGRAPHY & LAYOUT --- */
+        .header { margin-bottom: 20px; position: relative;}
+        .header h1 { margin: 0; font-size: 18px; font-weight: normal; color: #003399; }
+        .header p { margin: 2px 0 0; color: var(--win-text-muted); }
+        .save-indicator { position: absolute; right: 0; top: 0; color: var(--success); opacity: 0; transition: opacity 0.5s;}
 
         .section-title {
-            font-size: 1.1rem; border-bottom: 2px solid var(--border);
-            padding-bottom: 0.5rem; margin: 1.5rem 0 1rem; font-weight: 600;
+            font-size: 13px; font-weight: bold; color: #003399;
+            border-bottom: 1px solid #a0a0a0;
+            padding-bottom: 3px; margin: 20px 0 10px;
         }
-        #opc-tab .section-title { color: var(--opc-secondary); }
-        #pyr-tab .section-title { color: var(--pyr-secondary); }
 
-        /* --- GRIDS & INPUTS --- */
-        .grid-inputs-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-        .grid-inputs-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
-        .grid-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; align-items: end; }
+        /* --- FORMS & INPUTS --- */
+        .grid-inputs-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .grid-inputs-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .grid-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; align-items: start; }
         
-        .input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.85rem; }
-        .input-group input {
-            width: 100%; padding: 0.75rem; border: 1px solid var(--border);
-            border-radius: 6px; font-size: 1rem; box-sizing: border-box;
-            -webkit-appearance: none; font-family: 'Segoe UI', sans-serif;
+        .input-group label { display: block; margin-bottom: 3px; }
+        .input-group input, td input {
+            width: 100%; padding: 3px 5px; border: 1px solid var(--win-input-border);
+            border-radius: 2px; box-sizing: border-box; background-color: var(--win-input-bg);
+            font-family: inherit; font-size: 12px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
-        #opc-tab .input-group input:focus { outline: none; border-color: var(--opc-secondary); }
-        #pyr-tab .input-group input:focus { outline: none; border-color: var(--pyr-secondary); }
         
-        #pyr-tab .highlight-input input { border: 2px solid var(--pyr-secondary); background-color: var(--pyr-light); font-weight: bold; }
+        .input-group input:hover, td input:hover { border-color: #7eb4ea; }
+        .input-group input:focus, td input:focus { 
+            outline: none; border-color: var(--win-input-focus); 
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05), 0 0 3px rgba(86,157,229,0.5); 
+        }
+        
+        .highlight-input input { background-color: #ffffe1; border-color: #e5c365; }
 
-        /* --- BATCH SETUP CONTROLS --- */
+        /* --- BATCH TOOLBAR --- */
         .batch-controls {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            align-items: center;
-            background: #f1f5f9;
-            padding: 0.75rem;
-            border-radius: 8px;
-            border: 1px dashed var(--border);
+            display: flex; gap: 5px; margin-bottom: 10px; align-items: center;
+            background: linear-gradient(to bottom, #f5f6f7 0%, #e4e5e7 100%);
+            padding: 6px; border: 1px solid var(--win-border); border-radius: 3px;
         }
-        .batch-controls input {
-            padding: 0.6rem; border: 1px solid var(--border);
-            border-radius: 6px; font-size: 0.95rem; font-family: inherit;
-        }
-        .batch-controls button {
-            margin: 0; width: auto; padding: 0.6rem 1rem; font-size: 0.95rem; white-space: nowrap;
-        }
-        .btn-sync { background-color: var(--text-muted); }
-        .btn-sync:hover { background-color: #475569; }
+        .batch-controls input { width: auto; }
+        .batch-controls button { margin: 0; width: auto; padding: 3px 10px; }
 
-        /* --- RESPONSIVE TABLE --- */
+        /* --- WINDOWS 7 LISTVIEW (Tables) --- */
         .table-responsive {
-            width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
-            margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px;
+            width: 100%; overflow-x: auto; margin-bottom: 15px; 
+            border: 1px solid var(--win-border); background: #fff;
         }
 
         table { width: 100%; border-collapse: collapse; min-width: 750px; }
-        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
-        th { font-weight: 600; font-size: 0.9rem; color: var(--text-muted); white-space: nowrap; }
-        #opc-tab th { background-color: var(--opc-light); }
-        #pyr-tab th { background-color: var(--pyr-light); }
+        th, td { padding: 4px 8px; text-align: left; border-bottom: 1px solid #ededed; border-right: 1px solid #ededed;}
         
-        td input { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem; font-family: 'Segoe UI', sans-serif;}
+        td.num-col, .input-group input[type="number"] { font-variant-numeric: tabular-nums; }
         
-        .cell-result { font-weight: bold; font-size: 0.95rem; }
+        th { 
+            font-weight: normal; color: #000; border-right: 1px solid #d5d5d5; border-bottom: 1px solid #d5d5d5;
+            background: linear-gradient(to bottom, #ffffff 0%, #f1f2f4 49%, #e2e4e7 50%, #d0d3d9 100%);
+            box-shadow: inset 0 1px 0 #fff; cursor: default;
+        }
+        th:hover { background: linear-gradient(to bottom, #eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%); }
+        
+        tbody tr:hover { background-color: #e5f3fb; border: 1px solid #70c0e7; outline: 1px solid #70c0e7; outline-offset: -1px;}
+
+        /* Text Results */
+        .res-status, .res-interp { font-weight: bold; }
         .status-high { color: var(--warning); }
         .status-low { color: var(--success); }
-        .status-neutral { color: #f59e0b; }
+        .status-neutral { color: var(--neutral); }
 
         /* --- CHART CONTAINER --- */
         .chart-wrapper {
-            display: none; width: 100%; height: 400px; margin-top: 2rem; padding: 1rem;
-            background: #fff; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box;
+            display: none; width: 100%; height: 400px; margin-top: 15px; padding: 10px;
+            background: #fff; border: 1px solid var(--win-border); box-sizing: border-box;
         }
 
-        /* --- BUTTONS --- */
+        /* --- WIN7 BUTTONS --- */
         button {
-            width: 100%; padding: 1rem; color: white; border: none; border-radius: 8px; 
-            font-size: 1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s ease; 
-            margin-bottom: 0.5rem; touch-action: manipulation; font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, #f2f2f2 0%, #ebebeb 49%, #dddddd 50%, #cfcfcf 100%);
+            border: 1px solid #707070; color: #000; padding: 6px 12px; border-radius: 3px; 
+            font-size: 12px; cursor: pointer; margin-bottom: 5px; font-family: inherit;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
         }
-        #opc-tab .btn-run { background-color: var(--opc-secondary); }
-        #opc-tab .btn-run:hover { background-color: var(--opc-hover); }
-        #pyr-tab .btn-run { background-color: var(--pyr-secondary); }
-        #pyr-tab .btn-run:hover { background-color: var(--pyr-hover); }
-
-        .btn-add { background-color: #f1f5f9; color: var(--text-main); border: 1px dashed var(--border); margin-bottom: 1.5rem;}
-        .btn-add:hover { background-color: #e2e8f0; }
-        .btn-remove { background-color: transparent; color: var(--warning); padding: 0.5rem; font-size: 1.2rem; cursor: pointer; margin: 0;}
+        button:hover {
+            border-color: #3c7fb1; 
+            background: linear-gradient(to bottom, #eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
+        }
+        button:active {
+            background: linear-gradient(to bottom, #cce4f7 0%, #a4cdf0 49%, #81bbf2 50%, #87bdf3 100%);
+            border-color: #2c628b; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
         
-        .btn-export { background-color: var(--text-main); margin-top: 1rem; display: none; }
+        .btn-run { font-weight: bold; padding: 8px 12px; margin-top: 10px; width: 100%;}
+        
+        .btn-add { background: transparent; border: 1px dashed #abadb3; box-shadow: none; width: 100%; margin-bottom: 15px; color: #003399;}
+        .btn-add:hover { background: #e5f3fb; border-color: #70c0e7; }
+        
+        .btn-remove { background: transparent; border: none; box-shadow: none; color: #cc0000; padding: 0; font-size: 14px; font-weight: bold;}
+        .btn-remove:hover { background: transparent; color: #ff0000; border-color: transparent;}
 
-        /* --- VALIDATION & SUMMARY --- */
+        .btn-export { display: none; width: 100%; margin-top: 15px;}
+
+        /* --- VALIDATION & SUMMARY (Win7 Info Bar style) --- */
         .validation-banner {
-            display: none; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;
-            font-weight: 600; text-align: center;
+            display: none; padding: 8px; border-radius: 3px; margin-bottom: 15px;
+            border: 1px solid;
         }
-        .banner-valid { background-color: var(--success-bg); color: var(--success); border: 1px solid #bbf7d0; }
-        .banner-invalid { background-color: var(--warning-bg); color: var(--warning); border: 1px solid #fecaca; }
+        .banner-valid { background-color: #e4f4fb; color: #000; border-color: #a6d9f4; }
+        .banner-invalid { background-color: #ffffe1; color: #000; border-color: #e5c365; }
         
-        .report-summary-box { display: none; padding: 1.25rem; border-radius: 8px; margin-top: 1.5rem; }
-        #opc-tab .report-summary-box { background-color: var(--opc-light); border-left: 4px solid var(--opc-secondary); }
-        #pyr-tab .report-summary-box { background-color: var(--pyr-light); border-left: 4px solid var(--pyr-secondary); }
+        .report-summary-box { 
+            display: none; padding: 15px; border-radius: 3px; margin-top: 20px; 
+            background-color: #f9f9f9; border: 1px solid var(--win-border);
+        }
+        .report-summary-box h3 { margin-top: 0; font-size: 13px; border-bottom: 1px solid #a0a0a0; padding-bottom: 3px; color: #003399;}
 
         .report-header { display: none; }
 
-        /* --- MOBILE MEDIA QUERIES --- */
+        /* --- MOBILE MEDIA QUERIES (Graceful degradation) --- */
         @media screen and (max-width: 768px) {
-            .calculator-card { padding: 1.5rem; }
+            .app-container { padding: 2px; }
+            .header-controls { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 10px;}
+            .btn-reset { margin-left: 0; }
+            .tab-btn { border-radius: 3px; border-bottom: 1px solid var(--win-border);}
+            .tab-btn.active-tab { margin-top: 0; padding-top: 5px; }
             .grid-inputs-3 { grid-template-columns: 1fr; }
             .grid-inputs-5 { grid-template-columns: repeat(2, 1fr); }
             .grid-inputs-5 .input-group:last-child { grid-column: span 2; } 
-            .grid-settings { grid-template-columns: 1fr; gap: 0.5rem; align-items: flex-start;}
-            .tab-controls { flex-direction: column; }
+            .grid-settings { grid-template-columns: 1fr; gap: 10px; }
             .batch-controls { flex-wrap: wrap; }
-            .batch-controls input, .batch-controls button { width: 100% !important; margin-bottom: 0.5rem; }
-            .chart-wrapper { height: 300px; }
+            .batch-controls input, .batch-controls button { width: 100% !important; margin-bottom: 4px; }
+            .chart-wrapper { height: 300px; padding: 5px;}
         }
 
-        /* --- CONDENSED PRINT SETTINGS --- */
+        /* --- CONDENSED PRINT SETTINGS (Professional Document) --- */
         @media print {
             @page { margin: 10mm; }
             body { 
-                background-color: white; padding: 0; color: black; 
+                background: white; padding: 0; color: black; 
                 font-size: 10pt; font-family: 'Segoe UI', sans-serif;
                 -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
             }
-            .app-container { max-width: 100%; margin: 0; }
-            .calculator-card { box-shadow: none; border: none !important; padding: 0; }
+            .app-container { max-width: 100%; margin: 0; border: none; box-shadow: none; background: white;}
+            .aero-titlebar, .no-print, button, .header-controls, .header, .validation-banner, .batch-controls, .tab-content:not(.active) { display: none !important; }
             
-            .no-print, button, .header, .validation-banner, .tab-controls, .tab-content:not(.active), .batch-controls { display: none !important; }
+            .aero-content, .tab-content-area { border: none; padding: 0; background: white; box-shadow: none;}
             
             .report-header {
-                display: block; text-align: center; margin-bottom: 1rem;
+                display: block; text-align: center; margin-bottom: 1.5rem;
                 padding-bottom: 0.5rem; border-bottom: 2px solid #000;
             }
-            .report-header h2 { margin: 0 0 0.2rem 0; font-size: 14pt; color: black; }
+            .report-header h2 { margin: 0 0 0.25rem 0; font-size: 14pt; color: black; font-weight: bold;}
             .report-header p { margin: 0; color: #333; font-size: 9pt; }
             
+            .input-group label { color: black; font-size: 9pt; }
             td input, .input-group input { 
                 border: none !important; background: transparent !important; 
-                padding: 0 !important; font-family: inherit; font-size: 10pt; color: black;
+                padding: 0 !important; font-family: inherit; font-size: 10pt; color: black; box-shadow: none;
             }
             
-            .table-responsive { border: none; overflow: visible; margin-bottom: 0.5rem;}
+            .table-responsive { border: none; overflow: visible; margin-bottom: 1rem; }
             table { border: 1px solid #000; min-width: 100%; font-size: 9pt; }
-            th, td { padding: 4px 6px; }
-            th { border-bottom: 2px solid #000; background-color: #f0f0f0 !important; color: black; -webkit-print-color-adjust: exact; }
-            td { border-bottom: 1px solid #ccc; }
+            th, td { padding: 4px 6px; border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;}
+            th { border-bottom: 2px solid #000; background: #f0f0f0 !important; color: black; box-shadow: none;}
+            
+            .status-high { color: #cc0000 !important; }
+            .status-low { color: #008000 !important; }
             
             .report-summary-box {
-                display: block; margin-top: 1rem; padding: 10px; border-left: none !important;
-                border: 1px solid #000; background-color: #f9f9f9 !important;
-                -webkit-print-color-adjust: exact; page-break-inside: avoid;
+                display: block; margin-top: 1.5rem; padding: 12px; border: 1px solid #000; background-color: #f9f9f9 !important; page-break-inside: avoid;
             }
-            .report-summary-box h3 { margin-top: 0; font-size: 11pt; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 8px;}
+            .report-summary-box h3 { margin-top: 0; font-size: 11pt; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 8px; color: black;}
             .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 9pt; }
 
-            .chart-wrapper { border: 1px solid #000; height: 350px; page-break-inside: avoid; }
+            .chart-wrapper { border: 1px solid #000; height: 350px; page-break-inside: avoid; padding: 0;}
         }
     </style>
 </head>
@@ -255,292 +319,449 @@
 
 <div class="app-container">
     
-    <div class="tab-controls no-print">
-        <button class="tab-btn active-opc" onclick="switchTab('opc')">Organophosphates / Carbamates</button>
-        <button class="tab-btn" onclick="switchTab('pyr')">Synthetic Pyrethroids</button>
-    </div>
-
-    <div id="opc-tab" class="tab-content active">
-        <div class="calculator-card">
-            <div class="header">
-                <h1>Organophosphate & Carbamate</h1>
-                <p>Qualitative ELISA (Inhibition > 20% Threshold)</p>
-            </div>
-
-            <div class="report-header">
-                <h2>Analytical Laboratory Report</h2>
-                <p><strong>Assay:</strong> Organophosphates & Carbamates (Competitive ELISA)</p>
-                <p class="reportDateStr"></p>
-            </div>
-
-            <form id="opcForm">
-                
-                <div class="section-title">Run Information</div>
-                <div class="grid-settings">
-                    <div class="input-group">
-                        <label>Analyst Name</label>
-                        <input type="text" id="opc-analyst" placeholder="Enter analyst name" required>
-                    </div>
-                </div>
-
-                <div class="section-title">Calibration & Controls</div>
-                <div class="grid-inputs-3">
-                    <div class="input-group">
-                        <label>Zero Standard (B₀) OD₄₅₀</label>
-                        <input type="number" id="opc-b0" step="any" placeholder="1.850" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Negative Control OD</label>
-                        <input type="number" id="opc-neg" step="any" placeholder="1.790" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Positive Control OD</label>
-                        <input type="number" id="opc-pos" step="any" placeholder="0.850" required>
-                    </div>
-                </div>
-
-                <div id="opc-validation" class="validation-banner">
-                    <span id="opc-val-status"></span><br>
-                    <span id="opc-val-details" style="font-size: 0.85rem; font-weight: normal;"></span>
-                </div>
-
-                <div class="section-title">Sample Analysis Batch</div>
-                
-                <div class="batch-controls no-print">
-                    <input type="text" id="opc-batch-prefix" placeholder="Prefix" value="OPC-" style="width: 140px;" title="Sample ID Prefix (e.g., OPC-)">
-                    <input type="number" id="opc-batch-start" placeholder="Start #" value="1" style="width: 90px;" title="Starting Number (e.g., 1)">
-                    <input type="number" id="opc-batch-count" placeholder="Total Count" min="1" style="width: 120px;" title="Total number of rows to generate">
-                    
-                    <button type="button" onclick="generateBatch('opc')">Generate Rows</button>
-                    <span style="flex-grow: 1;"></span> <button type="button" class="btn-sync" onclick="syncSamples('opc', 'pyr')">Copy IDs to Pyrethroids ➔</button>
-                </div>
-
-                <div class="table-responsive">
-                    <table id="opc-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 25%;">Sample ID</th>
-                                <th style="width: 20%;">OD₄₅₀</th>
-                                <th style="width: 15%;">B/B₀ (%)</th>
-                                <th style="width: 15%;">Inhibition</th>
-                                <th style="width: 20%;">Assessment</th>
-                                <th style="width: 5%;" class="no-print"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="opc-body">
-                            <tr class="sample-row">
-                                <td><input type="text" class="opc-id" value="OPC-001" required></td>
-                                <td><input type="number" step="any" class="opc-od" placeholder="0.000" required></td>
-                                <td class="cell-result res-binding">-</td>
-                                <td class="cell-result res-inhibition">-</td>
-                                <td class="cell-result res-status">-</td>
-                                <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'opc')">✕</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <button type="button" class="btn-add no-print" onclick="addRow('opc')">+ Add Single Sample</button>
-                <button type="submit" class="btn-run no-print">Run OPC Analysis</button>
-            </form>
-
-            <div id="opc-summary" class="report-summary-box">
-                <h3>Batch Summary</h3>
-                <div class="summary-grid">
-                    <div><strong>Analyst:</strong> <span id="opc-repAnalyst">-</span></div>
-                    <div><strong>Total Samples:</strong> <span id="opc-repTotal">-</span></div>
-                    <div><strong>Assay Principle:</strong> Qualitative Inhibition (20%)</div>
-                    <div><strong>QC Status:</strong> <span id="opc-repStatus">-</span></div>
-                    <div><strong>Positive Results:</strong> <span id="opc-repPos">-</span></div>
-                    <div><strong>Negative Results:</strong> <span id="opc-repNeg">-</span></div>
-                </div>
-            </div>
-
-            <button type="button" id="opc-export" class="btn-export no-print" onclick="window.print()">🖨️ Export / Save Report as PDF</button>
+    <!-- Faux Aero Title Bar -->
+    <div class="aero-titlebar no-print">
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 14px;">🔬</span>
+            Unified ELISA Analyzer
+        </div>
+        <div class="aero-controls">
+            <div class="aero-btn"></div>
+            <div class="aero-btn"></div>
+            <div class="aero-btn close"></div>
         </div>
     </div>
 
-
-    <div id="pyr-tab" class="tab-content">
-        <div class="calculator-card">
-            <div class="header">
-                <h1>Synthetic Pyrethroids</h1>
-                <p>Quantitative Logit-Log & LOQ</p>
+    <div class="aero-content">
+        <!-- Top Controls & Native Tabs -->
+        <div class="header-controls no-print">
+            <div class="tab-controls">
+                <button class="tab-btn active-tab" onclick="switchTab('opc')">Organophosphates / Carbamates</button>
+                <button class="tab-btn" onclick="switchTab('pyr')">Synthetic Pyrethroids</button>
             </div>
+            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Application</button>
+        </div>
 
-            <div class="report-header">
-                <h2>Analytical Laboratory Report</h2>
-                <p><strong>Assay:</strong> Synthetic Pyrethroids (Quantitative Logit-Log ELISA)</p>
-                <p class="reportDateStr"></p>
-            </div>
-
-            <form id="pyrForm">
-                <div class="section-title">Run Information & Parameters</div>
-                <div class="grid-settings">
-                    <div class="input-group highlight-input">
-                        <label>Limit of Quant. (LOQ) ppm</label>
-                        <input type="number" id="pyr-loq" step="any" value="0.005" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Analyst Name</label>
-                        <input type="text" id="pyr-analyst" placeholder="Enter analyst name" required>
-                    </div>
+        <!-- ========================================== -->
+        <!-- TAB 1: ORGANOPHOSPHATES & CARBAMATES (OPC) -->
+        <!-- ========================================== -->
+        <div id="opc-tab" class="tab-content active">
+            <div class="tab-content-area active">
+                <div class="header">
+                    <h1>Organophosphate & Carbamate</h1>
+                    <p>Qualitative ELISA (Inhibition > 20% Threshold)</p>
+                    <div id="opc-save-msg" class="save-indicator">✓ Saved</div>
                 </div>
 
-                <div class="section-title">Standard Curve (Calibration)</div>
-                <div class="grid-inputs-5">
-                    <div class="input-group">
-                        <label>Zero (0 ppm)</label>
-                        <input type="number" id="pyr-std0" step="any" placeholder="1.850" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Std 1 (0.001)</label>
-                        <input type="number" id="pyr-std1" step="any" placeholder="1.550" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Std 2 (0.0025)</label>
-                        <input type="number" id="pyr-std2" step="any" placeholder="1.200" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Std 3 (0.0075)</label>
-                        <input type="number" id="pyr-std3" step="any" placeholder="0.700" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Std 4 (0.02)</label>
-                        <input type="number" id="pyr-std4" step="any" placeholder="0.350" required>
-                    </div>
+                <div class="report-header">
+                    <h2>Analytical Laboratory Report</h2>
+                    <p><strong>Assay:</strong> Organophosphates & Carbamates (Competitive ELISA)</p>
+                    <p class="reportDateStr"></p>
                 </div>
 
-                <div id="pyr-validation" class="validation-banner mt-3">
-                    <span id="pyr-val-status"></span><br>
-                    <span id="pyr-val-details" style="font-size: 0.85rem; font-weight: normal;"></span>
-                </div>
+                <form id="opcForm">
+                    <div class="section-title">Run Information</div>
+                    <div class="grid-settings">
+                        <div class="input-group">
+                            <label>Analyst Name</label>
+                            <input type="text" id="opc-analyst" placeholder="Enter analyst name" required>
+                        </div>
+                    </div>
 
-                <div class="section-title">Sample Analysis Batch</div>
-                
-                <div class="batch-controls no-print">
-                    <input type="text" id="pyr-batch-prefix" placeholder="Prefix" value="PYR-" style="width: 140px;" title="Sample ID Prefix (e.g., PYR-)">
-                    <input type="number" id="pyr-batch-start" placeholder="Start #" value="1" style="width: 90px;" title="Starting Number (e.g., 1)">
-                    <input type="number" id="pyr-batch-count" placeholder="Total Count" min="1" style="width: 120px;" title="Total number of rows to generate">
+                    <div class="section-title">Calibration & Controls</div>
+                    <div class="grid-inputs-3">
+                        <div class="input-group">
+                            <label>Zero Standard (B₀) OD₄₅₀</label>
+                            <input type="number" id="opc-b0" step="any" placeholder="1.850" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Negative Control OD</label>
+                            <input type="number" id="opc-neg" step="any" placeholder="1.790" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Positive Control OD</label>
+                            <input type="number" id="opc-pos" step="any" placeholder="0.850" required>
+                        </div>
+                    </div>
+
+                    <div id="opc-validation" class="validation-banner">
+                        <strong id="opc-val-status"></strong><br>
+                        <span id="opc-val-details"></span>
+                    </div>
+
+                    <div class="section-title">Sample Analysis Batch</div>
                     
-                    <button type="button" onclick="generateBatch('pyr')">Generate Rows</button>
-                    <span style="flex-grow: 1;"></span> <button type="button" class="btn-sync" onclick="syncSamples('pyr', 'opc')">Copy IDs to OPC Tab ➔</button>
+                    <div class="batch-controls no-print">
+                        <input type="text" id="opc-batch-prefix" placeholder="Prefix" value="OPC-" style="width: 80px;">
+                        <input type="number" id="opc-batch-start" placeholder="Start" value="1" style="width: 60px;">
+                        <input type="number" id="opc-batch-count" placeholder="Count" min="1" style="width: 60px;">
+                        <button type="button" onclick="generateBatch('opc')">Generate</button>
+                        <button type="button" onclick="triggerUndo('opc')">Undo</button>
+                        <span style="flex-grow: 1;"></span>
+                        <button type="button" onclick="syncSamples('opc', 'pyr')">Copy to Pyrethroids ➔</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="opc-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Sample ID</th>
+                                    <th style="width: 20%;">OD₄₅₀</th>
+                                    <th style="width: 15%;">B/B₀ (%)</th>
+                                    <th style="width: 15%;">Inhibition</th>
+                                    <th style="width: 20%;">Assessment</th>
+                                    <th style="width: 5%;" class="no-print"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="opc-body">
+                                <tr class="sample-row">
+                                    <td><input type="text" class="opc-id" value="OPC-001" required></td>
+                                    <td><input type="number" step="any" class="opc-od" placeholder="0.000" required></td>
+                                    <td class="num-col res-binding">-</td>
+                                    <td class="num-col res-inhibition">-</td>
+                                    <td class="res-status">-</td>
+                                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'opc')">✕</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button type="button" class="btn-add no-print" onclick="addRow('opc')">+ Add Row</button>
+                    <button type="submit" class="btn-run no-print">Run OPC Analysis</button>
+                </form>
+
+                <div id="opc-summary" class="report-summary-box">
+                    <h3>Batch Summary</h3>
+                    <div class="summary-grid">
+                        <div><strong>Analyst:</strong> <span id="opc-repAnalyst">-</span></div>
+                        <div><strong>Total Samples:</strong> <span id="opc-repTotal">-</span></div>
+                        <div><strong>Assay Principle:</strong> Qualitative Inhibition (20%)</div>
+                        <div><strong>QC Status:</strong> <span id="opc-repStatus">-</span></div>
+                        <div><strong>Positive Results:</strong> <span id="opc-repPos">-</span></div>
+                        <div><strong>Negative Results:</strong> <span id="opc-repNeg">-</span></div>
+                    </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table id="pyr-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 25%;">Sample ID</th>
-                                <th style="width: 20%;">OD₄₅₀</th>
-                                <th style="width: 15%;">B/B₀ (%)</th>
-                                <th style="width: 15%;">ppm</th>
-                                <th style="width: 20%;">Result</th>
-                                <th style="width: 5%;" class="no-print"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="pyr-body">
-                            <tr class="sample-row">
-                                <td><input type="text" class="pyr-id" value="PYR-001" required></td>
-                                <td><input type="number" step="any" class="pyr-od" placeholder="0.000" required></td>
-                                <td class="cell-result res-binding">-</td>
-                                <td class="cell-result res-conc">-</td>
-                                <td class="cell-result res-interp">-</td>
-                                <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'pyr')">✕</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <button type="button" class="btn-add no-print" onclick="addRow('pyr')">+ Add Single Sample</button>
-                <button type="submit" class="btn-run no-print">Calculate & Graph</button>
-            </form>
-
-            <div id="pyr-summary" class="report-summary-box">
-                <h3>Calibration & Run Summary</h3>
-                <div class="summary-grid">
-                    <div><strong>Analyst:</strong> <span id="pyr-repAnalyst">-</span></div>
-                    <div><strong>Limit of Quantification (LOQ):</strong> <span id="pyr-repLOQ">-</span> ppm</div>
-                    <div><strong>Total Samples:</strong> <span id="pyr-repTotal">-</span></div>
-                    <div><strong>Regression Model:</strong> Logit-Log</div>
-                    <div><strong>Run Status:</strong> <span id="pyr-repStatus">-</span></div>
-                    <div><strong>Curve Linearity (R²):</strong> <span id="pyr-repR2">-</span></div>
-                    <div><strong>Curve Slope (m):</strong> <span id="pyr-repSlope">-</span></div>
-                </div>
+                <button type="button" id="opc-export" class="btn-export no-print" onclick="window.print()">Print Report</button>
             </div>
+        </div>
 
-            <div id="chartContainer" class="chart-wrapper">
-                <canvas id="logitChart"></canvas>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: SYNTHETIC PYRETHROIDS (PYR)         -->
+        <!-- ========================================== -->
+        <div id="pyr-tab" class="tab-content">
+            <div class="tab-content-area active">
+                <div class="header">
+                    <h1>Synthetic Pyrethroids</h1>
+                    <p>Quantitative Logit-Log & LOQ</p>
+                    <div id="pyr-save-msg" class="save-indicator">✓ Saved</div>
+                </div>
+
+                <div class="report-header">
+                    <h2>Analytical Laboratory Report</h2>
+                    <p><strong>Assay:</strong> Synthetic Pyrethroids (Quantitative Logit-Log ELISA)</p>
+                    <p class="reportDateStr"></p>
+                </div>
+
+                <form id="pyrForm">
+                    <div class="section-title">Run Information & Parameters</div>
+                    <div class="grid-settings">
+                        <div class="input-group highlight-input">
+                            <label>Limit of Quant. (LOQ) ppm</label>
+                            <input type="number" id="pyr-loq" step="any" value="0.005" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Analyst Name</label>
+                            <input type="text" id="pyr-analyst" placeholder="Enter analyst name" required>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Standard Curve (Calibration)</div>
+                    <div class="grid-inputs-5">
+                        <div class="input-group">
+                            <label>Zero (0 ppm)</label>
+                            <input type="number" id="pyr-std0" step="any" placeholder="1.850" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Std 1 (0.001)</label>
+                            <input type="number" id="pyr-std1" step="any" placeholder="1.550" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Std 2 (0.0025)</label>
+                            <input type="number" id="pyr-std2" step="any" placeholder="1.200" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Std 3 (0.0075)</label>
+                            <input type="number" id="pyr-std3" step="any" placeholder="0.700" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Std 4 (0.02)</label>
+                            <input type="number" id="pyr-std4" step="any" placeholder="0.350" required>
+                        </div>
+                    </div>
+
+                    <div id="pyr-validation" class="validation-banner mt-3">
+                        <strong id="pyr-val-status"></strong><br>
+                        <span id="pyr-val-details"></span>
+                    </div>
+
+                    <div class="section-title">Sample Analysis Batch</div>
+                    
+                    <div class="batch-controls no-print">
+                        <input type="text" id="pyr-batch-prefix" placeholder="Prefix" value="PYR-" style="width: 80px;">
+                        <input type="number" id="pyr-batch-start" placeholder="Start" value="1" style="width: 60px;">
+                        <input type="number" id="pyr-batch-count" placeholder="Count" min="1" style="width: 60px;">
+                        <button type="button" onclick="generateBatch('pyr')">Generate</button>
+                        <button type="button" onclick="triggerUndo('pyr')">Undo</button>
+                        <span style="flex-grow: 1;"></span>
+                        <button type="button" onclick="syncSamples('pyr', 'opc')">Copy to OPC ➔</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="pyr-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Sample ID</th>
+                                    <th style="width: 20%;">OD₄₅₀</th>
+                                    <th style="width: 15%;">B/B₀ (%)</th>
+                                    <th style="width: 15%;">ppm</th>
+                                    <th style="width: 20%;">Result</th>
+                                    <th style="width: 5%;" class="no-print"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="pyr-body">
+                                <tr class="sample-row">
+                                    <td><input type="text" class="pyr-id" value="PYR-001" required></td>
+                                    <td><input type="number" step="any" class="pyr-od" placeholder="0.000" required></td>
+                                    <td class="num-col res-binding">-</td>
+                                    <td class="num-col res-conc">-</td>
+                                    <td class="res-interp">-</td>
+                                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'pyr')">✕</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button type="button" class="btn-add no-print" onclick="addRow('pyr')">+ Add Row</button>
+                    <button type="submit" class="btn-run no-print">Calculate & Graph</button>
+                </form>
+
+                <div id="pyr-summary" class="report-summary-box">
+                    <h3>Calibration & Run Summary</h3>
+                    <div class="summary-grid">
+                        <div><strong>Analyst:</strong> <span id="pyr-repAnalyst">-</span></div>
+                        <div><strong>Limit of Quantification (LOQ):</strong> <span id="pyr-repLOQ">-</span> ppm</div>
+                        <div><strong>Total Samples:</strong> <span id="pyr-repTotal">-</span></div>
+                        <div><strong>Regression Model:</strong> Logit-Log</div>
+                        <div><strong>Run Status:</strong> <span id="pyr-repStatus">-</span></div>
+                        <div><strong>Curve Linearity (R²):</strong> <span id="pyr-repR2">-</span></div>
+                        <div><strong>Curve Slope (m):</strong> <span id="pyr-repSlope">-</span></div>
+                    </div>
+                </div>
+
+                <!-- CHART CONTAINER -->
+                <div id="chartContainer" class="chart-wrapper">
+                    <canvas id="logitChart"></canvas>
+                </div>
+
+                <button type="button" id="pyr-export" class="btn-export no-print" onclick="window.print()">Print Report</button>
             </div>
-
-            <button type="button" id="pyr-export" class="btn-export no-print" onclick="window.print()">🖨️ Export / Save Report as PDF</button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- TAB LOGIC ---
-    function switchTab(target) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.getElementById(target + '-tab').classList.add('active');
+    // ==========================================
+    // SYSTEM STATE: CACHE & UNDO HISTORY
+    // ==========================================
+    const CACHE_KEY = "ElisaWin7App_Backup";
+    let undoHistory = { opc: [], pyr: [] };
+    let nextNum = { opc: 2, pyr: 2 }; 
+    let saveTimeout = null;
+    let activeTab = 'opc';
+
+    document.addEventListener('input', function(e) {
+        if(e.target.tagName === 'INPUT') scheduleSave();
+    });
+
+    function scheduleSave() {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(saveStateToCache, 800); 
+    }
+
+    function showSaveIndicator(type) {
+        const ind = document.getElementById(`${type}-save-msg`);
+        ind.style.opacity = '1';
+        setTimeout(() => ind.style.opacity = '0', 2000);
+    }
+
+    function saveStateToCache() {
+        const state = {
+            opc: {
+                analyst: document.getElementById('opc-analyst').value,
+                b0: document.getElementById('opc-b0').value,
+                neg: document.getElementById('opc-neg').value,
+                pos: document.getElementById('opc-pos').value,
+                prefix: document.getElementById('opc-batch-prefix').value,
+                startNum: document.getElementById('opc-batch-start').value,
+                rows: getTableData('opc')
+            },
+            pyr: {
+                loq: document.getElementById('pyr-loq').value,
+                analyst: document.getElementById('pyr-analyst').value,
+                std0: document.getElementById('pyr-std0').value,
+                std1: document.getElementById('pyr-std1').value,
+                std2: document.getElementById('pyr-std2').value,
+                std3: document.getElementById('pyr-std3').value,
+                std4: document.getElementById('pyr-std4').value,
+                prefix: document.getElementById('pyr-batch-prefix').value,
+                startNum: document.getElementById('pyr-batch-start').value,
+                rows: getTableData('pyr')
+            }
+        };
+        localStorage.setItem(CACHE_KEY, JSON.stringify(state));
+        showSaveIndicator(activeTab);
+    }
+
+    function loadStateFromCache() {
+        const saved = localStorage.getItem(CACHE_KEY);
+        if(!saved) return;
         
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active-opc');
-            btn.classList.remove('active-pyr');
-        });
-        
-        if(target === 'opc') {
-            document.querySelector("button[onclick=\"switchTab('opc')\"]").classList.add('active-opc');
-        } else {
-            document.querySelector("button[onclick=\"switchTab('pyr')\"]").classList.add('active-pyr');
+        try {
+            const state = JSON.parse(saved);
+            
+            // Restore OPC
+            document.getElementById('opc-analyst').value = state.opc.analyst || '';
+            document.getElementById('opc-b0').value = state.opc.b0 || '';
+            document.getElementById('opc-neg').value = state.opc.neg || '';
+            document.getElementById('opc-pos').value = state.opc.pos || '';
+            document.getElementById('opc-batch-prefix').value = state.opc.prefix || 'OPC-';
+            document.getElementById('opc-batch-start').value = state.opc.startNum || '1';
+            rebuildTable('opc', state.opc.rows);
+
+            // Restore PYR
+            document.getElementById('pyr-loq').value = state.pyr.loq || '0.005';
+            document.getElementById('pyr-analyst').value = state.pyr.analyst || '';
+            document.getElementById('pyr-std0').value = state.pyr.std0 || '';
+            document.getElementById('pyr-std1').value = state.pyr.std1 || '';
+            document.getElementById('pyr-std2').value = state.pyr.std2 || '';
+            document.getElementById('pyr-std3').value = state.pyr.std3 || '';
+            document.getElementById('pyr-std4').value = state.pyr.std4 || '';
+            document.getElementById('pyr-batch-prefix').value = state.pyr.prefix || 'PYR-';
+            document.getElementById('pyr-batch-start').value = state.pyr.startNum || '1';
+            rebuildTable('pyr', state.pyr.rows);
+
+        } catch(e) { console.error("Cache corrupted, starting fresh."); }
+    }
+
+    function clearCacheAndReset() {
+        if(confirm("Are you sure you want to completely wipe all data and start a new batch?")) {
+            localStorage.removeItem(CACHE_KEY);
+            location.reload();
         }
     }
 
-    // --- ROW MANAGEMENT & SMART BATCH GENERATION ---
-    // Global tracking to ensure incrementing works fluidly
-    let nextNum = { opc: 2, pyr: 2 }; 
-    
+    function getTableData(type) {
+        let rows = [];
+        document.getElementById(`${type}-body`).querySelectorAll('tr').forEach(row => {
+            rows.push({
+                id: row.querySelector(`.${type}-id`).value,
+                od: row.querySelector(`.${type}-od`).value
+            });
+        });
+        return rows;
+    }
+
+    function saveForUndo(type) {
+        undoHistory[type].push(getTableData(type));
+        if(undoHistory[type].length > 10) undoHistory[type].shift(); 
+    }
+
+    function triggerUndo(type) {
+        if (undoHistory[type].length === 0) {
+            alert("Nothing to undo!"); return;
+        }
+        rebuildTable(type, undoHistory[type].pop());
+        saveStateToCache(); 
+    }
+
+    function rebuildTable(type, rowsArray) {
+        const tbody = document.getElementById(`${type}-body`);
+        tbody.innerHTML = '';
+        if(!rowsArray || rowsArray.length === 0) { addRow(type); return; }
+
+        rowsArray.forEach(data => {
+            const tr = document.createElement('tr');
+            tr.className = 'sample-row';
+            if(type === 'opc') {
+                tr.innerHTML = `
+                    <td><input type="text" class="opc-id" value="${escapeHTML(data.id)}" required></td>
+                    <td><input type="number" step="any" class="opc-od" value="${escapeHTML(data.od)}" required></td>
+                    <td class="num-col res-binding">-</td><td class="num-col res-inhibition">-</td><td class="res-status">-</td>
+                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'opc')">✕</button></td>
+                `;
+            } else {
+                tr.innerHTML = `
+                    <td><input type="text" class="pyr-id" value="${escapeHTML(data.id)}" required></td>
+                    <td><input type="number" step="any" class="pyr-od" value="${escapeHTML(data.od)}" required></td>
+                    <td class="num-col res-binding">-</td><td class="num-col res-conc">-</td><td class="res-interp">-</td>
+                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'pyr')">✕</button></td>
+                `;
+            }
+            tbody.appendChild(tr);
+        });
+    }
+
+    function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[tag])); }
+    window.onload = loadStateFromCache;
+
+    // ==========================================
+    // UI & TAB LOGIC
+    // ==========================================
+    function switchTab(target) {
+        activeTab = target;
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.getElementById(target + '-tab').classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+        
+        if(target === 'opc') { document.querySelector("button[onclick=\"switchTab('opc')\"]").classList.add('active-tab'); } 
+        else { document.querySelector("button[onclick=\"switchTab('pyr')\"]").classList.add('active-tab'); }
+        scheduleSave();
+    }
+
+    // ==========================================
+    // ROW MANAGEMENT & SMART BATCH GENERATION
+    // ==========================================
     function generateBatch(type) {
         const prefix = document.getElementById(`${type}-batch-prefix`).value;
         const start = parseInt(document.getElementById(`${type}-batch-start`).value);
         const count = parseInt(document.getElementById(`${type}-batch-count`).value);
 
         if (isNaN(count) || count < 1 || isNaN(start)) {
-            alert("Please enter valid numbers for the Start Number and Total Count.");
-            return;
+            alert("Please enter valid numbers for the Start Number and Total Count."); return;
         }
 
+        saveForUndo(type); 
         const tbody = document.getElementById(`${type}-body`);
-        tbody.innerHTML = ''; // Clear current table
-
-        // Reset the counter to the requested start number
+        tbody.innerHTML = '';
         nextNum[type] = start;
 
         for (let i = 0; i < count; i++) {
-            const autoId = `${prefix}${nextNum[type].toString().padStart(3, '0')}`;
-            addRow(type, autoId);
-            // Increment the tracker for the next iteration
+            addRow(type, `${prefix}${nextNum[type].toString().padStart(3, '0')}`);
             nextNum[type]++;
         }
-        
-        // Update the Start Number box so the user sees where the next sample will pick up
         document.getElementById(`${type}-batch-start`).value = nextNum[type];
+        saveStateToCache();
     }
 
     function addRow(type, explicitId = null) {
         let idToUse = explicitId;
-        
-        // If clicking "Add Single Row", calculate the next ID automatically
         if (!idToUse) {
             const prefix = document.getElementById(`${type}-batch-prefix`).value;
             let startVal = parseInt(document.getElementById(`${type}-batch-start`).value);
-            
-            // Fallback safety if the input box is empty
             if (isNaN(startVal)) startVal = nextNum[type];
-            
             idToUse = `${prefix}${startVal.toString().padStart(3, '0')}`;
-            
-            // Advance the counters
             nextNum[type] = startVal + 1;
             document.getElementById(`${type}-batch-start`).value = nextNum[type];
         }
@@ -553,56 +774,50 @@
             tr.innerHTML = `
                 <td><input type="text" class="opc-id" value="${idToUse}" required></td>
                 <td><input type="number" step="any" class="opc-od" placeholder="0.000" required></td>
-                <td class="cell-result res-binding">-</td>
-                <td class="cell-result res-inhibition">-</td>
-                <td class="cell-result res-status">-</td>
+                <td class="num-col res-binding">-</td><td class="num-col res-inhibition">-</td><td class="res-status">-</td>
                 <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'opc')">✕</button></td>
             `;
         } else {
             tr.innerHTML = `
                 <td><input type="text" class="pyr-id" value="${idToUse}" required></td>
                 <td><input type="number" step="any" class="pyr-od" placeholder="0.000" required></td>
-                <td class="cell-result res-binding">-</td>
-                <td class="cell-result res-conc">-</td>
-                <td class="cell-result res-interp">-</td>
+                <td class="num-col res-binding">-</td><td class="num-col res-conc">-</td><td class="res-interp">-</td>
                 <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'pyr')">✕</button></td>
             `;
         }
         tbody.appendChild(tr);
+        scheduleSave();
     }
 
     function removeRow(btn, type) {
         const tbody = document.getElementById(`${type}-body`);
         if (tbody.children.length > 1) {
+            saveForUndo(type); 
             btn.closest('tr').remove();
+            saveStateToCache();
         }
     }
 
-    // Sync IDs from one tab to the other
     function syncSamples(sourceType, targetType) {
         const sourceRows = document.getElementById(`${sourceType}-body`).querySelectorAll('tr');
         const targetBody = document.getElementById(`${targetType}-body`);
-        
         if (sourceRows.length === 0) return;
 
-        targetBody.innerHTML = ''; // Clear target table
+        saveForUndo(targetType); 
+        targetBody.innerHTML = '';
+        sourceRows.forEach(row => { addRow(targetType, row.querySelector(`.${sourceType}-id`).value); });
 
-        // Loop through source, extract exact ID, and build in target
-        sourceRows.forEach(row => {
-            const sampleId = row.querySelector(`.${sourceType}-id`).value;
-            addRow(targetType, sampleId);
-        });
-
-        // Sync the prefix and start numbers in the UI as well
         document.getElementById(`${targetType}-batch-prefix`).value = document.getElementById(`${sourceType}-batch-prefix`).value;
         document.getElementById(`${targetType}-batch-start`).value = document.getElementById(`${sourceType}-batch-start`).value;
         nextNum[targetType] = nextNum[sourceType];
 
-        const targetName = targetType === 'opc' ? 'Organophosphates (OPC)' : 'Pyrethroids (PYR)';
-        alert(`Successfully copied ${sourceRows.length} sample IDs to the ${targetName} tab.`);
+        saveStateToCache();
+        alert(`Copied ${sourceRows.length} sample IDs successfully.`);
     }
 
-    // --- SET DATE UTILITY ---
+    // ==========================================
+    // ANALYSIS & MATH LOGIC
+    // ==========================================
     function updateDates() {
         const dStr = `<strong>Date Generated:</strong> ${new Date().toLocaleString()}`;
         document.querySelectorAll('.reportDateStr').forEach(el => el.innerHTML = dStr);
@@ -615,8 +830,7 @@
         e.preventDefault();
         updateDates();
 
-        const analystName = document.getElementById('opc-analyst').value || 'Not Specified';
-        document.getElementById('opc-repAnalyst').innerText = analystName;
+        document.getElementById('opc-repAnalyst').innerText = document.getElementById('opc-analyst').value || 'Not Specified';
 
         const b0 = parseFloat(document.getElementById('opc-b0').value);
         const neg = parseFloat(document.getElementById('opc-neg').value);
@@ -625,8 +839,7 @@
         const negInh = calcInhibition(neg, b0);
         const posInh = calcInhibition(pos, b0);
         
-        let valid = true;
-        let errs = [];
+        let valid = true; let errs = [];
         if (negInh > 20) { valid = false; errs.push(`Neg Ctrl Too High`); }
         if (posInh < 30) { valid = false; errs.push(`Pos Ctrl Too Low`); }
 
@@ -634,12 +847,12 @@
         banner.style.display = 'block';
         if (valid) {
             banner.className = "validation-banner banner-valid";
-            document.getElementById('opc-val-status').innerText = "✓ Assay Valid";
+            document.getElementById('opc-val-status').innerText = "Assay Valid";
             document.getElementById('opc-val-details').innerText = `Pos Inh: ${posInh.toFixed(1)}% | Neg Inh: ${negInh.toFixed(1)}%`;
             document.getElementById('opc-repStatus').innerText = "VALID";
         } else {
             banner.className = "validation-banner banner-invalid";
-            document.getElementById('opc-val-status').innerText = "⚠ Assay Invalid";
+            document.getElementById('opc-val-status').innerText = "Assay Invalid";
             document.getElementById('opc-val-details').innerText = errs.join(" | ");
             document.getElementById('opc-repStatus').innerText = "INVALID QC";
         }
@@ -659,12 +872,10 @@
 
             const statCell = row.querySelector('.res-status');
             if (inh > 20) {
-                statCell.innerText = "POSITIVE";
-                statCell.className = "cell-result res-status status-high";
+                statCell.innerHTML = '<span class="status-high">POSITIVE</span>';
                 posCount++;
             } else {
-                statCell.innerText = "NEGATIVE";
-                statCell.className = "cell-result res-status status-low";
+                statCell.innerHTML = '<span class="status-low">NEGATIVE</span>';
                 negCount++;
             }
         });
@@ -674,10 +885,10 @@
         document.getElementById('opc-repNeg').innerText = negCount;
         document.getElementById('opc-summary').style.display = 'block';
         document.getElementById('opc-export').style.display = 'block';
+        saveStateToCache(); 
     });
 
-
-    // --- PYRETHROID LOGIC (Quantitative Logit-Log & Charting) ---
+    // --- PYRETHROID LOGIC (Quantitative Logit-Log) ---
     const STD_CONCS = [0.001, 0.0025, 0.0075, 0.02];
     let elisaChart = null; 
 
@@ -691,16 +902,12 @@
         e.preventDefault();
         updateDates();
 
-        const analystName = document.getElementById('pyr-analyst').value || 'Not Specified';
-        document.getElementById('pyr-repAnalyst').innerText = analystName;
-
+        document.getElementById('pyr-repAnalyst').innerText = document.getElementById('pyr-analyst').value || 'Not Specified';
         const loq = parseFloat(document.getElementById('pyr-loq').value);
         const b0 = parseFloat(document.getElementById('pyr-std0').value);
         const stds = [
-            parseFloat(document.getElementById('pyr-std1').value),
-            parseFloat(document.getElementById('pyr-std2').value),
-            parseFloat(document.getElementById('pyr-std3').value),
-            parseFloat(document.getElementById('pyr-std4').value)
+            parseFloat(document.getElementById('pyr-std1').value), parseFloat(document.getElementById('pyr-std2').value),
+            parseFloat(document.getElementById('pyr-std3').value), parseFloat(document.getElementById('pyr-std4').value)
         ];
 
         let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
@@ -731,16 +938,15 @@
         if (r2 >= 0.95) {
             banner.className = "validation-banner banner-valid";
             rStatus = "VALID (R² >= 0.95)";
-            document.getElementById('pyr-val-status').innerText = "✓ Excellent Curve Fit";
+            document.getElementById('pyr-val-status').innerText = "Excellent Curve Fit";
         } else {
             banner.className = "validation-banner banner-invalid";
             rStatus = "INVALID (Poor Linearity)";
-            document.getElementById('pyr-val-status').innerText = "⚠ Poor Curve Linearity";
+            document.getElementById('pyr-val-status').innerText = "Poor Curve Linearity";
         }
         document.getElementById('pyr-val-details').innerText = `R² = ${r2.toFixed(4)} | Slope = ${m.toFixed(3)}`;
 
-        let total = 0;
-        let samplePoints = []; 
+        let total = 0; let samplePoints = []; 
 
         document.getElementById('pyr-body').querySelectorAll('tr').forEach(row => {
             const odInput = row.querySelector('.pyr-od').value;
@@ -760,23 +966,21 @@
             let iCell = row.querySelector('.res-interp');
             
             if (od > b0 * 0.99) {
-                cCell.innerText = "< 0.001"; cCell.className = "cell-result res-conc status-low";
-                iCell.innerText = "< LOQ"; iCell.className = "cell-result res-interp status-low";
+                cCell.innerText = "< 0.001"; 
+                iCell.innerHTML = '<span class="status-low">&lt; LOQ</span>';
             } else if (od < stds[3] * 0.9) {
-                cCell.innerText = "> 0.02"; cCell.className = "cell-result res-conc status-high";
+                cCell.innerText = "> 0.02";
                 if (loq < 0.02) {
-                    iCell.innerText = "Quantifiable (>ULOQ)"; iCell.className = "cell-result res-interp status-high";
+                    iCell.innerHTML = '<span class="status-high">Quantifiable</span>';
                 } else {
-                    iCell.innerText = "RETEST"; iCell.className = "cell-result res-interp status-neutral";
+                    iCell.innerHTML = '<span class="status-neutral">RETEST</span>';
                 }
             } else {
                 cCell.innerText = conc.toFixed(4);
                 if (conc < loq) {
-                    cCell.className = "cell-result res-conc status-low";
-                    iCell.innerText = "< LOQ"; iCell.className = "cell-result res-interp status-low";
+                    iCell.innerHTML = '<span class="status-low">&lt; LOQ</span>';
                 } else {
-                    cCell.className = "cell-result res-conc status-high";
-                    iCell.innerText = "Quantifiable"; iCell.className = "cell-result res-interp status-high";
+                    iCell.innerHTML = '<span class="status-high">Quantifiable</span>';
                 }
                 samplePoints.push({ x: lnConc, y: logitY, label: sampleId });
             }
@@ -789,52 +993,42 @@
         document.getElementById('pyr-repSlope').innerText = m.toFixed(4);
         
         document.getElementById('pyr-summary').style.display = 'block';
-        
         document.getElementById('chartContainer').style.display = 'block';
         drawChart(stdPoints, samplePoints, m, c);
-
         document.getElementById('pyr-export').style.display = 'block';
+        saveStateToCache(); 
     });
 
     function drawChart(stdPoints, samplePoints, m, c) {
         const ctx = document.getElementById('logitChart').getContext('2d');
         if (elisaChart) elisaChart.destroy();
-
-        const lineStart = Math.log(0.0005); 
-        const lineEnd = Math.log(0.03);     
-        
-        const lineData = [
-            { x: lineStart, y: m * lineStart + c },
-            { x: lineEnd, y: m * lineEnd + c }
-        ];
+        const lineStart = Math.log(0.0005); const lineEnd = Math.log(0.03);     
+        const lineData = [{ x: lineStart, y: m * lineStart + c }, { x: lineEnd, y: m * lineEnd + c }];
 
         elisaChart = new Chart(ctx, {
             type: 'scatter',
             data: {
                 datasets: [
-                    { label: 'Standard Curve (Logit-Log)', data: lineData, type: 'line', borderColor: '#0f172a', borderWidth: 2, pointRadius: 0, fill: false },
-                    { label: 'Standards', data: stdPoints, backgroundColor: '#059669', borderColor: '#064e3b', pointRadius: 6, pointHoverRadius: 8 },
-                    { label: 'Samples', data: samplePoints, backgroundColor: '#dc2626', borderColor: '#991b1b', pointRadius: 5, pointHoverRadius: 7 }
+                    { label: 'Standard Curve (Logit-Log)', data: lineData, type: 'line', borderColor: '#003399', borderWidth: 2, pointRadius: 0, fill: false },
+                    { label: 'Standards', data: stdPoints, backgroundColor: '#008000', borderColor: '#006400', pointRadius: 6, pointHoverRadius: 8 },
+                    { label: 'Samples', data: samplePoints, backgroundColor: '#cc0000', borderColor: '#8b0000', pointRadius: 5, pointHoverRadius: 7 }
                 ]
             },
             options: {
-                devicePixelRatio: 4, 
-                responsive: true, maintainAspectRatio: false,
+                devicePixelRatio: 4, responsive: true, maintainAspectRatio: false,
                 plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label === 'Samples') return context.raw.label + ': [ln(x): ' + context.parsed.x.toFixed(2) + ', logit: ' + context.parsed.y.toFixed(2) + ']';
-                                return label + ': [' + context.parsed.x.toFixed(2) + ', ' + context.parsed.y.toFixed(2) + ']';
-                            }
+                    tooltip: { callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label === 'Samples') return context.raw.label + ': [ln(x): ' + context.parsed.x.toFixed(2) + ', logit: ' + context.parsed.y.toFixed(2) + ']';
+                            return label + ': [' + context.parsed.x.toFixed(2) + ', ' + context.parsed.y.toFixed(2) + ']';
                         }
-                    },
-                    legend: { position: 'top', labels: { font: { family: "'Segoe UI', sans-serif" } } }
+                    }},
+                    legend: { position: 'top', labels: { font: { family: "'Segoe UI', Tahoma, sans-serif" } } }
                 },
                 scales: {
-                    x: { title: { display: true, text: 'ln(Concentration)', font: { family: "'Segoe UI', sans-serif", weight: 'bold' } } },
-                    y: { title: { display: true, text: 'Logit (B/B₀)', font: { family: "'Segoe UI', sans-serif", weight: 'bold' } } }
+                    x: { title: { display: true, text: 'ln(Concentration)', font: { family: "'Segoe UI', Tahoma, sans-serif", weight: 'bold' } } },
+                    y: { title: { display: true, text: 'Logit (B/B₀)', font: { family: "'Segoe UI', Tahoma, sans-serif", weight: 'bold' } } }
                 }
             }
         });
