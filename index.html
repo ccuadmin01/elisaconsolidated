@@ -161,14 +161,15 @@
         }
 
         table { width: 100%; border-collapse: collapse; min-width: 750px; }
-        th, td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #ededed; border-right: 1px solid #ededed; vertical-align: middle;}
+        /* Add explicit full borders to table cells to complete the box grid */
+        th, td { padding: 4px 6px; text-align: left; border: 1px solid #d5d5d5; vertical-align: middle;}
         td.num-col, .input-group input[type="number"] { font-variant-numeric: tabular-nums; }
         th { 
-            font-weight: bold; color: #000; border-right: 1px solid #d5d5d5; border-bottom: 1px solid #d5d5d5;
+            font-weight: bold; color: #000; border: 1px solid #a0a0a0;
             background: linear-gradient(to bottom, #ffffff 0%, #f1f2f4 49%, #e2e4e7 50%, #d0d3d9 100%);
             box-shadow: inset 0 1px 0 #fff; cursor: default; white-space: nowrap;
         }
-        tbody tr:hover { background-color: #e5f3fb; border: 1px solid #70c0e7; outline: 1px solid #70c0e7; outline-offset: -1px;}
+        tbody tr:hover { background-color: #e5f3fb; outline: 1px solid #70c0e7; outline-offset: -1px;}
 
         /* UNIVERSAL EXCEL-LIKE DRAG CSS */
         #fill-handle {
@@ -208,15 +209,17 @@
         .banner-valid { background-color: #e4f4fb; color: #000; border-color: #a6d9f4; }
         .banner-invalid { background-color: #ffffe1; color: #000; border-color: #e5c365; }
         
+        /* Formatted the summary box to strictly wrap its grid */
         .report-summary-box { 
-            display: none; padding: 15px 20px; border-radius: 4px; margin-top: 20px; 
+            padding: 15px 20px; border-radius: 4px; 
             background-color: #ffffff; border: 1px solid #a0a0a0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .report-summary-box h3 { margin-top: 0; font-size: 14px; border-bottom: 2px solid #003399; padding-bottom: 6px; color: #003399; text-transform: uppercase; letter-spacing: 1px;}
         .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; line-height: 1.4;}
         .summary-grid div { padding: 4px; border-bottom: 1px dashed #e0e0e0; }
         .full-width { grid-column: span 2; }
-        .sig-line { display: none; margin-top: 30px; padding-top: 5px; border-top: 1px solid #000; width: 250px; text-align: center; font-weight: bold; font-size: 11px;}
+        
+        .sig-line { display: none; margin-top: 30px; margin-left: auto; margin-right: 0; padding-top: 5px; border-top: 1px solid #000; width: 250px; text-align: center; font-weight: bold; font-size: 11px;}
         .report-header { display: none; }
         .print-footer { display: none; }
 
@@ -235,7 +238,7 @@
         /* --- CONDENSED PRINT SETTINGS (Professional Document - Segoe UI 9pt) --- */
         @media print {
             @page { margin: 10mm; size: auto; }
-            body { background: white; padding: 0; color: black; font-size: 9pt !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
+            body { background: white; padding: 0; color: black; font-size: 9pt !important; font-family: Tahoma, sans-serif !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
             .app-container { max-width: 100%; margin: 0; border: none; box-shadow: none; background: white; padding: 0;}
             .aero-titlebar, .no-print, button, .header-controls, .header, .validation-banner, .batch-controls, .tab-content:not(.active), #fill-handle { display: none !important; }
             
@@ -247,21 +250,27 @@
             
             .section-title { font-size: 10pt !important; margin: 10px 0 5px !important; padding-bottom: 2px !important; border-bottom: 1px solid #000 !important; }
             
+            /* Apply underlines to inputs to make them look like complete form boxes in print */
             .input-group label { color: black; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important;}
-            td input, .input-group input, .input-group select, .input-group textarea { 
-                border: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important;
+            .input-group input, .input-group select {
+                border: none !important; border-bottom: 1px solid #000 !important; border-radius: 0 !important;
+                background: transparent !important; padding: 2px 0 !important; margin: 0 !important;
                 font-family: inherit !important; font-size: 9pt !important; color: black; box-shadow: none; outline: none !important; font-weight: inherit !important;
-                height: auto !important;
             }
+
+            .highlight-input { border: 1px solid #000 !important; background: transparent !important; padding: 5px !important; }
             
+            /* Tables must be perfectly boxed */
             .table-responsive { border: none; overflow: visible; margin-bottom: 10px; box-shadow: none;}
-            table { border: 1px solid #000; min-width: 100%; font-size: 8pt !important; }
-            th, td { padding: 2px 4px !important; border-bottom: 1px solid #000; border-right: 1px solid #000; height: auto !important;}
-            th { border-bottom: 2px solid #000; background: #e0e0e0 !important; color: black; font-weight: bold; box-shadow: none;}
+            table { border: 1px solid #000 !important; min-width: 100%; font-size: 8pt !important; border-collapse: collapse !important; }
+            th, td { padding: 2px 4px !important; border: 1px solid #000 !important; height: auto !important;}
+            th { border-bottom: 2px solid #000 !important; background: #e0e0e0 !important; color: black; font-weight: bold; box-shadow: none;}
+            td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; }
             
             .status-high { color: #000 !important; font-weight: bold !important; }
             .status-low { color: #000 !important; }
             
+            /* Compact Summary Box */
             .report-summary-box { display: block; margin-top: 10px; padding: 6px 8px !important; border: 1px solid #000 !important; background-color: #fff !important; page-break-inside: avoid; border-radius: 0;}
             .report-summary-box h3 { margin-bottom: 4px !important; border-bottom: 1px solid #000 !important; color: #000 !important; font-size: 10pt !important; padding-bottom: 2px !important;}
             
@@ -270,7 +279,7 @@
             .summary-grid div { border-bottom: none !important; padding: 1px !important;}
             .full-width { grid-column: span 3 !important; }
             
-            .sig-line { display: block; margin-top: 20px !important; padding-top: 3px !important; border-top: 1px solid #000; width: 200px; text-align: center; font-weight: bold; font-size: 9pt !important;}
+            .sig-line { display: block; margin-top: 20px !important; padding-top: 3px !important; border-top: 1px solid #000; width: 200px; text-align: center; font-weight: bold; font-size: 9pt !important; page-break-inside: avoid;}
             .chart-wrapper { border: 1px solid #000; height: 250px !important; page-break-inside: avoid; padding: 0; box-shadow: none; margin-top: 10px !important;}
 
             .print-footer { display: block !important; position: fixed; bottom: 5mm; right: 5mm; font-size: 8pt; font-weight: normal; }
@@ -299,6 +308,9 @@
             <button class="btn-reset" onclick="clearCacheAndReset()">Reset Entire Suite</button>
         </div>
 
+        <!-- ============================== -->
+        <!-- OPC TAB -->
+        <!-- ============================== -->
         <div id="opc-tab" class="tab-content active">
             <div class="tab-content-area">
                 <div class="header">
@@ -391,24 +403,30 @@
                     <button type="submit" class="btn-run no-print">Run OPC Analysis</button>
                 </form>
 
-                <div id="opc-summary" class="report-summary-box">
-                    <h3>Batch Summary</h3>
-                    <div class="summary-grid">
-                        <div><strong>Analyst:</strong> <span id="opc-repAnalyst">-</span></div>
-                        <div><strong>Total Samples:</strong> <span id="opc-repTotal">-</span></div>
-                        <div><strong>Equipment:</strong> <span id="opc-repEquip">-</span></div>
-                        <div><strong>Method:</strong> <span id="opc-repMethod">-</span></div>
-                        <div class="full-width"><strong>Remarks:</strong> <span id="opc-repRemarks">-</span></div>
-                        <div><strong class="status-high">DETECTED Samples:</strong> <span id="opc-repPos">-</span></div>
-                        <div><strong class="status-low">NOT DETECTED:</strong> <span id="opc-repNeg">-</span></div>
+                <!-- Wrapper to control visibility, extracting sig-line from inside the border box -->
+                <div id="opc-summary" style="display: none; margin-top: 20px;">
+                    <div class="report-summary-box">
+                        <h3>Batch Summary</h3>
+                        <div class="summary-grid">
+                            <div><strong>Analyst:</strong> <span id="opc-repAnalyst">-</span></div>
+                            <div><strong>Total Samples:</strong> <span id="opc-repTotal">-</span></div>
+                            <div><strong>Equipment:</strong> <span id="opc-repEquip">-</span></div>
+                            <div><strong>Method:</strong> <span id="opc-repMethod">-</span></div>
+                            <div><strong class="status-high">DETECTED:</strong> <span id="opc-repPos">-</span></div>
+                            <div><strong class="status-low">NOT DETECTED:</strong> <span id="opc-repNeg">-</span></div>
+                            <div class="full-width"><strong>Remarks:</strong> <span id="opc-repRemarks">-</span></div>
+                        </div>
                     </div>
-                    <div class="sig-line">Reviewed & Verified By</div>
+                    <div class="sig-line">Reviewed & Verified By:</div>
                 </div>
 
                 <button type="button" id="opc-export" class="btn-export no-print" onclick="exportToPDF('OPC')">Export to PDF</button>
             </div>
         </div>
 
+        <!-- ============================== -->
+        <!-- PYR TAB -->
+        <!-- ============================== -->
         <div id="pyr-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -513,20 +531,23 @@
                     <button type="submit" class="btn-run no-print">Calculate & Graph</button>
                 </form>
 
-                <div id="pyr-summary" class="report-summary-box">
-                    <h3>Calibration & Run Summary</h3>
-                    <div class="summary-grid">
-                        <div><strong>Analyst:</strong> <span id="pyr-repAnalyst">-</span></div>
-                        <div><strong>LOQ:</strong> <span id="pyr-repLOQ">-</span> ppm</div>
-                        <div><strong>Total Samples:</strong> <span id="pyr-repTotal">-</span></div>
-                        <div><strong>Equipment:</strong> <span id="pyr-repEquip">-</span></div>
-                        <div><strong>Method:</strong> <span id="pyr-repMethod">-</span></div>
-                        <div><strong>Run Status:</strong> <span id="pyr-repStatus">-</span></div>
-                        <div><strong>Curve Linearity (R²):</strong> <span id="pyr-repR2">-</span></div>
-                        <div><strong>Curve Slope (m):</strong> <span id="pyr-repSlope">-</span></div>
-                        <div class="full-width"><strong>Remarks:</strong> <span id="pyr-repRemarks">-</span></div>
+                <!-- Wrapper to control visibility, extracting sig-line from inside the border box -->
+                <div id="pyr-summary" style="display: none; margin-top: 20px;">
+                    <div class="report-summary-box">
+                        <h3>Calibration & Run Summary</h3>
+                        <div class="summary-grid">
+                            <div><strong>Analyst:</strong> <span id="pyr-repAnalyst">-</span></div>
+                            <div><strong>LOQ:</strong> <span id="pyr-repLOQ">-</span> ppm</div>
+                            <div><strong>Total Samples:</strong> <span id="pyr-repTotal">-</span></div>
+                            <div><strong>Equipment:</strong> <span id="pyr-repEquip">-</span></div>
+                            <div><strong>Method:</strong> <span id="pyr-repMethod">-</span></div>
+                            <div><strong>Run Status:</strong> <span id="pyr-repStatus">-</span></div>
+                            <div><strong>Curve Linearity (R²):</strong> <span id="pyr-repR2">-</span></div>
+                            <div><strong>Curve Slope (m):</strong> <span id="pyr-repSlope">-</span></div>
+                            <div class="full-width"><strong>Remarks:</strong> <span id="pyr-repRemarks">-</span></div>
+                        </div>
                     </div>
-                    <div class="sig-line">Reviewed & Verified By</div>
+                    <div class="sig-line">Reviewed & Verified By:</div>
                 </div>
 
                 <div id="chartContainer" class="chart-wrapper">
@@ -537,6 +558,9 @@
             </div>
         </div>
 
+        <!-- ============================== -->
+        <!-- TXRF TAB -->
+        <!-- ============================== -->
         <div id="txrf-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -611,26 +635,32 @@
                     <button type="submit" class="btn-run no-print">Validate & Generate Report</button>
                 </form>
 
-                <div id="txrf-summary" class="report-summary-box">
-                    <h3>Batch Compliance Summary</h3>
-                    <div class="summary-grid">
-                        <div><strong>Analyst:</strong> <span id="txrf-rep-analyst">-</span></div>
-                        <div><strong>Total Samples:</strong> <span id="txrf-rep-total">-</span></div>
-                        <div><strong>Equipment:</strong> <span id="txrf-repEquip">-</span></div>
-                        <div><strong>Method:</strong> <span id="txrf-repMethod">-</span></div>
-                        <div><strong>Internal Standard:</strong> <span id="txrf-rep-is">-</span></div>
-                        <div><strong>Matrices Analyzed:</strong> <span id="txrf-rep-matrix">-</span></div>
-                        <div class="full-width"><strong>Remarks:</strong> <span id="txrf-repRemarks">-</span></div>
-                        <div><strong class="status-low">NOT DETECTED Samples:</strong> <span id="txrf-rep-nd">-</span></div>
-                        <div><strong class="status-high">DETECTED Samples:</strong> <span id="txrf-rep-d">-</span></div>
+                <!-- Wrapper to control visibility, extracting sig-line from inside the border box -->
+                <div id="txrf-summary" style="display: none; margin-top: 20px;">
+                    <div class="report-summary-box">
+                        <h3>Batch Compliance Summary</h3>
+                        <div class="summary-grid">
+                            <div><strong>Analyst:</strong> <span id="txrf-rep-analyst">-</span></div>
+                            <div><strong>Total Samples:</strong> <span id="txrf-rep-total">-</span></div>
+                            <div><strong>Equipment:</strong> <span id="txrf-repEquip">-</span></div>
+                            <div><strong>Method:</strong> <span id="txrf-repMethod">-</span></div>
+                            <div><strong>Internal Standard:</strong> <span id="txrf-rep-is">-</span></div>
+                            <div><strong>Matrices Analyzed:</strong> <span id="txrf-rep-matrix">-</span></div>
+                            <div><strong class="status-low">NOT DETECTED:</strong> <span id="txrf-rep-nd">-</span></div>
+                            <div><strong class="status-high">DETECTED:</strong> <span id="txrf-rep-d">-</span></div>
+                            <div class="full-width"><strong>Remarks:</strong> <span id="txrf-repRemarks">-</span></div>
+                        </div>
                     </div>
-                    <div class="sig-line">Reviewed & Verified By</div>
+                    <div class="sig-line">Reviewed & Verified By:</div>
                 </div>
 
                 <button type="button" id="txrf-export" class="btn-export no-print" onclick="exportToPDF('TXRF')">Export to PDF</button>
             </div>
         </div>
 
+        <!-- ============================== -->
+        <!-- MICRO TAB -->
+        <!-- ============================== -->
         <div id="micro-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -705,19 +735,22 @@
                     <button type="submit" class="btn-run no-print">Run Micro Analysis</button>
                 </form>
 
-                <div id="micro-summary" class="report-summary-box">
-                    <h3>Batch Summary</h3>
-                    <div class="summary-grid">
-                        <div><strong>Analyst:</strong> <span id="micro-repAnalyst">-</span></div>
-                        <div><strong>Total Samples:</strong> <span id="micro-repTotal">-</span></div>
-                        <div><strong>Equipment:</strong> <span id="micro-repEquip">-</span></div>
-                        <div><strong>Method:</strong> <span id="micro-repMethod">-</span></div>
-                        <div><strong>CT Cutoff Parameter:</strong> <span id="micro-repCutoff">-</span></div>
-                        <div class="full-width"><strong>Remarks:</strong> <span id="micro-repRemarks">-</span></div>
-                        <div><strong class="status-high">DETECTED Samples:</strong> <span id="micro-repPos">-</span></div>
-                        <div><strong class="status-low">NOT DETECTED:</strong> <span id="micro-repNeg">-</span></div>
+                <!-- Wrapper to control visibility, extracting sig-line from inside the border box -->
+                <div id="micro-summary" style="display: none; margin-top: 20px;">
+                    <div class="report-summary-box">
+                        <h3>Batch Summary</h3>
+                        <div class="summary-grid">
+                            <div><strong>Analyst:</strong> <span id="micro-repAnalyst">-</span></div>
+                            <div><strong>Total Samples:</strong> <span id="micro-repTotal">-</span></div>
+                            <div><strong>Equipment:</strong> <span id="micro-repEquip">-</span></div>
+                            <div><strong>Method:</strong> <span id="micro-repMethod">-</span></div>
+                            <div><strong>CT Cutoff Parameter:</strong> <span id="micro-repCutoff">-</span></div>
+                            <div><strong class="status-high">DETECTED:</strong> <span id="micro-repPos">-</span></div>
+                            <div><strong class="status-low">NOT DETECTED:</strong> <span id="micro-repNeg">-</span></div>
+                            <div class="full-width"><strong>Remarks:</strong> <span id="micro-repRemarks">-</span></div>
+                        </div>
                     </div>
-                    <div class="sig-line">Reviewed & Verified By</div>
+                    <div class="sig-line">Reviewed & Verified By:</div>
                 </div>
 
                 <button type="button" id="micro-export" class="btn-export no-print" onclick="exportToPDF('MICRO')">Export to PDF</button>
@@ -726,6 +759,7 @@
 
     </div>
     
+    <!-- Footer embedded at the end of the container, becomes fixed bottom-right during print -->
     <div class="print-footer reportDateStr"></div>
 </div>
 
@@ -749,7 +783,7 @@
     // ==========================================
     // GLOBALS & CACHE STATE
     // ==========================================
-    const CACHE_KEY = "MobileLabBuilder_V7";
+    const CACHE_KEY = "MobileLabBuilder_V8";
     let activeTab = 'opc';
     let saveTimeout = null;
     let elisaChart = null; 
@@ -1372,6 +1406,8 @@
         document.getElementById('opc-repPos').innerText = posCount;
         document.getElementById('opc-repNeg').innerText = negCount;
         document.getElementById('opc-summary').style.display = 'block';
+        
+        // Show universal print button on validation
         document.getElementById('opc-export').style.display = 'block';
         saveStateToCache(); 
     });
@@ -1489,6 +1525,8 @@
                 }
             }
         });
+        
+        // Show universal print button on validation
         document.getElementById('pyr-export').style.display = 'block';
         saveStateToCache(); 
     });
@@ -1556,6 +1594,8 @@
         document.getElementById('txrf-rep-d').innerText = detectedCount;
         
         document.getElementById('txrf-summary').style.display = 'block';
+        
+        // Show universal print button on validation
         document.getElementById('txrf-export').style.display = 'block';
         saveStateToCache(); 
     });
@@ -1599,6 +1639,8 @@
         document.getElementById('micro-repNeg').innerText = negCount;
         
         document.getElementById('micro-summary').style.display = 'block';
+        
+        // Show universal print button on validation
         document.getElementById('micro-export').style.display = 'block';
         saveStateToCache(); 
     });
