@@ -182,7 +182,6 @@
         .res-status, .res-interp { font-weight: bold; }
         .status-high { color: var(--warning); }
         .status-low { color: var(--success); }
-        .status-neutral { color: var(--neutral); }
 
         /* --- CHART CONTAINER --- */
         .chart-wrapper { display: none; width: 100%; height: 400px; margin-top: 15px; padding: 10px; background: #fff; border: 1px solid var(--win-border); box-sizing: border-box; }
@@ -208,9 +207,8 @@
         .banner-valid { background-color: #e4f4fb; color: #000; border-color: #a6d9f4; }
         .banner-invalid { background-color: #ffffe1; color: #000; border-color: #e5c365; }
         
-        /* Formatted the summary box to strictly wrap its grid */
         .report-summary-box { 
-            display: none; padding: 12px 15px; border-radius: 4px; margin-top: 20px; 
+            display: none; padding: 15px 20px; border-radius: 4px; margin-top: 20px; 
             background-color: #fcfcfc; border: 1px solid #a0a0a0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .report-summary-box h3 { margin-top: 0; font-size: 13px; border-bottom: 2px solid #003399; padding-bottom: 4px; color: #003399; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;}
@@ -233,55 +231,61 @@
         .pt-empty { visibility: hidden; }
         .pt-disabled { background: #e0e0e0; color: #a0a0a0; border-color: #d0d0d0; cursor: not-allowed; }
 
-        /* --- CONDENSED AESTHETIC PRINT SETTINGS (Segoe UI 9pt) --- */
+        /* --- HIGH QUALITY PROFESSIONAL PDF EXPORT CSS --- */
         @media print {
-            @page { margin: 12mm; size: A4 portrait; }
-            body { background: white; padding: 0; color: black; font-size: 9pt !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
+            @page { margin: 15mm; size: A4 portrait; }
+            body { 
+                background: white; padding: 0; color: #000; font-size: 10pt !important; 
+                font-family: 'Segoe UI', Tahoma, sans-serif !important; 
+                -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+            }
+            
             .app-container { max-width: 100%; margin: 0; border: none; box-shadow: none; background: white; padding: 0;}
             .aero-titlebar, .no-print, button, .header-controls, .header, .validation-banner, .batch-controls, .tab-content:not(.active), #fill-handle { display: none !important; }
-            
             .aero-content, .tab-content-area { border: none; padding: 0; background: white; box-shadow: none;}
             
-            /* Professional Header Layout */
-            .report-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #003399; }
+            /* Professional Document Header */
+            .report-header { 
+                display: flex; justify-content: space-between; align-items: flex-end; 
+                margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #003399; 
+            }
             .report-header-left h2 { margin: 0 0 4px 0; font-size: 16pt; color: #003399; font-weight: bold; text-transform: uppercase;}
-            .report-header-left p { margin: 1px 0; color: #000; font-size: 9pt; }
+            .report-header-left p { margin: 1px 0; color: #000; font-size: 10pt; }
             .report-header-right { text-align: right; font-size: 9pt; color: #444; }
             .report-header-right p { margin: 1px 0; }
             
-            .section-title { font-size: 10pt !important; margin: 10px 0 5px !important; padding: 2px 5px !important; background-color: #f0f0f0; border-left: 3px solid #003399; border-bottom: none !important; color: #003399;}
+            .section-title { font-size: 11pt !important; margin: 10px 0 5px !important; padding: 2px 5px !important; background-color: #f0f0f0; border-left: 3px solid #003399; border-bottom: none !important; color: #003399;}
             
-            /* Inputs -> Formatted Text visually */
-            .grid-settings { margin-bottom: 10px !important; gap: 8px !important;}
+            /* Inputs transformed to clean text fields */
+            .grid-settings { margin-bottom: 10px !important; gap: 10px !important;}
             .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; text-transform: uppercase;}
             .input-group input, .input-group select, .input-group textarea {
-                border: none !important; border-bottom: 1px dashed #aaa !important; border-radius: 0 !important;
-                background: transparent !important; padding: 1px 0 !important; margin: 0 !important;
-                font-family: inherit !important; font-size: 9pt !important; color: black; box-shadow: none; outline: none !important; font-weight: inherit !important;
+                border: none !important; border-bottom: 1px dotted #ccc !important; border-radius: 0 !important;
+                background: transparent !important; padding: 2px 0 !important; margin: 0 !important;
+                font-family: inherit !important; font-size: 10pt !important; font-weight: bold !important; color: black; box-shadow: none; outline: none !important;
             }
 
-            .highlight-input { border: 1px solid #ccc !important; background: #fdfdfd !important; padding: 6px !important; margin-bottom: 5px !important;}
+            .highlight-input { border: 1px solid #ccc !important; background: transparent !important; padding: 6px !important; margin-bottom: 5px !important;}
             
             /* High Density Tables */
             .table-responsive { border: none; overflow: visible; margin-bottom: 10px; box-shadow: none;}
             table { border: 1px solid #000 !important; min-width: 100%; font-size: 9pt !important; border-collapse: collapse !important; }
-            th, td { padding: 3px 5px !important; border: 1px solid #999 !important; height: auto !important;}
+            th, td { padding: 4px 6px !important; border: 1px solid #999 !important; height: auto !important;}
             th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; text-transform: uppercase; font-size: 8pt;}
-            td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; text-align: inherit;}
+            td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; text-align: inherit; color: #000 !important;}
             
+            /* Status Accents */
             .status-high { color: #cc0000 !important; font-weight: bold !important; }
-            .status-low { color: #000 !important; font-weight: bold !important;}
+            .status-low { color: #000000 !important; font-weight: bold !important;}
             
             /* Compact Summary Box */
             .report-summary-box { display: block; margin-top: 15px; padding: 10px 15px !important; border: 2px solid #003399 !important; background-color: #fff !important; page-break-inside: avoid; border-radius: 4px;}
             .report-summary-box h3 { margin-bottom: 6px !important; border-bottom: 1px solid #003399 !important; color: #003399 !important; font-size: 11pt !important; padding-bottom: 2px !important;}
-            
-            /* Compressed Grid for Print */
-            .summary-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 4px !important; font-size: 9pt !important; }
+            .summary-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; font-size: 9pt !important; }
             .summary-grid div { border-bottom: none !important; padding: 1px !important;}
             .full-width { grid-column: span 3 !important; }
             
-            .sig-line { display: block; margin-top: 25px !important; padding-top: 3px !important; border-top: 1px solid #000; width: 220px; text-align: center; font-weight: bold; font-size: 9pt !important; page-break-inside: avoid;}
+            .sig-line { display: block; margin-top: 30px !important; padding-top: 3px !important; border-top: 1px solid #000; width: 220px; text-align: center; font-weight: bold; font-size: 9pt !important; page-break-inside: avoid;}
             .chart-wrapper { border: 1px solid #ccc; height: 220px !important; page-break-inside: avoid; padding: 5px; box-shadow: none; margin-top: 10px !important;}
         }
     </style>
@@ -298,9 +302,9 @@
 <div class="app-container">
     
     <div class="aero-titlebar no-print">
-        <div style="display: flex; align-items: center; gap: 6px;" id="aero-title-text">
+        <div style="display: flex; align-items: center; gap: 6px;">
             <span style="font-size: 14px;">🔬</span>
-            Mobile Lab Report Builder: Organophosphates / Carbamates
+            Mobile Lab Report Builder
         </div>
     </div>
 
@@ -796,7 +800,7 @@
     // ==========================================
     // GLOBALS & CACHE STATE
     // ==========================================
-    const CACHE_KEY = "MobileLabBuilder_V9";
+    const CACHE_KEY = "MobileLabBuilder_V10";
     let activeTab = 'opc';
     let saveTimeout = null;
     let elisaChart = null; 
@@ -994,20 +998,12 @@
     // ==========================================
     // UI & TAB LOGIC
     // ==========================================
-    const tabTitles = {
-        'opc': 'Organophosphates / Carbamates',
-        'pyr': 'Pyrethroids',
-        'txrf': 'TXRF Heavy Metals',
-        'micro': 'Micro Ridacycler'
-    };
-
     function switchTab(target) {
         activeTab = target;
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.getElementById(target + '-tab').classList.add('active');
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
         document.getElementById(`btn-tab-${target}`).classList.add('active-tab');
-        document.getElementById('aero-title-text').innerHTML = `<span style="font-size: 14px;">🔬</span> Mobile Lab Report Builder: ${tabTitles[target]}`;
         scheduleSave();
     }
 
@@ -1635,7 +1631,7 @@
             
             if (ctInput === "") {
                 statCell.innerHTML = '<span style="color:#999">-</span>';
-                return; // skip blanks
+                return; 
             }
             total++;
 
