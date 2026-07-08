@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Unified ELISA Laboratory Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* Shared Colors */
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #0f172a;
@@ -17,13 +17,11 @@
             --warning: #dc2626;
             --warning-bg: #fee2e2;
             
-            /* OPC Theme (Blue) */
             --opc-primary: #1e3a8a;
             --opc-secondary: #2563eb;
             --opc-hover: #1d4ed8;
             --opc-light: #eff6ff;
 
-            /* PYR Theme (Emerald) */
             --pyr-primary: #064e3b;
             --pyr-secondary: #059669;
             --pyr-hover: #047857;
@@ -31,7 +29,7 @@
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
@@ -45,7 +43,7 @@
 
         .app-container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
             box-sizing: border-box;
             margin-bottom: 2rem;
         }
@@ -71,6 +69,7 @@
             background: transparent;
             color: var(--text-muted);
             transition: all 0.2s ease;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         .tab-btn.active-opc { background: var(--card-bg); color: var(--opc-secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -106,18 +105,39 @@
         /* --- GRIDS & INPUTS --- */
         .grid-inputs-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .grid-inputs-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
-        .grid-settings { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; margin-bottom: 1rem; align-items: center; }
+        .grid-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; align-items: end; }
         
         .input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.85rem; }
         .input-group input {
             width: 100%; padding: 0.75rem; border: 1px solid var(--border);
             border-radius: 6px; font-size: 1rem; box-sizing: border-box;
-            -webkit-appearance: none;
+            -webkit-appearance: none; font-family: 'Segoe UI', sans-serif;
         }
         #opc-tab .input-group input:focus { outline: none; border-color: var(--opc-secondary); }
         #pyr-tab .input-group input:focus { outline: none; border-color: var(--pyr-secondary); }
         
         #pyr-tab .highlight-input input { border: 2px solid var(--pyr-secondary); background-color: var(--pyr-light); font-weight: bold; }
+
+        /* --- BATCH SETUP CONTROLS --- */
+        .batch-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+        }
+        .batch-controls input {
+            padding: 0.6rem; border: 1px solid var(--border);
+            border-radius: 6px; font-size: 0.95rem; font-family: inherit;
+        }
+        .batch-controls button {
+            margin: 0; width: auto; padding: 0.6rem 1rem; font-size: 0.95rem; white-space: nowrap;
+        }
+        .btn-sync { background-color: var(--text-muted); }
+        .btn-sync:hover { background-color: #475569; }
 
         /* --- RESPONSIVE TABLE --- */
         .table-responsive {
@@ -125,24 +145,30 @@
             margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px;
         }
 
-        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        table { width: 100%; border-collapse: collapse; min-width: 750px; }
         th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
         th { font-weight: 600; font-size: 0.9rem; color: var(--text-muted); white-space: nowrap; }
         #opc-tab th { background-color: var(--opc-light); }
         #pyr-tab th { background-color: var(--pyr-light); }
         
-        td input { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem;}
+        td input { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem; font-family: 'Segoe UI', sans-serif;}
         
-        .cell-result { font-family: monospace; font-weight: bold; font-size: 0.95rem; }
+        .cell-result { font-weight: bold; font-size: 0.95rem; }
         .status-high { color: var(--warning); }
         .status-low { color: var(--success); }
         .status-neutral { color: #f59e0b; }
+
+        /* --- CHART CONTAINER --- */
+        .chart-wrapper {
+            display: none; width: 100%; height: 400px; margin-top: 2rem; padding: 1rem;
+            background: #fff; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box;
+        }
 
         /* --- BUTTONS --- */
         button {
             width: 100%; padding: 1rem; color: white; border: none; border-radius: 8px; 
             font-size: 1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s ease; 
-            margin-bottom: 0.5rem; touch-action: manipulation;
+            margin-bottom: 0.5rem; touch-action: manipulation; font-family: 'Segoe UI', sans-serif;
         }
         #opc-tab .btn-run { background-color: var(--opc-secondary); }
         #opc-tab .btn-run:hover { background-color: var(--opc-hover); }
@@ -176,51 +202,52 @@
             .grid-inputs-5 { grid-template-columns: repeat(2, 1fr); }
             .grid-inputs-5 .input-group:last-child { grid-column: span 2; } 
             .grid-settings { grid-template-columns: 1fr; gap: 0.5rem; align-items: flex-start;}
-            .grid-settings p { padding-top: 0.5rem !important; }
             .tab-controls { flex-direction: column; }
+            .batch-controls { flex-wrap: wrap; }
+            .batch-controls input, .batch-controls button { width: 100% !important; margin-bottom: 0.5rem; }
+            .chart-wrapper { height: 300px; }
         }
 
-        @media screen and (max-width: 480px) {
-            .calculator-card { padding: 1.25rem 1rem; border-radius: 12px; }
-            .header h1 { font-size: 1.5rem; }
-            .grid-inputs-5 { grid-template-columns: 1fr; }
-            .grid-inputs-5 .input-group:last-child { grid-column: span 1; }
-        }
-
-        /* --- PRINT SETTINGS --- */
+        /* --- CONDENSED PRINT SETTINGS --- */
         @media print {
-            @page { margin: 15mm; }
-            body { background-color: white; padding: 0; color: black; }
+            @page { margin: 10mm; }
+            body { 
+                background-color: white; padding: 0; color: black; 
+                font-size: 10pt; font-family: 'Segoe UI', sans-serif;
+                -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+            }
             .app-container { max-width: 100%; margin: 0; }
             .calculator-card { box-shadow: none; border: none !important; padding: 0; }
             
-            /* Hide UI controls and inactive tabs */
-            .no-print, button, .header, .validation-banner, .tab-controls, .tab-content:not(.active) { display: none !important; }
+            .no-print, button, .header, .validation-banner, .tab-controls, .tab-content:not(.active), .batch-controls { display: none !important; }
             
             .report-header {
-                display: block; text-align: center; margin-bottom: 2rem;
-                padding-bottom: 1rem; border-bottom: 2px solid #000;
+                display: block; text-align: center; margin-bottom: 1rem;
+                padding-bottom: 0.5rem; border-bottom: 2px solid #000;
             }
-            .report-header h2 { margin: 0 0 0.5rem 0; font-size: 1.5rem; color: black; }
-            .report-header p { margin: 0 0 0.25rem 0; color: #333; font-size: 0.95rem; }
+            .report-header h2 { margin: 0 0 0.2rem 0; font-size: 14pt; color: black; }
+            .report-header p { margin: 0; color: #333; font-size: 9pt; }
             
             td input, .input-group input { 
                 border: none !important; background: transparent !important; 
-                padding: 0 !important; font-family: inherit; font-size: 1rem; color: black;
+                padding: 0 !important; font-family: inherit; font-size: 10pt; color: black;
             }
             
-            .table-responsive { border: none; overflow: visible; }
-            table { border: 1px solid #000; min-width: 100%; }
+            .table-responsive { border: none; overflow: visible; margin-bottom: 0.5rem;}
+            table { border: 1px solid #000; min-width: 100%; font-size: 9pt; }
+            th, td { padding: 4px 6px; }
             th { border-bottom: 2px solid #000; background-color: #f0f0f0 !important; color: black; -webkit-print-color-adjust: exact; }
             td { border-bottom: 1px solid #ccc; }
             
             .report-summary-box {
-                display: block; margin-top: 2rem; padding: 1.5rem; border-left: none !important;
+                display: block; margin-top: 1rem; padding: 10px; border-left: none !important;
                 border: 1px solid #000; background-color: #f9f9f9 !important;
                 -webkit-print-color-adjust: exact; page-break-inside: avoid;
             }
-            .report-summary-box h3 { margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
-            .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.95rem; }
+            .report-summary-box h3 { margin-top: 0; font-size: 11pt; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 8px;}
+            .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 9pt; }
+
+            .chart-wrapper { border: 1px solid #000; height: 350px; page-break-inside: avoid; }
         }
     </style>
 </head>
@@ -247,6 +274,15 @@
             </div>
 
             <form id="opcForm">
+                
+                <div class="section-title">Run Information</div>
+                <div class="grid-settings">
+                    <div class="input-group">
+                        <label>Analyst Name</label>
+                        <input type="text" id="opc-analyst" placeholder="Enter analyst name" required>
+                    </div>
+                </div>
+
                 <div class="section-title">Calibration & Controls</div>
                 <div class="grid-inputs-3">
                     <div class="input-group">
@@ -268,7 +304,17 @@
                     <span id="opc-val-details" style="font-size: 0.85rem; font-weight: normal;"></span>
                 </div>
 
-                <div class="section-title">Batch Samples</div>
+                <div class="section-title">Sample Analysis Batch</div>
+                
+                <div class="batch-controls no-print">
+                    <input type="text" id="opc-batch-prefix" placeholder="Prefix" value="OPC-" style="width: 140px;" title="Sample ID Prefix (e.g., OPC-)">
+                    <input type="number" id="opc-batch-start" placeholder="Start #" value="1" style="width: 90px;" title="Starting Number (e.g., 1)">
+                    <input type="number" id="opc-batch-count" placeholder="Total Count" min="1" style="width: 120px;" title="Total number of rows to generate">
+                    
+                    <button type="button" onclick="generateBatch('opc')">Generate Rows</button>
+                    <span style="flex-grow: 1;"></span> <button type="button" class="btn-sync" onclick="syncSamples('opc', 'pyr')">Copy IDs to Pyrethroids ➔</button>
+                </div>
+
                 <div class="table-responsive">
                     <table id="opc-table">
                         <thead>
@@ -294,15 +340,16 @@
                     </table>
                 </div>
 
-                <button type="button" class="btn-add no-print" onclick="addRow('opc')">+ Add Another Sample</button>
+                <button type="button" class="btn-add no-print" onclick="addRow('opc')">+ Add Single Sample</button>
                 <button type="submit" class="btn-run no-print">Run OPC Analysis</button>
             </form>
 
             <div id="opc-summary" class="report-summary-box">
                 <h3>Batch Summary</h3>
                 <div class="summary-grid">
-                    <div><strong>Assay Principle:</strong> Qualitative Inhibition (20% Cutoff)</div>
+                    <div><strong>Analyst:</strong> <span id="opc-repAnalyst">-</span></div>
                     <div><strong>Total Samples:</strong> <span id="opc-repTotal">-</span></div>
+                    <div><strong>Assay Principle:</strong> Qualitative Inhibition (20%)</div>
                     <div><strong>QC Status:</strong> <span id="opc-repStatus">-</span></div>
                     <div><strong>Positive Results:</strong> <span id="opc-repPos">-</span></div>
                     <div><strong>Negative Results:</strong> <span id="opc-repNeg">-</span></div>
@@ -328,16 +375,15 @@
             </div>
 
             <form id="pyrForm">
-                <div class="section-title">Assay Parameters</div>
+                <div class="section-title">Run Information & Parameters</div>
                 <div class="grid-settings">
                     <div class="input-group highlight-input">
                         <label>Limit of Quant. (LOQ) ppm</label>
                         <input type="number" id="pyr-loq" step="any" value="0.005" required>
                     </div>
                     <div class="input-group">
-                        <p style="margin:0; padding-top:1.2rem; font-size:0.85rem; color:var(--text-muted);">
-                            <em>Values below this limit report as &lt; LOQ.</em>
-                        </p>
+                        <label>Analyst Name</label>
+                        <input type="text" id="pyr-analyst" placeholder="Enter analyst name" required>
                     </div>
                 </div>
 
@@ -370,7 +416,17 @@
                     <span id="pyr-val-details" style="font-size: 0.85rem; font-weight: normal;"></span>
                 </div>
 
-                <div class="section-title">Sample Analysis</div>
+                <div class="section-title">Sample Analysis Batch</div>
+                
+                <div class="batch-controls no-print">
+                    <input type="text" id="pyr-batch-prefix" placeholder="Prefix" value="PYR-" style="width: 140px;" title="Sample ID Prefix (e.g., PYR-)">
+                    <input type="number" id="pyr-batch-start" placeholder="Start #" value="1" style="width: 90px;" title="Starting Number (e.g., 1)">
+                    <input type="number" id="pyr-batch-count" placeholder="Total Count" min="1" style="width: 120px;" title="Total number of rows to generate">
+                    
+                    <button type="button" onclick="generateBatch('pyr')">Generate Rows</button>
+                    <span style="flex-grow: 1;"></span> <button type="button" class="btn-sync" onclick="syncSamples('pyr', 'opc')">Copy IDs to OPC Tab ➔</button>
+                </div>
+
                 <div class="table-responsive">
                     <table id="pyr-table">
                         <thead>
@@ -396,20 +452,25 @@
                     </table>
                 </div>
 
-                <button type="button" class="btn-add no-print" onclick="addRow('pyr')">+ Add Another Sample</button>
-                <button type="submit" class="btn-run no-print">Calculate PYR</button>
+                <button type="button" class="btn-add no-print" onclick="addRow('pyr')">+ Add Single Sample</button>
+                <button type="submit" class="btn-run no-print">Calculate & Graph</button>
             </form>
 
             <div id="pyr-summary" class="report-summary-box">
                 <h3>Calibration & Run Summary</h3>
                 <div class="summary-grid">
+                    <div><strong>Analyst:</strong> <span id="pyr-repAnalyst">-</span></div>
                     <div><strong>Limit of Quantification (LOQ):</strong> <span id="pyr-repLOQ">-</span> ppm</div>
-                    <div><strong>Total Samples Analyzed:</strong> <span id="pyr-repTotal">-</span></div>
+                    <div><strong>Total Samples:</strong> <span id="pyr-repTotal">-</span></div>
                     <div><strong>Regression Model:</strong> Logit-Log</div>
                     <div><strong>Run Status:</strong> <span id="pyr-repStatus">-</span></div>
                     <div><strong>Curve Linearity (R²):</strong> <span id="pyr-repR2">-</span></div>
                     <div><strong>Curve Slope (m):</strong> <span id="pyr-repSlope">-</span></div>
                 </div>
+            </div>
+
+            <div id="chartContainer" class="chart-wrapper">
+                <canvas id="logitChart"></canvas>
             </div>
 
             <button type="button" id="pyr-export" class="btn-export no-print" onclick="window.print()">🖨️ Export / Save Report as PDF</button>
@@ -435,20 +496,62 @@
         }
     }
 
-    // --- ROW MANAGEMENT ---
-    let counts = { opc: 1, pyr: 1 };
+    // --- ROW MANAGEMENT & SMART BATCH GENERATION ---
+    // Global tracking to ensure incrementing works fluidly
+    let nextNum = { opc: 2, pyr: 2 }; 
     
-    function addRow(type) {
-        counts[type]++;
-        const idPrefix = type === 'opc' ? 'OPC' : 'PYR';
-        const autoId = `${idPrefix}-${counts[type].toString().padStart(3, '0')}`;
+    function generateBatch(type) {
+        const prefix = document.getElementById(`${type}-batch-prefix`).value;
+        const start = parseInt(document.getElementById(`${type}-batch-start`).value);
+        const count = parseInt(document.getElementById(`${type}-batch-count`).value);
+
+        if (isNaN(count) || count < 1 || isNaN(start)) {
+            alert("Please enter valid numbers for the Start Number and Total Count.");
+            return;
+        }
+
+        const tbody = document.getElementById(`${type}-body`);
+        tbody.innerHTML = ''; // Clear current table
+
+        // Reset the counter to the requested start number
+        nextNum[type] = start;
+
+        for (let i = 0; i < count; i++) {
+            const autoId = `${prefix}${nextNum[type].toString().padStart(3, '0')}`;
+            addRow(type, autoId);
+            // Increment the tracker for the next iteration
+            nextNum[type]++;
+        }
+        
+        // Update the Start Number box so the user sees where the next sample will pick up
+        document.getElementById(`${type}-batch-start`).value = nextNum[type];
+    }
+
+    function addRow(type, explicitId = null) {
+        let idToUse = explicitId;
+        
+        // If clicking "Add Single Row", calculate the next ID automatically
+        if (!idToUse) {
+            const prefix = document.getElementById(`${type}-batch-prefix`).value;
+            let startVal = parseInt(document.getElementById(`${type}-batch-start`).value);
+            
+            // Fallback safety if the input box is empty
+            if (isNaN(startVal)) startVal = nextNum[type];
+            
+            idToUse = `${prefix}${startVal.toString().padStart(3, '0')}`;
+            
+            // Advance the counters
+            nextNum[type] = startVal + 1;
+            document.getElementById(`${type}-batch-start`).value = nextNum[type];
+        }
+        
         const tbody = document.getElementById(`${type}-body`);
         const tr = document.createElement('tr');
         tr.className = 'sample-row';
         
         if (type === 'opc') {
             tr.innerHTML = `
-                <td><input type="text" class="opc-id" value="${autoId}" required></td>
+                <td><input type="text" class="opc-id" value="${idToUse}" required></td>
                 <td><input type="number" step="any" class="opc-od" placeholder="0.000" required></td>
                 <td class="cell-result res-binding">-</td>
                 <td class="cell-result res-inhibition">-</td>
@@ -457,7 +560,7 @@
             `;
         } else {
             tr.innerHTML = `
-                <td><input type="text" class="pyr-id" value="${autoId}" required></td>
+                <td><input type="text" class="pyr-id" value="${idToUse}" required></td>
                 <td><input type="number" step="any" class="pyr-od" placeholder="0.000" required></td>
                 <td class="cell-result res-binding">-</td>
                 <td class="cell-result res-conc">-</td>
@@ -475,6 +578,30 @@
         }
     }
 
+    // Sync IDs from one tab to the other
+    function syncSamples(sourceType, targetType) {
+        const sourceRows = document.getElementById(`${sourceType}-body`).querySelectorAll('tr');
+        const targetBody = document.getElementById(`${targetType}-body`);
+        
+        if (sourceRows.length === 0) return;
+
+        targetBody.innerHTML = ''; // Clear target table
+
+        // Loop through source, extract exact ID, and build in target
+        sourceRows.forEach(row => {
+            const sampleId = row.querySelector(`.${sourceType}-id`).value;
+            addRow(targetType, sampleId);
+        });
+
+        // Sync the prefix and start numbers in the UI as well
+        document.getElementById(`${targetType}-batch-prefix`).value = document.getElementById(`${sourceType}-batch-prefix`).value;
+        document.getElementById(`${targetType}-batch-start`).value = document.getElementById(`${sourceType}-batch-start`).value;
+        nextNum[targetType] = nextNum[sourceType];
+
+        const targetName = targetType === 'opc' ? 'Organophosphates (OPC)' : 'Pyrethroids (PYR)';
+        alert(`Successfully copied ${sourceRows.length} sample IDs to the ${targetName} tab.`);
+    }
+
     // --- SET DATE UTILITY ---
     function updateDates() {
         const dStr = `<strong>Date Generated:</strong> ${new Date().toLocaleString()}`;
@@ -487,6 +614,9 @@
     document.getElementById('opcForm').addEventListener('submit', function(e) {
         e.preventDefault();
         updateDates();
+
+        const analystName = document.getElementById('opc-analyst').value || 'Not Specified';
+        document.getElementById('opc-repAnalyst').innerText = analystName;
 
         const b0 = parseFloat(document.getElementById('opc-b0').value);
         const neg = parseFloat(document.getElementById('opc-neg').value);
@@ -547,8 +677,10 @@
     });
 
 
-    // --- PYRETHROID LOGIC (Quantitative Logit-Log) ---
+    // --- PYRETHROID LOGIC (Quantitative Logit-Log & Charting) ---
     const STD_CONCS = [0.001, 0.0025, 0.0075, 0.02];
+    let elisaChart = null; 
+
     function getLogit(y) {
         if (y >= 1) y = 0.999;
         if (y <= 0) y = 0.001;
@@ -558,6 +690,9 @@
     document.getElementById('pyrForm').addEventListener('submit', function(e) {
         e.preventDefault();
         updateDates();
+
+        const analystName = document.getElementById('pyr-analyst').value || 'Not Specified';
+        document.getElementById('pyr-repAnalyst').innerText = analystName;
 
         const loq = parseFloat(document.getElementById('pyr-loq').value);
         const b0 = parseFloat(document.getElementById('pyr-std0').value);
@@ -569,13 +704,13 @@
         ];
 
         let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
-        let points = [];
+        let stdPoints = [];
 
         for (let i = 0; i < 4; i++) {
             let y = getLogit(stds[i] / b0);
             let x = Math.log(STD_CONCS[i]);
             sumX += x; sumY += y; sumXY += (x * y); sumX2 += (x * x);
-            points.push({x: x, y: y});
+            stdPoints.push({x: x, y: y});
         }
 
         const m = (4 * sumXY - sumX * sumY) / (4 * sumX2 - sumX * sumX);
@@ -583,7 +718,7 @@
 
         let ssTot = 0, ssRes = 0;
         const meanY = sumY / 4;
-        for (let p of points) {
+        for (let p of stdPoints) {
             ssTot += Math.pow(p.y - meanY, 2);
             ssRes += Math.pow(p.y - (m * p.x + c), 2);
         }
@@ -605,14 +740,19 @@
         document.getElementById('pyr-val-details').innerText = `R² = ${r2.toFixed(4)} | Slope = ${m.toFixed(3)}`;
 
         let total = 0;
+        let samplePoints = []; 
+
         document.getElementById('pyr-body').querySelectorAll('tr').forEach(row => {
             const odInput = row.querySelector('.pyr-od').value;
+            const sampleId = row.querySelector('.pyr-id').value;
             if (!odInput) return;
             total++;
 
             const od = parseFloat(odInput);
             const bind = od / b0;
-            const conc = Math.exp((getLogit(bind) - c) / m);
+            const logitY = getLogit(bind);
+            const lnConc = (logitY - c) / m;
+            const conc = Math.exp(lnConc);
 
             row.querySelector('.res-binding').innerText = (bind * 100).toFixed(1) + '%';
             
@@ -638,6 +778,7 @@
                     cCell.className = "cell-result res-conc status-high";
                     iCell.innerText = "Quantifiable"; iCell.className = "cell-result res-interp status-high";
                 }
+                samplePoints.push({ x: lnConc, y: logitY, label: sampleId });
             }
         });
 
@@ -648,8 +789,56 @@
         document.getElementById('pyr-repSlope').innerText = m.toFixed(4);
         
         document.getElementById('pyr-summary').style.display = 'block';
+        
+        document.getElementById('chartContainer').style.display = 'block';
+        drawChart(stdPoints, samplePoints, m, c);
+
         document.getElementById('pyr-export').style.display = 'block';
     });
+
+    function drawChart(stdPoints, samplePoints, m, c) {
+        const ctx = document.getElementById('logitChart').getContext('2d');
+        if (elisaChart) elisaChart.destroy();
+
+        const lineStart = Math.log(0.0005); 
+        const lineEnd = Math.log(0.03);     
+        
+        const lineData = [
+            { x: lineStart, y: m * lineStart + c },
+            { x: lineEnd, y: m * lineEnd + c }
+        ];
+
+        elisaChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    { label: 'Standard Curve (Logit-Log)', data: lineData, type: 'line', borderColor: '#0f172a', borderWidth: 2, pointRadius: 0, fill: false },
+                    { label: 'Standards', data: stdPoints, backgroundColor: '#059669', borderColor: '#064e3b', pointRadius: 6, pointHoverRadius: 8 },
+                    { label: 'Samples', data: samplePoints, backgroundColor: '#dc2626', borderColor: '#991b1b', pointRadius: 5, pointHoverRadius: 7 }
+                ]
+            },
+            options: {
+                devicePixelRatio: 4, 
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label === 'Samples') return context.raw.label + ': [ln(x): ' + context.parsed.x.toFixed(2) + ', logit: ' + context.parsed.y.toFixed(2) + ']';
+                                return label + ': [' + context.parsed.x.toFixed(2) + ', ' + context.parsed.y.toFixed(2) + ']';
+                            }
+                        }
+                    },
+                    legend: { position: 'top', labels: { font: { family: "'Segoe UI', sans-serif" } } }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'ln(Concentration)', font: { family: "'Segoe UI', sans-serif", weight: 'bold' } } },
+                    y: { title: { display: true, text: 'Logit (B/B₀)', font: { family: "'Segoe UI', sans-serif", weight: 'bold' } } }
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>
