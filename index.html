@@ -67,17 +67,9 @@
             font-size: 13px;
             font-weight: normal;
             margin-bottom: 6px;
-            cursor: default;
             user-select: none;
+            cursor: default;
         }
-        
-        .aero-controls { display: flex; gap: 4px; }
-        .aero-btn {
-            width: 26px; height: 18px; border: 1px solid rgba(255,255,255,0.5); border-radius: 3px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 49%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.2) 100%);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 1px 2px rgba(0,0,0,0.3);
-        }
-        .aero-btn.close { background: linear-gradient(to bottom, #e08b8b 0%, #c43e3e 49%, #9e1717 50%, #b82b2b 100%); border-color: #6a1a1a;}
 
         .aero-content {
             background-color: var(--win-bg);
@@ -325,19 +317,16 @@
 
 <div class="app-container">
     
+    <!-- Faux Aero Title Bar -->
     <div class="aero-titlebar no-print">
         <div style="display: flex; align-items: center; gap: 6px;">
             <span style="font-size: 14px;">🔬</span>
             Unified ELISA Analyzer
         </div>
-        <div class="aero-controls">
-            <div class="aero-btn"></div>
-            <div class="aero-btn"></div>
-            <div class="aero-btn close"></div>
-        </div>
     </div>
 
     <div class="aero-content">
+        <!-- Top Controls & Native Tabs -->
         <div class="header-controls no-print">
             <div class="tab-controls">
                 <button class="tab-btn active-tab" onclick="switchTab('opc')">Organophosphates / Carbamates</button>
@@ -346,6 +335,9 @@
             <button class="btn-reset" onclick="clearCacheAndReset()">Reset Application</button>
         </div>
 
+        <!-- ========================================== -->
+        <!-- TAB 1: ORGANOPHOSPHATES & CARBAMATES (OPC) -->
+        <!-- ========================================== -->
         <div id="opc-tab" class="tab-content active">
             <div class="tab-content-area">
                 <div class="header">
@@ -449,6 +441,9 @@
         </div>
 
 
+        <!-- ========================================== -->
+        <!-- TAB 2: SYNTHETIC PYRETHROIDS (PYR)         -->
+        <!-- ========================================== -->
         <div id="pyr-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -560,6 +555,7 @@
                     </div>
                 </div>
 
+                <!-- CHART CONTAINER -->
                 <div id="chartContainer" class="chart-wrapper">
                     <canvas id="logitChart"></canvas>
                 </div>
