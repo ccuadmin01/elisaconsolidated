@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mobile Laboratory Report</title>
+    <title>Mobile Lab Report Builder</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -27,7 +27,7 @@
 
         body {
             font-family: Tahoma, 'Segoe UI', sans-serif;
-            font-size: 12px; /* Standard Win7 system size (9pt) */
+            font-size: 12px; 
             background: var(--win-desktop);
             background-attachment: fixed;
             color: var(--win-text);
@@ -40,13 +40,11 @@
             box-sizing: border-box;
         }
 
-        /* --- WINDOWS 7 AERO WINDOW --- */
         .app-container {
             width: 100%;
-            max-width: 1150px;
+            max-width: 1200px;
             box-sizing: border-box;
             margin-bottom: 2rem;
-            /* Aero Glass Effect */
             background: var(--win-glass);
             border: 1px solid var(--win-glass-border);
             border-radius: 8px;
@@ -70,14 +68,6 @@
             cursor: default;
             user-select: none;
         }
-        
-        .aero-controls { display: flex; gap: 4px; }
-        .aero-btn {
-            width: 26px; height: 18px; border: 1px solid rgba(255,255,255,0.5); border-radius: 3px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 49%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.2) 100%);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 1px 2px rgba(0,0,0,0.3);
-        }
-        .aero-btn.close { background: linear-gradient(to bottom, #e08b8b 0%, #c43e3e 49%, #9e1717 50%, #b82b2b 100%); border-color: #6a1a1a;}
 
         .aero-content {
             background-color: var(--win-bg);
@@ -90,46 +80,30 @@
 
         /* --- TAB NAVIGATION --- */
         .header-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: -1px; /* Overlap border */
-            position: relative;
-            z-index: 2;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: -1px; position: relative; z-index: 2;
         }
         
-        .tab-controls { display: flex; gap: 2px; }
+        .tab-controls { display: flex; gap: 2px; flex-wrap: wrap; }
 
         .tab-btn {
-            padding: 5px 12px;
-            font-size: 12px;
-            border: 1px solid var(--win-border);
-            border-bottom: none;
-            border-radius: 3px 3px 0 0;
-            cursor: pointer;
+            padding: 6px 12px; font-size: 12px; border: 1px solid var(--win-border);
+            border-bottom: none; border-radius: 3px 3px 0 0; cursor: pointer;
             background: linear-gradient(to bottom, #f9f9f9 0%, #e3e3e3 100%);
-            color: var(--win-text);
-            font-family: Tahoma, 'Segoe UI', sans-serif;
-            margin: 0;
-            box-shadow: inset 0 1px 0 #fff;
+            color: var(--win-text); font-family: Tahoma, 'Segoe UI', sans-serif;
+            margin: 0; box-shadow: inset 0 1px 0 #fff;
         }
         .tab-btn:hover:not(.active-tab) { background: linear-gradient(to bottom, #ffffff 0%, #edf4fc 100%); }
-
         .tab-btn.active-tab { 
-            background: #ffffff; 
-            padding-top: 7px; /* Pops up slightly */
-            margin-top: -2px;
-            border-bottom: 1px solid #ffffff; /* Seamless integration with content */
-            font-weight: bold;
+            background: #ffffff; padding-top: 8px; margin-top: -3px;
+            border-bottom: 1px solid #ffffff; font-weight: bold;
         }
         
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
         .tab-content-area {
-            background: #ffffff;
-            border: 1px solid var(--win-border);
-            padding: 20px;
+            background: #ffffff; border: 1px solid var(--win-border); padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
@@ -148,9 +122,8 @@
         .save-indicator { position: absolute; right: 0; top: 0; color: var(--success); opacity: 0; transition: opacity 0.5s; font-weight: bold;}
 
         .section-title {
-            font-size: 13px; font-weight: bold; color: #003399;
-            border-bottom: 1px solid #a0a0a0; padding-bottom: 3px; margin: 20px 0 10px;
-            display: flex; justify-content: space-between; align-items: center;
+            font-size: 13px; font-weight: bold; color: #003399; border-bottom: 1px solid #a0a0a0;
+            padding-bottom: 3px; margin: 20px 0 10px; display: flex; justify-content: space-between; align-items: center;
         }
 
         /* --- FORMS & INPUTS --- */
@@ -163,12 +136,10 @@
         .input-group input, .input-group select, td input {
             width: 100%; padding: 4px 6px; border: 1px solid var(--win-input-border);
             border-radius: 2px; box-sizing: border-box; background-color: var(--win-input-bg);
-            font-family: inherit; font-size: 12px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-            transition: border-color 0.15s;
+            font-family: inherit; font-size: 12px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.15s;
         }
         .input-group input:focus, .input-group select:focus, td input:focus { 
-            outline: none; border-color: var(--win-input-focus); 
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05), 0 0 3px rgba(86,157,229,0.5); 
+            outline: none; border-color: var(--win-input-focus); box-shadow: inset 0 1px 2px rgba(0,0,0,0.05), 0 0 3px rgba(86,157,229,0.5); 
         }
         
         .highlight-input { background-color: #fcf4e3; padding: 10px; border: 1px solid #e5c365; border-radius: 3px; position: relative;}
@@ -178,7 +149,7 @@
         .batch-controls {
             display: flex; gap: 5px; margin-bottom: 10px; align-items: center;
             background: linear-gradient(to bottom, #f5f6f7 0%, #e4e5e7 100%);
-            padding: 6px; border: 1px solid var(--win-border); border-radius: 3px;
+            padding: 6px; border: 1px solid var(--win-border); border-radius: 3px; flex-wrap: wrap;
         }
         .batch-controls input { width: auto; }
         .batch-controls button { margin: 0; width: auto; padding: 3px 10px; }
@@ -199,10 +170,9 @@
         }
         tbody tr:hover { background-color: #e5f3fb; border: 1px solid #70c0e7; outline: 1px solid #70c0e7; outline-offset: -1px;}
 
-        /* EXCEL-LIKE DRAG CSS (TXRF) */
+        /* UNIVERSAL EXCEL-LIKE DRAG CSS */
         #fill-handle {
-            width: 7px; height: 7px; background-color: #003399; 
-            border: 1px solid #ffffff; position: fixed; 
+            width: 7px; height: 7px; background-color: #003399; border: 1px solid #ffffff; position: fixed; 
             cursor: crosshair; display: none; z-index: 1000; box-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
         .fill-highlight { background-color: #eaf6fd !important; outline: 2px solid #569de5 !important; outline-offset: -2px; }
@@ -215,10 +185,7 @@
         .status-neutral { color: var(--neutral); }
 
         /* --- CHART CONTAINER --- */
-        .chart-wrapper {
-            display: none; width: 100%; height: 400px; margin-top: 15px; padding: 10px;
-            background: #fff; border: 1px solid var(--win-border); box-sizing: border-box;
-        }
+        .chart-wrapper { display: none; width: 100%; height: 400px; margin-top: 15px; padding: 10px; background: #fff; border: 1px solid var(--win-border); box-sizing: border-box; }
 
         /* --- WIN7 BUTTONS --- */
         button {
@@ -242,81 +209,71 @@
         .banner-invalid { background-color: #ffffe1; color: #000; border-color: #e5c365; }
         
         .report-summary-box { 
-            display: none; padding: 20px; border-radius: 4px; margin-top: 25px; 
+            display: none; padding: 15px 20px; border-radius: 4px; margin-top: 20px; 
             background-color: #ffffff; border: 1px solid #a0a0a0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .report-summary-box h3 { margin-top: 0; font-size: 14px; border-bottom: 2px solid #003399; padding-bottom: 6px; color: #003399; text-transform: uppercase; letter-spacing: 1px;}
-        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; line-height: 1.6;}
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; line-height: 1.4;}
         .summary-grid div { padding: 4px; border-bottom: 1px dashed #e0e0e0; }
-        .sig-line { display: none; margin-top: 40px; padding-top: 10px; border-top: 1px solid #000; width: 250px; text-align: center; font-weight: bold; }
+        .full-width { grid-column: span 2; }
+        .sig-line { display: none; margin-top: 30px; padding-top: 5px; border-top: 1px solid #000; width: 250px; text-align: center; font-weight: bold; font-size: 11px;}
         .report-header { display: none; }
+        .print-footer { display: none; }
 
         /* --- MODAL (Periodic Table) --- */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background: var(--win-bg); padding: 20px; border-radius: 5px; 
-            border: 1px solid var(--win-border); box-shadow: 0 0 15px rgba(0,0,0,0.5); 
-            max-width: 800px; width: 95%;
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+        .modal-content { background: var(--win-bg); padding: 20px; border-radius: 5px; border: 1px solid var(--win-border); box-shadow: 0 0 15px rgba(0,0,0,0.5); max-width: 800px; width: 95%; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px;}
         .modal-header h3 { margin: 0; color: #003399; font-size: 14px;}
         .ptable-grid { display: grid; grid-template-columns: repeat(18, 1fr); gap: 3px; }
         .pt-btn { padding: 8px 0; text-align: center; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 2px; font-weight: bold; font-family: Tahoma;}
-        .pt-btn:hover { background: #eaf6fd; border-color: #3c7fb1; }
+        .pt-btn:hover:not(.pt-disabled) { background: #eaf6fd; border-color: #3c7fb1; }
         .pt-btn.active { background: #569de5; color: white; border-color: #004073; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);}
         .pt-empty { visibility: hidden; }
+        .pt-disabled { background: #e0e0e0; color: #a0a0a0; border-color: #d0d0d0; cursor: not-allowed; }
 
-        /* --- MOBILE MEDIA QUERIES --- */
-        @media screen and (max-width: 768px) {
-            .app-container { padding: 2px; }
-            .header-controls { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 10px;}
-            .btn-reset { margin-left: 0; }
-            .tab-btn { border-radius: 3px; border-bottom: 1px solid var(--win-border);}
-            .tab-btn.active-tab { margin-top: 0; padding-top: 5px; }
-            .grid-inputs-3, .grid-settings { grid-template-columns: 1fr; gap: 10px; }
-            .grid-inputs-5 { grid-template-columns: repeat(2, 1fr); }
-            .grid-inputs-5 .input-group:last-child { grid-column: span 2; } 
-            .batch-controls { flex-wrap: wrap; }
-            .batch-controls input, .batch-controls button { width: 100% !important; margin-bottom: 4px; }
-            .chart-wrapper { height: 300px; padding: 5px;}
-        }
-
-        /* --- CONDENSED PRINT SETTINGS (Professional Document) --- */
+        /* --- CONDENSED PRINT SETTINGS (Professional Document - Segoe UI 9pt) --- */
         @media print {
             @page { margin: 10mm; size: auto; }
-            body { background: white; padding: 0; color: black; font-size: 10pt; font-family: Tahoma, 'Segoe UI', sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
-            .app-container { max-width: 100%; margin: 0; border: none; box-shadow: none; background: white;}
+            body { background: white; padding: 0; color: black; font-size: 9pt !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
+            .app-container { max-width: 100%; margin: 0; border: none; box-shadow: none; background: white; padding: 0;}
             .aero-titlebar, .no-print, button, .header-controls, .header, .validation-banner, .batch-controls, .tab-content:not(.active), #fill-handle { display: none !important; }
             
             .aero-content, .tab-content-area { border: none; padding: 0; background: white; box-shadow: none;}
             
-            .report-header { display: block; text-align: center; margin-bottom: 2rem; padding-bottom: 0.5rem; border-bottom: 2px solid #000; }
-            .report-header h2 { margin: 0 0 0.25rem 0; font-size: 16pt; color: black; font-weight: bold; text-transform: uppercase;}
-            .report-header p { margin: 2px 0; color: #000; font-size: 10pt; }
+            .report-header { display: block; text-align: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #000; }
+            .report-header h2 { margin: 0 0 5px 0; font-size: 12pt; color: black; font-weight: bold; text-transform: uppercase;}
+            .report-header p { margin: 2px 0; color: #000; font-size: 9pt; }
             
-            .input-group label { color: black; font-size: 9pt; }
-            td input, .input-group input, .input-group select { 
-                border: none !important; background: transparent !important; padding: 0 !important; 
-                font-family: inherit; font-size: 10pt; color: black; box-shadow: none; outline: none !important; font-weight: inherit !important;
+            .section-title { font-size: 10pt !important; margin: 10px 0 5px !important; padding-bottom: 2px !important; border-bottom: 1px solid #000 !important; }
+            
+            .input-group label { color: black; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important;}
+            td input, .input-group input, .input-group select, .input-group textarea { 
+                border: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important;
+                font-family: inherit !important; font-size: 9pt !important; color: black; box-shadow: none; outline: none !important; font-weight: inherit !important;
+                height: auto !important;
             }
             
-            .table-responsive { border: none; overflow: visible; margin-bottom: 1rem; box-shadow: none;}
-            table { border: 1px solid #000; min-width: 100%; font-size: 9pt; }
-            th, td { padding: 4px 6px; border-bottom: 1px solid #000; border-right: 1px solid #000;}
+            .table-responsive { border: none; overflow: visible; margin-bottom: 10px; box-shadow: none;}
+            table { border: 1px solid #000; min-width: 100%; font-size: 8pt !important; }
+            th, td { padding: 2px 4px !important; border-bottom: 1px solid #000; border-right: 1px solid #000; height: auto !important;}
             th { border-bottom: 2px solid #000; background: #e0e0e0 !important; color: black; font-weight: bold; box-shadow: none;}
             
             .status-high { color: #000 !important; font-weight: bold !important; }
             .status-low { color: #000 !important; }
             
-            .report-summary-box { display: block; margin-top: 2rem; padding: 15px; border: 2px solid #000; background-color: #fff !important; page-break-inside: avoid; border-radius: 0;}
-            .report-summary-box h3 { border-bottom: 2px solid #000; color: #000;}
-            .summary-grid { gap: 4px; font-size: 10pt; }
-            .summary-grid div { border-bottom: none; }
-            .sig-line { display: block; }
-            .chart-wrapper { border: 1px solid #000; height: 350px; page-break-inside: avoid; padding: 0; box-shadow: none;}
+            .report-summary-box { display: block; margin-top: 10px; padding: 6px 8px !important; border: 1px solid #000 !important; background-color: #fff !important; page-break-inside: avoid; border-radius: 0;}
+            .report-summary-box h3 { margin-bottom: 4px !important; border-bottom: 1px solid #000 !important; color: #000 !important; font-size: 10pt !important; padding-bottom: 2px !important;}
+            
+            /* Compressed Grid for Print */
+            .summary-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 4px !important; font-size: 8pt !important; }
+            .summary-grid div { border-bottom: none !important; padding: 1px !important;}
+            .full-width { grid-column: span 3 !important; }
+            
+            .sig-line { display: block; margin-top: 20px !important; padding-top: 3px !important; border-top: 1px solid #000; width: 200px; text-align: center; font-weight: bold; font-size: 9pt !important;}
+            .chart-wrapper { border: 1px solid #000; height: 250px !important; page-break-inside: avoid; padding: 0; box-shadow: none; margin-top: 10px !important;}
+
+            .print-footer { display: block !important; position: fixed; bottom: 5mm; right: 5mm; font-size: 8pt; font-weight: normal; }
         }
     </style>
 </head>
@@ -331,49 +288,49 @@
 
 <div class="app-container">
     
-    <div class="aero-titlebar no-print">
-        <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="font-size: 14px;">🔬</span>
-            Mobile Laboratory Report 
-        </div>
-        <div class="aero-controls">
-            <div class="aero-btn"></div>
-            <div class="aero-btn"></div>
-            <div class="aero-btn close"></div>
-        </div>
-    </div>
-
     <div class="aero-content">
         <div class="header-controls no-print">
             <div class="tab-controls">
                 <button class="tab-btn active-tab" onclick="switchTab('opc')" id="btn-tab-opc">Organophosphates / Carbamates</button>
-                <button class="tab-btn" onclick="switchTab('pyr')" id="btn-tab-pyr">Synthetic Pyrethroids</button>
+                <button class="tab-btn" onclick="switchTab('pyr')" id="btn-tab-pyr">Pyrethroids</button>
                 <button class="tab-btn" onclick="switchTab('txrf')" id="btn-tab-txrf">TXRF Heavy Metals</button>
+                <button class="tab-btn" onclick="switchTab('micro')" id="btn-tab-micro">Micro Ridacycler</button>
             </div>
-            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Application</button>
+            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Entire Suite</button>
         </div>
 
         <div id="opc-tab" class="tab-content active">
             <div class="tab-content-area">
                 <div class="header">
-                    <h1>Organophosphate & Carbamate</h1>
+                    <h1>Mobile Lab Report Builder: Organophosphate & Carbamate</h1>
                     <p>Qualitative ELISA (Inhibition > 20% Threshold)</p>
                     <div id="opc-save-msg" class="save-indicator">✓ Saved</div>
                 </div>
 
                 <div class="report-header">
                     <h2>Analytical Laboratory Report</h2>
-                    <p><strong>Section:</strong> Chemical Contaminants Section</p>
-                    <p><strong>Assay:</strong> Organophosphates & Carbamates (Competitive ELISA)</p>
-                    <p class="reportDateStr"></p>
+                    <p>Mobile Laboratory</p>
+                    <p>Organophosphates & Carbamates (Competitive ELISA)</p>
                 </div>
 
                 <form id="opcForm">
-                    <div class="section-title">Run Information</div>
+                    <div class="section-title">Report Details</div>
                     <div class="grid-settings">
                         <div class="input-group">
                             <label>Analyst Name</label>
-                            <input type="text" id="opc-analyst" placeholder="Enter analyst name" required>
+                            <input type="text" id="opc-analyst" value="Lab Technician 1" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Equipment Used</label>
+                            <input type="text" id="opc-equip" value="Microplate Reader">
+                        </div>
+                        <div class="input-group">
+                            <label>Method Used</label>
+                            <input type="text" id="opc-method" value="Competitive ELISA">
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Notes / Remarks</label>
+                            <input type="text" id="opc-remarks" value="Routine Analysis">
                         </div>
                     </div>
 
@@ -381,15 +338,15 @@
                     <div class="grid-inputs-3">
                         <div class="input-group">
                             <label>Zero Standard (B₀) OD₄₅₀</label>
-                            <input type="number" id="opc-b0" step="any" placeholder="1.850" required>
+                            <input type="number" id="opc-b0" step="any" value="1.850" required>
                         </div>
                         <div class="input-group">
                             <label>Negative Control OD</label>
-                            <input type="number" id="opc-neg" step="any" placeholder="1.790" required>
+                            <input type="number" id="opc-neg" step="any" value="1.790" required>
                         </div>
                         <div class="input-group">
                             <label>Positive Control OD</label>
-                            <input type="number" id="opc-pos" step="any" placeholder="0.850" required>
+                            <input type="number" id="opc-pos" step="any" value="0.850" required>
                         </div>
                     </div>
 
@@ -401,17 +358,19 @@
                     <div class="section-title">Sample Analysis Batch</div>
                     
                     <div class="batch-controls no-print">
-                        <input type="text" id="opc-batch-prefix" placeholder="Prefix" value="OPC-" style="width: 80px;">
-                        <input type="number" id="opc-batch-start" placeholder="Start" value="1" style="width: 60px;">
-                        <input type="number" id="opc-batch-count" placeholder="Count" min="1" style="width: 60px;">
+                        <input type="text" id="opc-batch-prefix" value="ML-OPC-" style="width: 80px;">
+                        <input type="number" id="opc-batch-start" value="1" style="width: 60px;">
+                        <input type="number" id="opc-batch-count" value="10" min="1" style="width: 60px;">
                         <button type="button" onclick="generateBatch('opc')">Generate</button>
                         <button type="button" onclick="triggerUndo('opc')">Undo</button>
                         <span style="flex-grow: 1;"></span>
-                        <button type="button" onclick="syncSamples('opc', 'pyr')">Copy to PYR ➔</button>
-                        <button type="button" onclick="syncSamples('opc', 'txrf')">Copy to TXRF ➔</button>
+                        <span style="font-size:11px; margin-right:5px;">Copy IDs to:</span>
+                        <button type="button" onclick="syncSamples('opc', 'pyr')">PYR</button>
+                        <button type="button" onclick="syncSamples('opc', 'txrf')">TXRF</button>
+                        <button type="button" onclick="syncSamples('opc', 'micro')">Micro</button>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive table-scroll-container">
                         <table id="opc-table">
                             <thead>
                                 <tr>
@@ -437,44 +396,55 @@
                     <div class="summary-grid">
                         <div><strong>Analyst:</strong> <span id="opc-repAnalyst">-</span></div>
                         <div><strong>Total Samples:</strong> <span id="opc-repTotal">-</span></div>
-                        <div><strong>Assay Principle:</strong> Qualitative Inhibition (20%)</div>
-                        <div><strong>QC Status:</strong> <span id="opc-repStatus">-</span></div>
-                        <div><strong class="status-high">Positive Results:</strong> <span id="opc-repPos">-</span></div>
-                        <div><strong class="status-low">Negative Results:</strong> <span id="opc-repNeg">-</span></div>
+                        <div><strong>Equipment:</strong> <span id="opc-repEquip">-</span></div>
+                        <div><strong>Method:</strong> <span id="opc-repMethod">-</span></div>
+                        <div class="full-width"><strong>Remarks:</strong> <span id="opc-repRemarks">-</span></div>
+                        <div><strong class="status-high">DETECTED Samples:</strong> <span id="opc-repPos">-</span></div>
+                        <div><strong class="status-low">NOT DETECTED:</strong> <span id="opc-repNeg">-</span></div>
                     </div>
                     <div class="sig-line">Reviewed & Verified By</div>
                 </div>
 
-                <button type="button" id="opc-export" class="btn-export no-print" onclick="window.print()">Print Report</button>
+                <button type="button" id="opc-export" class="btn-export no-print" onclick="exportToPDF('OPC')">Export to PDF</button>
             </div>
         </div>
-
 
         <div id="pyr-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
-                    <h1>Synthetic Pyrethroids</h1>
+                    <h1>Mobile Lab Report Builder: Pyrethroids</h1>
                     <p>Quantitative Logit-Log & LOQ</p>
                     <div id="pyr-save-msg" class="save-indicator">✓ Saved</div>
                 </div>
 
                 <div class="report-header">
                     <h2>Analytical Laboratory Report</h2>
-                    <p><strong>Section:</strong> Chemical Contaminants Section</p>
-                    <p><strong>Assay:</strong> Synthetic Pyrethroids (Quantitative Logit-Log ELISA)</p>
-                    <p class="reportDateStr"></p>
+                    <p>Mobile Laboratory</p>
+                    <p>Pyrethroids (Quantitative Logit-Log ELISA)</p>
                 </div>
 
                 <form id="pyrForm">
-                    <div class="section-title">Run Information & Parameters</div>
+                    <div class="section-title">Report Details</div>
                     <div class="grid-settings">
+                        <div class="input-group">
+                            <label>Analyst Name</label>
+                            <input type="text" id="pyr-analyst" value="Lab Technician 1" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Equipment Used</label>
+                            <input type="text" id="pyr-equip" value="Microplate Reader">
+                        </div>
+                        <div class="input-group">
+                            <label>Method Used</label>
+                            <input type="text" id="pyr-method" value="Quantitative Logit-Log ELISA">
+                        </div>
                         <div class="input-group highlight-input">
                             <label>Limit of Quant. (LOQ) ppm</label>
                             <input type="number" id="pyr-loq" step="any" value="0.005" required>
                         </div>
-                        <div class="input-group">
-                            <label>Analyst Name</label>
-                            <input type="text" id="pyr-analyst" placeholder="Enter analyst name" required>
+                        <div class="input-group full-width">
+                            <label>Notes / Remarks</label>
+                            <input type="text" id="pyr-remarks" value="Routine Analysis">
                         </div>
                     </div>
 
@@ -482,23 +452,23 @@
                     <div class="grid-inputs-5">
                         <div class="input-group">
                             <label>Zero (0 ppm)</label>
-                            <input type="number" id="pyr-std0" step="any" placeholder="1.850" required>
+                            <input type="number" id="pyr-std0" step="any" value="1.850" required>
                         </div>
                         <div class="input-group">
                             <label>Std 1 (0.001)</label>
-                            <input type="number" id="pyr-std1" step="any" placeholder="1.550" required>
+                            <input type="number" id="pyr-std1" step="any" value="1.550" required>
                         </div>
                         <div class="input-group">
                             <label>Std 2 (0.0025)</label>
-                            <input type="number" id="pyr-std2" step="any" placeholder="1.200" required>
+                            <input type="number" id="pyr-std2" step="any" value="1.200" required>
                         </div>
                         <div class="input-group">
                             <label>Std 3 (0.0075)</label>
-                            <input type="number" id="pyr-std3" step="any" placeholder="0.700" required>
+                            <input type="number" id="pyr-std3" step="any" value="0.700" required>
                         </div>
                         <div class="input-group">
                             <label>Std 4 (0.02)</label>
-                            <input type="number" id="pyr-std4" step="any" placeholder="0.350" required>
+                            <input type="number" id="pyr-std4" step="any" value="0.350" required>
                         </div>
                     </div>
 
@@ -510,17 +480,19 @@
                     <div class="section-title">Sample Analysis Batch</div>
                     
                     <div class="batch-controls no-print">
-                        <input type="text" id="pyr-batch-prefix" placeholder="Prefix" value="PYR-" style="width: 80px;">
-                        <input type="number" id="pyr-batch-start" placeholder="Start" value="1" style="width: 60px;">
-                        <input type="number" id="pyr-batch-count" placeholder="Count" min="1" style="width: 60px;">
+                        <input type="text" id="pyr-batch-prefix" value="ML-PYR-" style="width: 80px;">
+                        <input type="number" id="pyr-batch-start" value="1" style="width: 60px;">
+                        <input type="number" id="pyr-batch-count" value="10" min="1" style="width: 60px;">
                         <button type="button" onclick="generateBatch('pyr')">Generate</button>
                         <button type="button" onclick="triggerUndo('pyr')">Undo</button>
                         <span style="flex-grow: 1;"></span>
-                        <button type="button" onclick="syncSamples('pyr', 'opc')">Copy to OPC ➔</button>
-                        <button type="button" onclick="syncSamples('pyr', 'txrf')">Copy to TXRF ➔</button>
+                        <span style="font-size:11px; margin-right:5px;">Copy IDs to:</span>
+                        <button type="button" onclick="syncSamples('pyr', 'opc')">OPC</button>
+                        <button type="button" onclick="syncSamples('pyr', 'txrf')">TXRF</button>
+                        <button type="button" onclick="syncSamples('pyr', 'micro')">Micro</button>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive table-scroll-container">
                         <table id="pyr-table">
                             <thead>
                                 <tr>
@@ -545,12 +517,14 @@
                     <h3>Calibration & Run Summary</h3>
                     <div class="summary-grid">
                         <div><strong>Analyst:</strong> <span id="pyr-repAnalyst">-</span></div>
-                        <div><strong>Limit of Quantification (LOQ):</strong> <span id="pyr-repLOQ">-</span> ppm</div>
+                        <div><strong>LOQ:</strong> <span id="pyr-repLOQ">-</span> ppm</div>
                         <div><strong>Total Samples:</strong> <span id="pyr-repTotal">-</span></div>
-                        <div><strong>Regression Model:</strong> Logit-Log</div>
+                        <div><strong>Equipment:</strong> <span id="pyr-repEquip">-</span></div>
+                        <div><strong>Method:</strong> <span id="pyr-repMethod">-</span></div>
                         <div><strong>Run Status:</strong> <span id="pyr-repStatus">-</span></div>
                         <div><strong>Curve Linearity (R²):</strong> <span id="pyr-repR2">-</span></div>
                         <div><strong>Curve Slope (m):</strong> <span id="pyr-repSlope">-</span></div>
+                        <div class="full-width"><strong>Remarks:</strong> <span id="pyr-repRemarks">-</span></div>
                     </div>
                     <div class="sig-line">Reviewed & Verified By</div>
                 </div>
@@ -559,36 +533,46 @@
                     <canvas id="logitChart"></canvas>
                 </div>
 
-                <button type="button" id="pyr-export" class="btn-export no-print" onclick="window.print()">Print Report</button>
+                <button type="button" id="pyr-export" class="btn-export no-print" onclick="exportToPDF('PYR')">Export to PDF</button>
             </div>
         </div>
-
 
         <div id="txrf-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
-                    <h1>TXRF Heavy Metals Profiling</h1>
+                    <h1>Mobile Lab Report Builder: TXRF Heavy Metals</h1>
                     <p>Total Reflection X-Ray Fluorescence Analysis & Regulatory Compliance</p>
                     <div id="txrf-save-msg" class="save-indicator">✓ Saved</div>
                 </div>
 
                 <div class="report-header">
                     <h2>Analytical Laboratory Report</h2>
-                    <p><strong>Section:</strong> Chemical Contaminants Section</p>
-                    <p><strong>Methodology:</strong> Total Reflection X-Ray Fluorescence (TXRF)</p>
-                    <p class="reportDateStr"></p>
+                    <p>Mobile Laboratory</p>
+                    <p>Total Reflection X-Ray Fluorescence (TXRF)</p>
                 </div>
 
                 <form id="txrfForm">
-                    <div class="section-title">Run Information</div>
+                    <div class="section-title">Report Details</div>
                     <div class="grid-settings">
                         <div class="input-group">
                             <label>Analyst Name</label>
-                            <input type="text" id="txrf-analyst" placeholder="Enter analyst name" required>
+                            <input type="text" id="txrf-analyst" value="Lab Technician 1" required>
                         </div>
                         <div class="input-group">
                             <label>Internal Standard (IS)</label>
-                            <input type="text" id="txrf-is" placeholder="e.g., Gallium (Ga) 10 mg/L">
+                            <input type="text" id="txrf-is" value="Gallium (Ga) 10 mg/L">
+                        </div>
+                        <div class="input-group">
+                            <label>Equipment Used</label>
+                            <input type="text" id="txrf-equip" value="S2 PICOFOX">
+                        </div>
+                        <div class="input-group">
+                            <label>Method Used</label>
+                            <input type="text" id="txrf-method" value="TXRF Element Profiling">
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Notes / Remarks</label>
+                            <input type="text" id="txrf-remarks" value="Routine Analysis">
                         </div>
                     </div>
 
@@ -603,17 +587,19 @@
                     <div class="section-title" style="margin-top:20px;">Sample Analysis Batch</div>
                     
                     <div class="batch-controls no-print">
-                        <input type="text" id="txrf-batch-prefix" placeholder="Prefix" value="TXRF-" style="width: 80px;">
-                        <input type="number" id="txrf-batch-start" placeholder="Start" value="1" style="width: 60px;">
-                        <input type="number" id="txrf-batch-count" placeholder="Count" min="1" style="width: 60px;">
+                        <input type="text" id="txrf-batch-prefix" value="ML-TXRF-" style="width: 80px;">
+                        <input type="number" id="txrf-batch-start" value="1" style="width: 60px;">
+                        <input type="number" id="txrf-batch-count" value="10" min="1" style="width: 60px;">
                         <button type="button" onclick="generateBatch('txrf')">Generate</button>
                         <button type="button" onclick="triggerUndo('txrf')">Undo</button>
                         <span style="flex-grow: 1;"></span>
-                        <button type="button" onclick="syncSamples('txrf', 'opc')">Copy to OPC ➔</button>
-                        <button type="button" onclick="syncSamples('txrf', 'pyr')">Copy to PYR ➔</button>
+                        <span style="font-size:11px; margin-right:5px;">Copy IDs to:</span>
+                        <button type="button" onclick="syncSamples('txrf', 'opc')">OPC</button>
+                        <button type="button" onclick="syncSamples('txrf', 'pyr')">PYR</button>
+                        <button type="button" onclick="syncSamples('txrf', 'micro')">Micro</button>
                     </div>
 
-                    <div class="table-responsive" id="table-scroll-container">
+                    <div class="table-responsive table-scroll-container">
                         <table id="txrf-table">
                             <thead id="txrf-thead"></thead>
                             <tbody id="txrf-body">
@@ -629,20 +615,118 @@
                     <h3>Batch Compliance Summary</h3>
                     <div class="summary-grid">
                         <div><strong>Analyst:</strong> <span id="txrf-rep-analyst">-</span></div>
+                        <div><strong>Total Samples:</strong> <span id="txrf-rep-total">-</span></div>
+                        <div><strong>Equipment:</strong> <span id="txrf-repEquip">-</span></div>
+                        <div><strong>Method:</strong> <span id="txrf-repMethod">-</span></div>
                         <div><strong>Internal Standard:</strong> <span id="txrf-rep-is">-</span></div>
                         <div><strong>Matrices Analyzed:</strong> <span id="txrf-rep-matrix">-</span></div>
-                        <div><strong>Total Samples Processed:</strong> <span id="txrf-rep-total">-</span></div>
-                        <div><strong class="status-low">NOT DETECTED (Compliant):</strong> <span id="txrf-rep-nd">-</span></div>
-                        <div><strong class="status-high">DETECTED (Non-Compliant):</strong> <span id="txrf-rep-d">-</span></div>
+                        <div class="full-width"><strong>Remarks:</strong> <span id="txrf-repRemarks">-</span></div>
+                        <div><strong class="status-low">NOT DETECTED Samples:</strong> <span id="txrf-rep-nd">-</span></div>
+                        <div><strong class="status-high">DETECTED Samples:</strong> <span id="txrf-rep-d">-</span></div>
                     </div>
                     <div class="sig-line">Reviewed & Verified By</div>
                 </div>
 
-                <button type="button" id="txrf-export" class="btn-export no-print" onclick="window.print()">Print Official Report</button>
+                <button type="button" id="txrf-export" class="btn-export no-print" onclick="exportToPDF('TXRF')">Export to PDF</button>
+            </div>
+        </div>
+
+        <div id="micro-tab" class="tab-content">
+            <div class="tab-content-area">
+                <div class="header">
+                    <h1>Mobile Lab Report Builder: Micro Ridacycler</h1>
+                    <p>qPCR Qualitative Pathogen Detection</p>
+                    <div id="micro-save-msg" class="save-indicator">✓ Saved</div>
+                </div>
+
+                <div class="report-header">
+                    <h2>Analytical Laboratory Report</h2>
+                    <p>Mobile Laboratory</p>
+                    <p>qPCR Pathogen Detection (Micro Ridacycler)</p>
+                </div>
+
+                <form id="microForm">
+                    <div class="section-title">Report Details</div>
+                    <div class="grid-settings">
+                        <div class="input-group">
+                            <label>Analyst Name</label>
+                            <input type="text" id="micro-analyst" value="Lab Technician 1" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Equipment Used</label>
+                            <input type="text" id="micro-equip" value="RIDA®CYCLER">
+                        </div>
+                        <div class="input-group">
+                            <label>Method Used</label>
+                            <input type="text" id="micro-method" value="Real-Time PCR (qPCR)">
+                        </div>
+                        <div class="input-group highlight-input">
+                            <label>Target CT Cutoff (Threshold)</label>
+                            <input type="number" id="micro-cutoff" step="any" value="35.0" required>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Notes / Remarks</label>
+                            <input type="text" id="micro-remarks" value="Routine Analysis">
+                        </div>
+                    </div>
+
+                    <div class="section-title">Sample Analysis Batch</div>
+                    
+                    <div class="batch-controls no-print">
+                        <input type="text" id="micro-batch-prefix" value="ML-MIC-" style="width: 80px;">
+                        <input type="number" id="micro-batch-start" value="1" style="width: 60px;">
+                        <input type="number" id="micro-batch-count" value="10" min="1" style="width: 60px;">
+                        <button type="button" onclick="generateBatch('micro')">Generate</button>
+                        <button type="button" onclick="triggerUndo('micro')">Undo</button>
+                        <span style="flex-grow: 1;"></span>
+                        <span style="font-size:11px; margin-right:5px;">Copy IDs to:</span>
+                        <button type="button" onclick="syncSamples('micro', 'opc')">OPC</button>
+                        <button type="button" onclick="syncSamples('micro', 'pyr')">PYR</button>
+                        <button type="button" onclick="syncSamples('micro', 'txrf')">TXRF</button>
+                    </div>
+
+                    <div class="table-responsive table-scroll-container">
+                        <table id="micro-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Sample ID</th>
+                                    <th style="width: 20%;">Target CT Value</th>
+                                    <th style="width: 20%;">Internal Control (IC) CT</th>
+                                    <th style="width: 30%;">Assessment</th>
+                                    <th style="width: 5%;" class="no-print"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="micro-body">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <button type="button" class="btn-add no-print" onclick="addRow('micro')">+ Add Row</button>
+                    <button type="submit" class="btn-run no-print">Run Micro Analysis</button>
+                </form>
+
+                <div id="micro-summary" class="report-summary-box">
+                    <h3>Batch Summary</h3>
+                    <div class="summary-grid">
+                        <div><strong>Analyst:</strong> <span id="micro-repAnalyst">-</span></div>
+                        <div><strong>Total Samples:</strong> <span id="micro-repTotal">-</span></div>
+                        <div><strong>Equipment:</strong> <span id="micro-repEquip">-</span></div>
+                        <div><strong>Method:</strong> <span id="micro-repMethod">-</span></div>
+                        <div><strong>CT Cutoff Parameter:</strong> <span id="micro-repCutoff">-</span></div>
+                        <div class="full-width"><strong>Remarks:</strong> <span id="micro-repRemarks">-</span></div>
+                        <div><strong class="status-high">DETECTED Samples:</strong> <span id="micro-repPos">-</span></div>
+                        <div><strong class="status-low">NOT DETECTED:</strong> <span id="micro-repNeg">-</span></div>
+                    </div>
+                    <div class="sig-line">Reviewed & Verified By</div>
+                </div>
+
+                <button type="button" id="micro-export" class="btn-export no-print" onclick="exportToPDF('MICRO')">Export to PDF</button>
             </div>
         </div>
 
     </div>
+    
+    <div class="print-footer reportDateStr"></div>
 </div>
 
 <div id="ptable-modal" class="modal-overlay">
@@ -651,7 +735,7 @@
             <h3>Select TXRF Elements</h3>
             <button type="button" class="btn-remove" onclick="closeModal()">✕</button>
         </div>
-        <p style="margin-top: 0; margin-bottom: 10px; color: #666;">Click to toggle elements for analysis. Columns will update automatically.</p>
+        <p style="margin-top: 0; margin-bottom: 10px; color: #666;">Elements typically unsupported by standard TXRF (Z &lt; 13 or Noble Gases) are disabled.</p>
         <div id="ptable-grid" class="ptable-grid"></div>
         <div style="text-align: right; margin-top: 15px;">
             <button type="button" style="font-weight: bold;" onclick="closeModal()">Apply & Close</button>
@@ -665,19 +749,23 @@
     // ==========================================
     // GLOBALS & CACHE STATE
     // ==========================================
-    const CACHE_KEY = "UnifiedLabSuite_Backup";
+    const CACHE_KEY = "MobileLabBuilder_V7";
     let activeTab = 'opc';
     let saveTimeout = null;
     let elisaChart = null; 
 
-    // Undo & Row Trackers for 3 Tabs
-    let undoHistory = { opc: [], pyr: [], txrf: [] };
-    let nextNum = { opc: 1, pyr: 1, txrf: 1 }; 
+    // Undo & Row Trackers for 4 Tabs
+    let undoHistory = { opc: [], pyr: [], txrf: [], micro: [] };
+    let nextNum = { opc: 1, pyr: 1, txrf: 1, micro: 1 }; 
 
     // TXRF Specific State
     let activeElements = ['As', 'Cd', 'Pb'];
     let mrlValues = { 'As': 0.2, 'Cd': 0.4, 'Pb': 0.2 };
     const defaultMRLs = { 'As': 0.2, 'Cd': 0.4, 'Pb': 0.2, 'Hg': 0.01, 'Cr': 1.0, 'Ni': 1.5, 'Cu': 5.0, 'Zn': 50.0, 'Fe': 50.0, 'Mn': 2.0 };
+    
+    // TXRF Standard Exclusions
+    const unsupportedElements = ['H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Ar','Kr','Xe','Rn','Tc','Po','At','Pm'];
+
     const ptableLayout = [
         ['H','','','','','','','','','','','','','','','','','He'],
         ['Li','Be','','','','','','','','','','','B','C','N','O','F','Ne'],
@@ -705,12 +793,27 @@
     }
 
     // ==========================================
+    // PDF EXPORT UTILITY
+    // ==========================================
+    function exportToPDF(assayName) {
+        updateDates();
+        const currentDate = new Date().toISOString().slice(0, 10);
+        const originalTitle = document.title;
+        document.title = `Mobile_Lab_Report_${assayName}_${currentDate}`;
+        window.print();
+        document.title = originalTitle;
+    }
+
+    // ==========================================
     // CACHE LOGIC (UNIVERSAL)
     // ==========================================
     function saveStateToCache() {
         const state = {
             opc: {
                 analyst: document.getElementById('opc-analyst').value,
+                equip: document.getElementById('opc-equip').value,
+                method: document.getElementById('opc-method').value,
+                remarks: document.getElementById('opc-remarks').value,
                 b0: document.getElementById('opc-b0').value,
                 neg: document.getElementById('opc-neg').value,
                 pos: document.getElementById('opc-pos').value,
@@ -719,8 +822,11 @@
                 rows: getTableData('opc')
             },
             pyr: {
-                loq: document.getElementById('pyr-loq').value,
                 analyst: document.getElementById('pyr-analyst').value,
+                equip: document.getElementById('pyr-equip').value,
+                method: document.getElementById('pyr-method').value,
+                remarks: document.getElementById('pyr-remarks').value,
+                loq: document.getElementById('pyr-loq').value,
                 std0: document.getElementById('pyr-std0').value,
                 std1: document.getElementById('pyr-std1').value,
                 std2: document.getElementById('pyr-std2').value,
@@ -732,12 +838,25 @@
             },
             txrf: {
                 analyst: document.getElementById('txrf-analyst').value,
+                equip: document.getElementById('txrf-equip').value,
+                method: document.getElementById('txrf-method').value,
+                remarks: document.getElementById('txrf-remarks').value,
                 istd: document.getElementById('txrf-is').value,
                 prefix: document.getElementById('txrf-batch-prefix').value,
                 startNum: document.getElementById('txrf-batch-start').value,
                 activeElements: activeElements,
                 mrlValues: mrlValues,
                 rows: getTableData('txrf')
+            },
+            micro: {
+                analyst: document.getElementById('micro-analyst').value,
+                equip: document.getElementById('micro-equip').value,
+                method: document.getElementById('micro-method').value,
+                remarks: document.getElementById('micro-remarks').value,
+                cutoff: document.getElementById('micro-cutoff').value,
+                prefix: document.getElementById('micro-batch-prefix').value,
+                startNum: document.getElementById('micro-batch-start').value,
+                rows: getTableData('micro')
             }
         };
         localStorage.setItem(CACHE_KEY, JSON.stringify(state));
@@ -747,8 +866,7 @@
     function loadStateFromCache() {
         const saved = localStorage.getItem(CACHE_KEY);
         if(!saved) { 
-            // Initialize fresh layout
-            rebuildDynamicUI(); addRow('opc'); addRow('pyr'); addRow('txrf');
+            rebuildDynamicUI(); addRow('opc'); addRow('pyr'); addRow('txrf'); addRow('micro');
             return; 
         }
         
@@ -756,32 +874,41 @@
             const state = JSON.parse(saved);
             
             // Restore OPC
-            document.getElementById('opc-analyst').value = state.opc.analyst || '';
-            document.getElementById('opc-b0').value = state.opc.b0 || '';
-            document.getElementById('opc-neg').value = state.opc.neg || '';
-            document.getElementById('opc-pos').value = state.opc.pos || '';
-            document.getElementById('opc-batch-prefix').value = state.opc.prefix || 'OPC-';
+            document.getElementById('opc-analyst').value = state.opc.analyst || 'Lab Technician 1';
+            document.getElementById('opc-equip').value = state.opc.equip || 'Microplate Reader';
+            document.getElementById('opc-method').value = state.opc.method || 'Competitive ELISA';
+            document.getElementById('opc-remarks').value = state.opc.remarks || 'Routine Analysis';
+            document.getElementById('opc-b0').value = state.opc.b0 || '1.850';
+            document.getElementById('opc-neg').value = state.opc.neg || '1.790';
+            document.getElementById('opc-pos').value = state.opc.pos || '0.850';
+            document.getElementById('opc-batch-prefix').value = state.opc.prefix || 'ML-OPC-';
             document.getElementById('opc-batch-start').value = state.opc.startNum || '1';
             rebuildTable('opc', state.opc.rows);
             nextNum['opc'] = parseInt(state.opc.startNum) || 1;
 
             // Restore PYR
+            document.getElementById('pyr-analyst').value = state.pyr.analyst || 'Lab Technician 1';
+            document.getElementById('pyr-equip').value = state.pyr.equip || 'Microplate Reader';
+            document.getElementById('pyr-method').value = state.pyr.method || 'Quantitative Logit-Log ELISA';
+            document.getElementById('pyr-remarks').value = state.pyr.remarks || 'Routine Analysis';
             document.getElementById('pyr-loq').value = state.pyr.loq || '0.005';
-            document.getElementById('pyr-analyst').value = state.pyr.analyst || '';
-            document.getElementById('pyr-std0').value = state.pyr.std0 || '';
-            document.getElementById('pyr-std1').value = state.pyr.std1 || '';
-            document.getElementById('pyr-std2').value = state.pyr.std2 || '';
-            document.getElementById('pyr-std3').value = state.pyr.std3 || '';
-            document.getElementById('pyr-std4').value = state.pyr.std4 || '';
-            document.getElementById('pyr-batch-prefix').value = state.pyr.prefix || 'PYR-';
+            document.getElementById('pyr-std0').value = state.pyr.std0 || '1.850';
+            document.getElementById('pyr-std1').value = state.pyr.std1 || '1.550';
+            document.getElementById('pyr-std2').value = state.pyr.std2 || '1.200';
+            document.getElementById('pyr-std3').value = state.pyr.std3 || '0.700';
+            document.getElementById('pyr-std4').value = state.pyr.std4 || '0.350';
+            document.getElementById('pyr-batch-prefix').value = state.pyr.prefix || 'ML-PYR-';
             document.getElementById('pyr-batch-start').value = state.pyr.startNum || '1';
             rebuildTable('pyr', state.pyr.rows);
             nextNum['pyr'] = parseInt(state.pyr.startNum) || 1;
 
             // Restore TXRF
-            document.getElementById('txrf-analyst').value = state.txrf.analyst || '';
-            document.getElementById('txrf-is').value = state.txrf.istd || '';
-            document.getElementById('txrf-batch-prefix').value = state.txrf.prefix || 'TXRF-';
+            document.getElementById('txrf-analyst').value = state.txrf.analyst || 'Lab Technician 1';
+            document.getElementById('txrf-equip').value = state.txrf.equip || 'S2 PICOFOX';
+            document.getElementById('txrf-method').value = state.txrf.method || 'TXRF Element Profiling';
+            document.getElementById('txrf-remarks').value = state.txrf.remarks || 'Routine Analysis';
+            document.getElementById('txrf-is').value = state.txrf.istd || 'Gallium (Ga) 10 mg/L';
+            document.getElementById('txrf-batch-prefix').value = state.txrf.prefix || 'ML-TXRF-';
             document.getElementById('txrf-batch-start').value = state.txrf.startNum || '1';
             if (state.txrf.activeElements && state.txrf.activeElements.length > 0) {
                 activeElements = state.txrf.activeElements;
@@ -791,14 +918,27 @@
             rebuildTable('txrf', state.txrf.rows);
             nextNum['txrf'] = parseInt(state.txrf.startNum) || 1;
 
+            // Restore Micro
+            if (state.micro) {
+                document.getElementById('micro-analyst').value = state.micro.analyst || 'Lab Technician 1';
+                document.getElementById('micro-equip').value = state.micro.equip || 'RIDA®CYCLER';
+                document.getElementById('micro-method').value = state.micro.method || 'Real-Time PCR (qPCR)';
+                document.getElementById('micro-remarks').value = state.micro.remarks || 'Routine Analysis';
+                document.getElementById('micro-cutoff').value = state.micro.cutoff || '35.0';
+                document.getElementById('micro-batch-prefix').value = state.micro.prefix || 'ML-MIC-';
+                document.getElementById('micro-batch-start').value = state.micro.startNum || '1';
+                rebuildTable('micro', state.micro.rows);
+                nextNum['micro'] = parseInt(state.micro.startNum) || 1;
+            } else { addRow('micro'); }
+
         } catch(e) { 
             console.error("Cache corrupted, starting fresh."); 
-            rebuildDynamicUI(); addRow('opc'); addRow('pyr'); addRow('txrf');
+            rebuildDynamicUI(); addRow('opc'); addRow('pyr'); addRow('txrf'); addRow('micro');
         }
     }
 
     function clearCacheAndReset() {
-        if(confirm("Are you sure you want to completely wipe ALL data across all 3 tabs and start fresh?")) {
+        if(confirm("Are you sure you want to completely wipe ALL data across all tabs and start fresh?")) {
             localStorage.removeItem(CACHE_KEY);
             location.reload();
         }
@@ -828,9 +968,13 @@
                 let vals = {};
                 activeElements.forEach(el => {
                     let input = tr.querySelector(`.txrf-val-${el}`);
-                    if (input) vals[el] = input.value; // Store as string to preserve blanks
+                    if (input) vals[el] = input.value; 
                 });
                 rows.push({id, matrix, vals});
+            } else if (type === 'micro') {
+                let ct = tr.querySelector('.micro-ct').value;
+                let ic = tr.querySelector('.micro-ic').value;
+                rows.push({id, ct, ic});
             } else {
                 let od = tr.querySelector(`.${type}-od`).value;
                 rows.push({id, od});
@@ -864,16 +1008,24 @@
                 if(type === 'opc') {
                     tr.innerHTML = `
                         <td><input type="text" class="opc-id" value="${escapeHTML(data.id)}" required></td>
-                        <td><input type="number" step="any" class="opc-od" value="${escapeHTML(data.od)}" required></td>
+                        <td><input type="number" step="any" class="opc-od" value="${escapeHTML(data.od)}"></td>
                         <td class="num-col res-binding">-</td><td class="num-col res-inhibition">-</td><td class="res-status">-</td>
-                        <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'opc')">✕</button></td>
+                        <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'opc')">✕</button></td>
                     `;
                 } else if (type === 'pyr') {
                     tr.innerHTML = `
                         <td><input type="text" class="pyr-id" value="${escapeHTML(data.id)}" required></td>
-                        <td><input type="number" step="any" class="pyr-od" value="${escapeHTML(data.od)}" required></td>
+                        <td><input type="number" step="any" class="pyr-od" value="${escapeHTML(data.od)}"></td>
                         <td class="num-col res-binding">-</td><td class="num-col res-conc">-</td><td class="res-interp">-</td>
-                        <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'pyr')">✕</button></td>
+                        <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'pyr')">✕</button></td>
+                    `;
+                } else if (type === 'micro') {
+                    tr.innerHTML = `
+                        <td><input type="text" class="micro-id" value="${escapeHTML(data.id)}" required></td>
+                        <td><input type="number" step="any" class="micro-ct" value="${escapeHTML(data.ct)}"></td>
+                        <td><input type="number" step="any" class="micro-ic" value="${escapeHTML(data.ic)}"></td>
+                        <td class="res-status">-</td>
+                        <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'micro')">✕</button></td>
                     `;
                 }
                 tbody.appendChild(tr);
@@ -898,7 +1050,7 @@
         for (let i = 0; i < count; i++) {
             const newId = `${prefix}${nextNum[type].toString().padStart(3, '0')}`;
             if (type === 'txrf') { insertTxrfRowHTML(newId); }
-            else { addRow(type, newId, true); } // true prevents re-incrementing nextNum
+            else { addRow(type, newId, true); } 
             nextNum[type]++;
         }
         document.getElementById(`${type}-batch-start`).value = nextNum[type];
@@ -927,16 +1079,24 @@
             if (type === 'opc') {
                 tr.innerHTML = `
                     <td><input type="text" class="opc-id" value="${idToUse}" required></td>
-                    <td><input type="number" step="any" class="opc-od" placeholder="0.000" required></td>
+                    <td><input type="number" step="any" class="opc-od" value="0.000"></td>
                     <td class="num-col res-binding">-</td><td class="num-col res-inhibition">-</td><td class="res-status">-</td>
-                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'opc')">✕</button></td>
+                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'opc')">✕</button></td>
                 `;
             } else if (type === 'pyr') {
                 tr.innerHTML = `
                     <td><input type="text" class="pyr-id" value="${idToUse}" required></td>
-                    <td><input type="number" step="any" class="pyr-od" placeholder="0.000" required></td>
+                    <td><input type="number" step="any" class="pyr-od" value="0.000"></td>
                     <td class="num-col res-binding">-</td><td class="num-col res-conc">-</td><td class="res-interp">-</td>
-                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'pyr')">✕</button></td>
+                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'pyr')">✕</button></td>
+                `;
+            } else if (type === 'micro') {
+                tr.innerHTML = `
+                    <td><input type="text" class="micro-id" value="${idToUse}" required></td>
+                    <td><input type="number" step="any" class="micro-ct" value="0.0"></td>
+                    <td><input type="number" step="any" class="micro-ic" value="0.0"></td>
+                    <td class="res-status">-</td>
+                    <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'micro')">✕</button></td>
                 `;
             }
             tbody.appendChild(tr);
@@ -963,11 +1123,8 @@
         
         sourceRows.forEach(row => { 
             let id = row.querySelector(`.${sourceType}-id`).value;
-            if (targetType === 'txrf') {
-                insertTxrfRowHTML(id);
-            } else {
-                addRow(targetType, id, true); 
-            }
+            if (targetType === 'txrf') { insertTxrfRowHTML(id); } 
+            else { addRow(targetType, id, true); }
         });
 
         document.getElementById(`${targetType}-batch-prefix`).value = document.getElementById(`${sourceType}-batch-prefix`).value;
@@ -975,7 +1132,7 @@
         nextNum[targetType] = nextNum[sourceType];
 
         saveStateToCache();
-        alert(`Copied ${sourceRows.length} sample IDs successfully.`);
+        alert(`Copied ${sourceRows.length} sample IDs to the ${targetType.toUpperCase()} tab.`);
     }
 
     function escapeHTML(str) { 
@@ -984,7 +1141,7 @@
     }
 
     function updateDates() {
-        const dStr = `<strong>Date Generated:</strong> ${new Date().toLocaleString()}`;
+        const dStr = `Date Generated: ${new Date().toLocaleString()}`;
         document.querySelectorAll('.reportDateStr').forEach(el => el.innerHTML = dStr);
     }
 
@@ -1010,6 +1167,9 @@
                 const div = document.createElement('div');
                 if (sym === '') {
                     div.className = 'pt-empty';
+                } else if (unsupportedElements.includes(sym)) {
+                    div.className = 'pt-btn pt-disabled';
+                    div.innerText = sym;
                 } else {
                     div.className = `pt-btn ${activeElements.includes(sym) ? 'active' : ''}`;
                     div.innerText = sym;
@@ -1069,22 +1229,22 @@
             <td><input type="text" class="txrf-matrix-row" list="matrix-options" placeholder="Select or type..." value="${escapeHTML(matrix)}"></td>
         `;
         activeElements.forEach(el => {
-            let v = valsObj[el] !== undefined ? escapeHTML(valsObj[el]) : '';
+            let v = valsObj[el] !== undefined ? escapeHTML(valsObj[el]) : '0.00';
             html += `<td><input type="number" step="any" class="txrf-val-${el} num-col" value="${v}"></td>`;
         });
-        html += `<td class="res-status">-</td><td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" onclick="removeRow(this, 'txrf')">✕</button></td>`;
+        html += `<td class="res-status">-</td><td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'txrf')">✕</button></td>`;
         tr.innerHTML = html;
         tbody.appendChild(tr);
     }
 
     // ==========================================
-    // EXCEL-LIKE DRAG TO FILL LOGIC (TXRF)
+    // UNIVERSAL EXCEL-LIKE DRAG TO FILL LOGIC
     // ==========================================
     const fillHandle = document.getElementById('fill-handle');
     let activeInput = null; let isFilling = false; let fillValue = ''; let fillColIndex = -1; let highlightedInputs = [];
 
     document.addEventListener('focusin', (e) => {
-        if (e.target.tagName === 'INPUT' && e.target.closest('#txrf-body')) {
+        if (e.target.tagName === 'INPUT' && e.target.closest('tbody')) {
             if (activeInput) activeInput.classList.remove('active-excel-cell');
             activeInput = e.target;
             activeInput.classList.add('active-excel-cell');
@@ -1094,14 +1254,16 @@
 
     document.addEventListener('mousedown', (e) => {
         if (e.target === fillHandle) return; 
-        if (e.target.tagName !== 'INPUT' || !e.target.closest('#txrf-body')) {
+        if (e.target.tagName !== 'INPUT' || !e.target.closest('tbody')) {
             fillHandle.style.display = 'none';
             if (activeInput) { activeInput.classList.remove('active-excel-cell'); activeInput = null; }
         }
     });
 
-    document.getElementById('table-scroll-container').addEventListener('scroll', () => {
-        if (activeInput && fillHandle.style.display === 'block') positionHandle(activeInput);
+    document.querySelectorAll('.table-scroll-container').forEach(el => {
+        el.addEventListener('scroll', () => {
+            if (activeInput && fillHandle.style.display === 'block') positionHandle(activeInput);
+        });
     });
     window.addEventListener('resize', () => fillHandle.style.display = 'none');
 
@@ -1120,7 +1282,7 @@
 
     document.addEventListener('mousemove', (e) => {
         if (!isFilling) return;
-        if (e.target.tagName === 'INPUT' && e.target.closest('#txrf-body')) {
+        if (e.target.tagName === 'INPUT' && e.target.closest('tbody')) {
             let tr = e.target.closest('tr'); let td = e.target.closest('td');
             let colIdx = Array.from(tr.children).indexOf(td);
             if (colIdx === fillColIndex) {
@@ -1128,7 +1290,7 @@
                 highlightedInputs = [];
                 let startRow = activeInput.closest('tr').rowIndex; let currentRow = tr.rowIndex;
                 let minRow = Math.min(startRow, currentRow); let maxRow = Math.max(startRow, currentRow);
-                let table = document.getElementById('txrf-table');
+                let table = activeInput.closest('table');
                 for (let i = minRow; i <= maxRow; i++) {
                     let targetTd = table.rows[i].cells[colIdx];
                     if(targetTd) {
@@ -1146,22 +1308,24 @@
     document.addEventListener('mouseup', () => {
         if (isFilling) {
             isFilling = false;
-            if (highlightedInputs.length > 0) saveForUndo('txrf');
+            if (highlightedInputs.length > 0) saveForUndo(activeTab);
             highlightedInputs.forEach(input => { input.value = fillValue; input.classList.remove('fill-highlight'); });
             highlightedInputs = []; scheduleSave();
             if (activeInput) { activeInput.focus(); positionHandle(activeInput); }
         }
     });
 
-
     // ==========================================
-    // ANALYSIS EXECUTIONS (OPC, PYR, TXRF)
+    // ANALYSIS EXECUTIONS (OPC, PYR, TXRF, MICRO)
     // ==========================================
 
     // --- OPC LOGIC ---
     document.getElementById('opcForm').addEventListener('submit', function(e) {
         e.preventDefault(); updateDates();
         document.getElementById('opc-repAnalyst').innerText = document.getElementById('opc-analyst').value || 'Not Specified';
+        document.getElementById('opc-repEquip').innerText = document.getElementById('opc-equip').value || 'Not Specified';
+        document.getElementById('opc-repMethod').innerText = document.getElementById('opc-method').value || 'Competitive ELISA';
+        document.getElementById('opc-repRemarks').innerText = document.getElementById('opc-remarks').value || 'None';
 
         const b0 = parseFloat(document.getElementById('opc-b0').value);
         const neg = parseFloat(document.getElementById('opc-neg').value);
@@ -1180,18 +1344,16 @@
             banner.className = "validation-banner banner-valid";
             document.getElementById('opc-val-status').innerText = "Assay Valid";
             document.getElementById('opc-val-details').innerText = `Pos Inh: ${posInh.toFixed(1)}% | Neg Inh: ${negInh.toFixed(1)}%`;
-            document.getElementById('opc-repStatus').innerText = "VALID";
         } else {
             banner.className = "validation-banner banner-invalid";
             document.getElementById('opc-val-status').innerText = "Assay Invalid";
             document.getElementById('opc-val-details').innerText = errs.join(" | ");
-            document.getElementById('opc-repStatus').innerText = "INVALID QC";
         }
 
         let total = 0, posCount = 0, negCount = 0;
         document.getElementById('opc-body').querySelectorAll('tr').forEach(row => {
             const odInput = row.querySelector('.opc-od').value;
-            if(!odInput) return;
+            if(odInput === "") return; 
             total++;
 
             const od = parseFloat(odInput);
@@ -1202,8 +1364,8 @@
             row.querySelector('.res-inhibition').innerText = inh.toFixed(1) + '%';
 
             const statCell = row.querySelector('.res-status');
-            if (inh > 20) { statCell.innerHTML = '<span class="status-high">POSITIVE</span>'; posCount++; } 
-            else { statCell.innerHTML = '<span class="status-low">NEGATIVE</span>'; negCount++; }
+            if (inh > 20) { statCell.innerHTML = '<span class="status-high">DETECTED</span>'; posCount++; } 
+            else { statCell.innerHTML = '<span class="status-low">NOT DETECTED</span>'; negCount++; }
         });
 
         document.getElementById('opc-repTotal').innerText = total;
@@ -1220,6 +1382,9 @@
     document.getElementById('pyrForm').addEventListener('submit', function(e) {
         e.preventDefault(); updateDates();
         document.getElementById('pyr-repAnalyst').innerText = document.getElementById('pyr-analyst').value || 'Not Specified';
+        document.getElementById('pyr-repEquip').innerText = document.getElementById('pyr-equip').value || 'Not Specified';
+        document.getElementById('pyr-repMethod').innerText = document.getElementById('pyr-method').value || 'Quantitative Logit-Log ELISA';
+        document.getElementById('pyr-repRemarks').innerText = document.getElementById('pyr-remarks').value || 'None';
         
         const loq = parseFloat(document.getElementById('pyr-loq').value);
         const b0 = parseFloat(document.getElementById('pyr-std0').value);
@@ -1231,7 +1396,7 @@
         let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0; let stdPoints = [];
         for (let i = 0; i < 4; i++) {
             let y = getLogit(stds[i] / b0);
-            let x = Math.log(STD_CONCS[i]);
+            let x = Math.log([0.001, 0.0025, 0.0075, 0.02][i]);
             sumX += x; sumY += y; sumXY += (x * y); sumX2 += (x * x);
             stdPoints.push({x: x, y: y});
         }
@@ -1258,7 +1423,7 @@
         document.getElementById('pyr-body').querySelectorAll('tr').forEach(row => {
             const odInput = row.querySelector('.pyr-od').value;
             const sampleId = row.querySelector('.pyr-id').value;
-            if (!odInput) return;
+            if (odInput === "") return; 
             total++;
 
             const od = parseFloat(odInput);
@@ -1271,15 +1436,15 @@
             let cCell = row.querySelector('.res-conc'); let iCell = row.querySelector('.res-interp');
             
             if (od > b0 * 0.99) {
-                cCell.innerText = "< 0.001"; iCell.innerHTML = '<span class="status-low">&lt; LOQ</span>';
+                cCell.innerText = "< 0.001"; iCell.innerHTML = '<span class="status-low">NOT DETECTED</span>';
             } else if (od < stds[3] * 0.9) {
                 cCell.innerText = "> 0.02";
-                if (loq < 0.02) { iCell.innerHTML = '<span class="status-high">Quantifiable</span>'; } 
+                if (loq < 0.02) { iCell.innerHTML = '<span class="status-high">DETECTED</span>'; } 
                 else { iCell.innerHTML = '<span class="status-neutral">RETEST</span>'; }
             } else {
                 cCell.innerText = conc.toFixed(4);
-                if (conc < loq) { iCell.innerHTML = '<span class="status-low">&lt; LOQ</span>'; } 
-                else { iCell.innerHTML = '<span class="status-high">Quantifiable</span>'; }
+                if (conc < loq) { iCell.innerHTML = '<span class="status-low">NOT DETECTED</span>'; } 
+                else { iCell.innerHTML = '<span class="status-high">DETECTED</span>'; }
                 samplePoints.push({ x: lnConc, y: logitY, label: sampleId });
             }
         });
@@ -1333,6 +1498,9 @@
         e.preventDefault(); updateDates();
         
         document.getElementById('txrf-rep-analyst').innerText = document.getElementById('txrf-analyst').value || 'Not Specified';
+        document.getElementById('txrf-repEquip').innerText = document.getElementById('txrf-equip').value || 'Not Specified';
+        document.getElementById('txrf-repMethod').innerText = document.getElementById('txrf-method').value || 'TXRF Element Profiling';
+        document.getElementById('txrf-repRemarks').innerText = document.getElementById('txrf-remarks').value || 'None';
         document.getElementById('txrf-rep-is').innerText = document.getElementById('txrf-is').value || 'Not Specified';
 
         let total = 0, notDetectedCount = 0, detectedCount = 0;
@@ -1389,6 +1557,49 @@
         
         document.getElementById('txrf-summary').style.display = 'block';
         document.getElementById('txrf-export').style.display = 'block';
+        saveStateToCache(); 
+    });
+
+    // --- MICRO RIDACYCLER LOGIC ---
+    document.getElementById('microForm').addEventListener('submit', function(e) {
+        e.preventDefault(); updateDates();
+        
+        document.getElementById('micro-repAnalyst').innerText = document.getElementById('micro-analyst').value || 'Not Specified';
+        document.getElementById('micro-repEquip').innerText = document.getElementById('micro-equip').value || 'Not Specified';
+        document.getElementById('micro-repMethod').innerText = document.getElementById('micro-method').value || 'Real-Time PCR (qPCR)';
+        document.getElementById('micro-repRemarks').innerText = document.getElementById('micro-remarks').value || 'None';
+        
+        const cutoff = parseFloat(document.getElementById('micro-cutoff').value);
+        document.getElementById('micro-repCutoff').innerText = cutoff + " CT";
+
+        let total = 0, posCount = 0, negCount = 0;
+
+        document.getElementById('micro-body').querySelectorAll('tr').forEach(row => {
+            const ctInput = row.querySelector('.micro-ct').value.trim();
+            const statCell = row.querySelector('.res-status');
+            
+            if (ctInput === "") {
+                statCell.innerHTML = '<span style="color:#999">-</span>';
+                return; 
+            }
+            total++;
+
+            const ct = parseFloat(ctInput);
+            if (ct > 0 && ct <= cutoff) {
+                statCell.innerHTML = '<span class="status-high">DETECTED</span>';
+                posCount++;
+            } else {
+                statCell.innerHTML = '<span class="status-low">NOT DETECTED</span>';
+                negCount++;
+            }
+        });
+
+        document.getElementById('micro-repTotal').innerText = total;
+        document.getElementById('micro-repPos').innerText = posCount;
+        document.getElementById('micro-repNeg').innerText = negCount;
+        
+        document.getElementById('micro-summary').style.display = 'block';
+        document.getElementById('micro-export').style.display = 'block';
         saveStateToCache(); 
     });
 
