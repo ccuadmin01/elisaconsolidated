@@ -63,7 +63,7 @@
             color: white;
             text-shadow: 0 0 3px #000, 0 0 5px #000, 0 0 8px #000;
             font-size: 13px;
-            font-weight: normal;
+            font-weight: bold;
             margin-bottom: 6px;
             cursor: default;
             user-select: none;
@@ -161,11 +161,10 @@
         }
 
         table { width: 100%; border-collapse: collapse; min-width: 750px; }
-        /* Add explicit full borders to table cells to complete the box grid */
-        th, td { padding: 4px 6px; text-align: left; border: 1px solid #d5d5d5; vertical-align: middle;}
+        th, td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #ededed; border-right: 1px solid #ededed; vertical-align: middle;}
         td.num-col, .input-group input[type="number"] { font-variant-numeric: tabular-nums; }
         th { 
-            font-weight: bold; color: #000; border: 1px solid #a0a0a0;
+            font-weight: bold; color: #000; border-right: 1px solid #d5d5d5; border-bottom: 1px solid #d5d5d5;
             background: linear-gradient(to bottom, #ffffff 0%, #f1f2f4 49%, #e2e4e7 50%, #d0d3d9 100%);
             box-shadow: inset 0 1px 0 #fff; cursor: default; white-space: nowrap;
         }
@@ -201,7 +200,7 @@
         .btn-add { background: transparent; border: 1px dashed #abadb3; box-shadow: none; width: 100%; margin-bottom: 15px; color: #003399;}
         .btn-add:hover { background: #e5f3fb; border-color: #70c0e7; }
         .btn-remove { background: transparent; border: none; box-shadow: none; color: #cc0000; padding: 0; font-size: 14px; font-weight: bold;}
-        .btn-export { display: none; width: 100%; margin-top: 15px;}
+        .btn-export { display: none; width: 100%; margin-top: 15px; padding: 10px; font-weight: bold;}
         .btn-small { padding: 3px 8px; font-size: 11px; }
 
         /* --- VALIDATION & SUMMARY --- */
@@ -211,17 +210,16 @@
         
         /* Formatted the summary box to strictly wrap its grid */
         .report-summary-box { 
-            padding: 15px 20px; border-radius: 4px; 
-            background-color: #ffffff; border: 1px solid #a0a0a0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: none; padding: 12px 15px; border-radius: 4px; margin-top: 20px; 
+            background-color: #fcfcfc; border: 1px solid #a0a0a0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        .report-summary-box h3 { margin-top: 0; font-size: 14px; border-bottom: 2px solid #003399; padding-bottom: 6px; color: #003399; text-transform: uppercase; letter-spacing: 1px;}
-        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; line-height: 1.4;}
-        .summary-grid div { padding: 4px; border-bottom: 1px dashed #e0e0e0; }
+        .report-summary-box h3 { margin-top: 0; font-size: 13px; border-bottom: 2px solid #003399; padding-bottom: 4px; color: #003399; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;}
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 12px; line-height: 1.3;}
+        .summary-grid div { padding: 3px; }
         .full-width { grid-column: span 2; }
         
         .sig-line { display: none; margin-top: 30px; margin-left: auto; margin-right: 0; padding-top: 5px; border-top: 1px solid #000; width: 250px; text-align: center; font-weight: bold; font-size: 11px;}
         .report-header { display: none; }
-        .print-footer { display: none; }
 
         /* --- MODAL (Periodic Table) --- */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
@@ -235,54 +233,56 @@
         .pt-empty { visibility: hidden; }
         .pt-disabled { background: #e0e0e0; color: #a0a0a0; border-color: #d0d0d0; cursor: not-allowed; }
 
-        /* --- CONDENSED PRINT SETTINGS (Professional Document - Segoe UI 9pt) --- */
+        /* --- CONDENSED AESTHETIC PRINT SETTINGS (Segoe UI 9pt) --- */
         @media print {
-            @page { margin: 10mm; size: auto; }
-            body { background: white; padding: 0; color: black; font-size: 9pt !important; font-family: Tahoma, sans-serif !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
+            @page { margin: 12mm; size: A4 portrait; }
+            body { background: white; padding: 0; color: black; font-size: 9pt !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
             .app-container { max-width: 100%; margin: 0; border: none; box-shadow: none; background: white; padding: 0;}
             .aero-titlebar, .no-print, button, .header-controls, .header, .validation-banner, .batch-controls, .tab-content:not(.active), #fill-handle { display: none !important; }
             
             .aero-content, .tab-content-area { border: none; padding: 0; background: white; box-shadow: none;}
             
-            .report-header { display: block; text-align: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #000; }
-            .report-header h2 { margin: 0 0 5px 0; font-size: 12pt; color: black; font-weight: bold; text-transform: uppercase;}
-            .report-header p { margin: 2px 0; color: #000; font-size: 9pt; }
+            /* Professional Header Layout */
+            .report-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #003399; }
+            .report-header-left h2 { margin: 0 0 4px 0; font-size: 16pt; color: #003399; font-weight: bold; text-transform: uppercase;}
+            .report-header-left p { margin: 1px 0; color: #000; font-size: 9pt; }
+            .report-header-right { text-align: right; font-size: 9pt; color: #444; }
+            .report-header-right p { margin: 1px 0; }
             
-            .section-title { font-size: 10pt !important; margin: 10px 0 5px !important; padding-bottom: 2px !important; border-bottom: 1px solid #000 !important; }
+            .section-title { font-size: 10pt !important; margin: 10px 0 5px !important; padding: 2px 5px !important; background-color: #f0f0f0; border-left: 3px solid #003399; border-bottom: none !important; color: #003399;}
             
-            /* Apply underlines to inputs to make them look like complete form boxes in print */
-            .input-group label { color: black; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important;}
-            .input-group input, .input-group select {
-                border: none !important; border-bottom: 1px solid #000 !important; border-radius: 0 !important;
-                background: transparent !important; padding: 2px 0 !important; margin: 0 !important;
+            /* Inputs -> Formatted Text visually */
+            .grid-settings { margin-bottom: 10px !important; gap: 8px !important;}
+            .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; text-transform: uppercase;}
+            .input-group input, .input-group select, .input-group textarea {
+                border: none !important; border-bottom: 1px dashed #aaa !important; border-radius: 0 !important;
+                background: transparent !important; padding: 1px 0 !important; margin: 0 !important;
                 font-family: inherit !important; font-size: 9pt !important; color: black; box-shadow: none; outline: none !important; font-weight: inherit !important;
             }
 
-            .highlight-input { border: 1px solid #000 !important; background: transparent !important; padding: 5px !important; }
+            .highlight-input { border: 1px solid #ccc !important; background: #fdfdfd !important; padding: 6px !important; margin-bottom: 5px !important;}
             
-            /* Tables must be perfectly boxed */
+            /* High Density Tables */
             .table-responsive { border: none; overflow: visible; margin-bottom: 10px; box-shadow: none;}
-            table { border: 1px solid #000 !important; min-width: 100%; font-size: 8pt !important; border-collapse: collapse !important; }
-            th, td { padding: 2px 4px !important; border: 1px solid #000 !important; height: auto !important;}
-            th { border-bottom: 2px solid #000 !important; background: #e0e0e0 !important; color: black; font-weight: bold; box-shadow: none;}
-            td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; }
+            table { border: 1px solid #000 !important; min-width: 100%; font-size: 9pt !important; border-collapse: collapse !important; }
+            th, td { padding: 3px 5px !important; border: 1px solid #999 !important; height: auto !important;}
+            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; text-transform: uppercase; font-size: 8pt;}
+            td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; text-align: inherit;}
             
-            .status-high { color: #000 !important; font-weight: bold !important; }
-            .status-low { color: #000 !important; }
+            .status-high { color: #cc0000 !important; font-weight: bold !important; }
+            .status-low { color: #000 !important; font-weight: bold !important;}
             
             /* Compact Summary Box */
-            .report-summary-box { display: block; margin-top: 10px; padding: 6px 8px !important; border: 1px solid #000 !important; background-color: #fff !important; page-break-inside: avoid; border-radius: 0;}
-            .report-summary-box h3 { margin-bottom: 4px !important; border-bottom: 1px solid #000 !important; color: #000 !important; font-size: 10pt !important; padding-bottom: 2px !important;}
+            .report-summary-box { display: block; margin-top: 15px; padding: 10px 15px !important; border: 2px solid #003399 !important; background-color: #fff !important; page-break-inside: avoid; border-radius: 4px;}
+            .report-summary-box h3 { margin-bottom: 6px !important; border-bottom: 1px solid #003399 !important; color: #003399 !important; font-size: 11pt !important; padding-bottom: 2px !important;}
             
             /* Compressed Grid for Print */
-            .summary-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 4px !important; font-size: 8pt !important; }
+            .summary-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 4px !important; font-size: 9pt !important; }
             .summary-grid div { border-bottom: none !important; padding: 1px !important;}
             .full-width { grid-column: span 3 !important; }
             
-            .sig-line { display: block; margin-top: 20px !important; padding-top: 3px !important; border-top: 1px solid #000; width: 200px; text-align: center; font-weight: bold; font-size: 9pt !important; page-break-inside: avoid;}
-            .chart-wrapper { border: 1px solid #000; height: 250px !important; page-break-inside: avoid; padding: 0; box-shadow: none; margin-top: 10px !important;}
-
-            .print-footer { display: block !important; position: fixed; bottom: 5mm; right: 5mm; font-size: 8pt; font-weight: normal; }
+            .sig-line { display: block; margin-top: 25px !important; padding-top: 3px !important; border-top: 1px solid #000; width: 220px; text-align: center; font-weight: bold; font-size: 9pt !important; page-break-inside: avoid;}
+            .chart-wrapper { border: 1px solid #ccc; height: 220px !important; page-break-inside: avoid; padding: 5px; box-shadow: none; margin-top: 10px !important;}
         }
     </style>
 </head>
@@ -297,6 +297,13 @@
 
 <div class="app-container">
     
+    <div class="aero-titlebar no-print">
+        <div style="display: flex; align-items: center; gap: 6px;" id="aero-title-text">
+            <span style="font-size: 14px;">🔬</span>
+            Mobile Lab Report Builder: Organophosphates / Carbamates
+        </div>
+    </div>
+
     <div class="aero-content">
         <div class="header-controls no-print">
             <div class="tab-controls">
@@ -308,9 +315,6 @@
             <button class="btn-reset" onclick="clearCacheAndReset()">Reset Entire Suite</button>
         </div>
 
-        <!-- ============================== -->
-        <!-- OPC TAB -->
-        <!-- ============================== -->
         <div id="opc-tab" class="tab-content active">
             <div class="tab-content-area">
                 <div class="header">
@@ -320,9 +324,15 @@
                 </div>
 
                 <div class="report-header">
-                    <h2>Analytical Laboratory Report</h2>
-                    <p>Mobile Laboratory</p>
-                    <p>Organophosphates & Carbamates (Competitive ELISA)</p>
+                    <div class="report-header-left">
+                        <h2>Analytical Laboratory Report</h2>
+                        <p><strong>Section:</strong> Mobile Laboratory</p>
+                        <p><strong>Assay:</strong> Organophosphates & Carbamates (Competitive ELISA)</p>
+                    </div>
+                    <div class="report-header-right">
+                        <p class="reportDateStr"></p>
+                        <p class="reportIdStr"></p>
+                    </div>
                 </div>
 
                 <form id="opcForm">
@@ -403,8 +413,7 @@
                     <button type="submit" class="btn-run no-print">Run OPC Analysis</button>
                 </form>
 
-                <!-- Wrapper to control visibility, extracting sig-line from inside the border box -->
-                <div id="opc-summary" style="display: none; margin-top: 20px;">
+                <div id="opc-summary" style="display: none;">
                     <div class="report-summary-box">
                         <h3>Batch Summary</h3>
                         <div class="summary-grid">
@@ -424,9 +433,7 @@
             </div>
         </div>
 
-        <!-- ============================== -->
-        <!-- PYR TAB -->
-        <!-- ============================== -->
+
         <div id="pyr-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -436,9 +443,15 @@
                 </div>
 
                 <div class="report-header">
-                    <h2>Analytical Laboratory Report</h2>
-                    <p>Mobile Laboratory</p>
-                    <p>Pyrethroids (Quantitative Logit-Log ELISA)</p>
+                    <div class="report-header-left">
+                        <h2>Analytical Laboratory Report</h2>
+                        <p><strong>Section:</strong> Mobile Laboratory</p>
+                        <p><strong>Assay:</strong> Pyrethroids (Quantitative Logit-Log ELISA)</p>
+                    </div>
+                    <div class="report-header-right">
+                        <p class="reportDateStr"></p>
+                        <p class="reportIdStr"></p>
+                    </div>
                 </div>
 
                 <form id="pyrForm">
@@ -531,8 +544,7 @@
                     <button type="submit" class="btn-run no-print">Calculate & Graph</button>
                 </form>
 
-                <!-- Wrapper to control visibility, extracting sig-line from inside the border box -->
-                <div id="pyr-summary" style="display: none; margin-top: 20px;">
+                <div id="pyr-summary" style="display: none;">
                     <div class="report-summary-box">
                         <h3>Calibration & Run Summary</h3>
                         <div class="summary-grid">
@@ -558,9 +570,6 @@
             </div>
         </div>
 
-        <!-- ============================== -->
-        <!-- TXRF TAB -->
-        <!-- ============================== -->
         <div id="txrf-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -570,9 +579,15 @@
                 </div>
 
                 <div class="report-header">
-                    <h2>Analytical Laboratory Report</h2>
-                    <p>Mobile Laboratory</p>
-                    <p>Total Reflection X-Ray Fluorescence (TXRF)</p>
+                    <div class="report-header-left">
+                        <h2>Analytical Laboratory Report</h2>
+                        <p><strong>Section:</strong> Mobile Laboratory</p>
+                        <p><strong>Methodology:</strong> Total Reflection X-Ray Fluorescence (TXRF)</p>
+                    </div>
+                    <div class="report-header-right">
+                        <p class="reportDateStr"></p>
+                        <p class="reportIdStr"></p>
+                    </div>
                 </div>
 
                 <form id="txrfForm">
@@ -635,8 +650,7 @@
                     <button type="submit" class="btn-run no-print">Validate & Generate Report</button>
                 </form>
 
-                <!-- Wrapper to control visibility, extracting sig-line from inside the border box -->
-                <div id="txrf-summary" style="display: none; margin-top: 20px;">
+                <div id="txrf-summary" style="display: none;">
                     <div class="report-summary-box">
                         <h3>Batch Compliance Summary</h3>
                         <div class="summary-grid">
@@ -646,8 +660,8 @@
                             <div><strong>Method:</strong> <span id="txrf-repMethod">-</span></div>
                             <div><strong>Internal Standard:</strong> <span id="txrf-rep-is">-</span></div>
                             <div><strong>Matrices Analyzed:</strong> <span id="txrf-rep-matrix">-</span></div>
-                            <div><strong class="status-low">NOT DETECTED:</strong> <span id="txrf-rep-nd">-</span></div>
                             <div><strong class="status-high">DETECTED:</strong> <span id="txrf-rep-d">-</span></div>
+                            <div><strong class="status-low">NOT DETECTED:</strong> <span id="txrf-rep-nd">-</span></div>
                             <div class="full-width"><strong>Remarks:</strong> <span id="txrf-repRemarks">-</span></div>
                         </div>
                     </div>
@@ -658,9 +672,6 @@
             </div>
         </div>
 
-        <!-- ============================== -->
-        <!-- MICRO TAB -->
-        <!-- ============================== -->
         <div id="micro-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -670,9 +681,15 @@
                 </div>
 
                 <div class="report-header">
-                    <h2>Analytical Laboratory Report</h2>
-                    <p>Mobile Laboratory</p>
-                    <p>qPCR Pathogen Detection (Micro Ridacycler)</p>
+                    <div class="report-header-left">
+                        <h2>Analytical Laboratory Report</h2>
+                        <p><strong>Section:</strong> Mobile Laboratory</p>
+                        <p><strong>Methodology:</strong> qPCR Pathogen Detection (Micro Ridacycler)</p>
+                    </div>
+                    <div class="report-header-right">
+                        <p class="reportDateStr"></p>
+                        <p class="reportIdStr"></p>
+                    </div>
                 </div>
 
                 <form id="microForm">
@@ -735,8 +752,7 @@
                     <button type="submit" class="btn-run no-print">Run Micro Analysis</button>
                 </form>
 
-                <!-- Wrapper to control visibility, extracting sig-line from inside the border box -->
-                <div id="micro-summary" style="display: none; margin-top: 20px;">
+                <div id="micro-summary" style="display: none;">
                     <div class="report-summary-box">
                         <h3>Batch Summary</h3>
                         <div class="summary-grid">
@@ -758,9 +774,6 @@
         </div>
 
     </div>
-    
-    <!-- Footer embedded at the end of the container, becomes fixed bottom-right during print -->
-    <div class="print-footer reportDateStr"></div>
 </div>
 
 <div id="ptable-modal" class="modal-overlay">
@@ -783,7 +796,7 @@
     // ==========================================
     // GLOBALS & CACHE STATE
     // ==========================================
-    const CACHE_KEY = "MobileLabBuilder_V8";
+    const CACHE_KEY = "MobileLabBuilder_V9";
     let activeTab = 'opc';
     let saveTimeout = null;
     let elisaChart = null; 
@@ -981,12 +994,20 @@
     // ==========================================
     // UI & TAB LOGIC
     // ==========================================
+    const tabTitles = {
+        'opc': 'Organophosphates / Carbamates',
+        'pyr': 'Pyrethroids',
+        'txrf': 'TXRF Heavy Metals',
+        'micro': 'Micro Ridacycler'
+    };
+
     function switchTab(target) {
         activeTab = target;
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.getElementById(target + '-tab').classList.add('active');
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
         document.getElementById(`btn-tab-${target}`).classList.add('active-tab');
+        document.getElementById('aero-title-text').innerHTML = `<span style="font-size: 14px;">🔬</span> Mobile Lab Report Builder: ${tabTitles[target]}`;
         scheduleSave();
     }
 
@@ -1113,22 +1134,22 @@
             if (type === 'opc') {
                 tr.innerHTML = `
                     <td><input type="text" class="opc-id" value="${idToUse}" required></td>
-                    <td><input type="number" step="any" class="opc-od" value="0.000"></td>
+                    <td><input type="number" step="any" class="opc-od" placeholder="0.000"></td>
                     <td class="num-col res-binding">-</td><td class="num-col res-inhibition">-</td><td class="res-status">-</td>
                     <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'opc')">✕</button></td>
                 `;
             } else if (type === 'pyr') {
                 tr.innerHTML = `
                     <td><input type="text" class="pyr-id" value="${idToUse}" required></td>
-                    <td><input type="number" step="any" class="pyr-od" value="0.000"></td>
+                    <td><input type="number" step="any" class="pyr-od" placeholder="0.000"></td>
                     <td class="num-col res-binding">-</td><td class="num-col res-conc">-</td><td class="res-interp">-</td>
                     <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'pyr')">✕</button></td>
                 `;
             } else if (type === 'micro') {
                 tr.innerHTML = `
                     <td><input type="text" class="micro-id" value="${idToUse}" required></td>
-                    <td><input type="number" step="any" class="micro-ct" value="0.0"></td>
-                    <td><input type="number" step="any" class="micro-ic" value="0.0"></td>
+                    <td><input type="number" step="any" class="micro-ct" placeholder="CT"></td>
+                    <td><input type="number" step="any" class="micro-ic" placeholder="IC"></td>
                     <td class="res-status">-</td>
                     <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'micro')">✕</button></td>
                 `;
@@ -1175,8 +1196,11 @@
     }
 
     function updateDates() {
-        const dStr = `Date Generated: ${new Date().toLocaleString()}`;
+        const now = new Date();
+        const dStr = `<strong>Date:</strong> ${now.toLocaleString()}`;
+        const idStr = `<strong>Report ID:</strong> ML-${now.getTime().toString().slice(-6)}`;
         document.querySelectorAll('.reportDateStr').forEach(el => el.innerHTML = dStr);
+        document.querySelectorAll('.reportIdStr').forEach(el => el.innerHTML = idStr);
     }
 
     // ==========================================
@@ -1263,7 +1287,7 @@
             <td><input type="text" class="txrf-matrix-row" list="matrix-options" placeholder="Select or type..." value="${escapeHTML(matrix)}"></td>
         `;
         activeElements.forEach(el => {
-            let v = valsObj[el] !== undefined ? escapeHTML(valsObj[el]) : '0.00';
+            let v = valsObj[el] !== undefined ? escapeHTML(valsObj[el]) : '';
             html += `<td><input type="number" step="any" class="txrf-val-${el} num-col" value="${v}"></td>`;
         });
         html += `<td class="res-status">-</td><td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'txrf')">✕</button></td>`;
@@ -1406,9 +1430,6 @@
         document.getElementById('opc-repPos').innerText = posCount;
         document.getElementById('opc-repNeg').innerText = negCount;
         document.getElementById('opc-summary').style.display = 'block';
-        
-        // Show universal print button on validation
-        document.getElementById('opc-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1525,9 +1546,6 @@
                 }
             }
         });
-        
-        // Show universal print button on validation
-        document.getElementById('pyr-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1594,9 +1612,6 @@
         document.getElementById('txrf-rep-d').innerText = detectedCount;
         
         document.getElementById('txrf-summary').style.display = 'block';
-        
-        // Show universal print button on validation
-        document.getElementById('txrf-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1620,7 +1635,7 @@
             
             if (ctInput === "") {
                 statCell.innerHTML = '<span style="color:#999">-</span>';
-                return; 
+                return; // skip blanks
             }
             total++;
 
@@ -1639,9 +1654,6 @@
         document.getElementById('micro-repNeg').innerText = negCount;
         
         document.getElementById('micro-summary').style.display = 'block';
-        
-        // Show universal print button on validation
-        document.getElementById('micro-export').style.display = 'block';
         saveStateToCache(); 
     });
 
