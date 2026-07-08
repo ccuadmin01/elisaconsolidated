@@ -259,7 +259,7 @@
             
             /* Inputs transformed to clean text fields */
             .grid-settings { margin-bottom: 10px !important; gap: 10px !important;}
-            .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; text-transform: uppercase;}
+            .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; }
             .input-group input, .input-group select, .input-group textarea {
                 border: none !important; border-radius: 0 !important;
                 background: transparent !important; padding: 2px 0 !important; margin: 0 !important;
@@ -272,7 +272,7 @@
             .table-responsive { border: none; overflow: visible; margin-bottom: 10px; box-shadow: none;}
             table { border: 1px solid #000 !important; min-width: 100%; font-size: 9pt !important; border-collapse: collapse !important; }
             th, td { padding: 4px 6px !important; border: 1px solid #999 !important; height: auto !important;}
-            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; text-transform: uppercase; font-size: 8pt;}
+            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; font-size: 8pt;}
             td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; text-align: inherit; color: #000 !important;}
             
             /* Hide the X column in print */
@@ -325,10 +325,7 @@
             <button class="btn-reset" onclick="clearCacheAndReset()">Reset Entire Suite</button>
         </div>
 
-        <!-- ============================== -->
-        <!-- OPC TAB -->
-        <!-- ============================== -->
-        <div id="opc-tab" class="tab-content active">
+                                <div id="opc-tab" class="tab-content active">
             <div class="tab-content-area">
                 <div class="header">
                     <h1>Mobile Lab Report Builder: Organophosphate & Carbamate</h1>
@@ -409,7 +406,7 @@
                                     <th style="width: 20%;">OD₄₅₀</th>
                                     <th style="width: 15%;">B/B₀ (%)</th>
                                     <th style="width: 15%;">Inhibition</th>
-                                    <th style="width: 20%;">Assessment</th>
+                                    <th style="width: 20%;">Result</th>
                                     <th style="width: 5%;" class="no-print"></th>
                                 </tr>
                             </thead>
@@ -442,10 +439,7 @@
             </div>
         </div>
 
-        <!-- ============================== -->
-        <!-- PYR TAB -->
-        <!-- ============================== -->
-        <div id="pyr-tab" class="tab-content">
+                                <div id="pyr-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
                     <h1>Mobile Lab Report Builder: Pyrethroids</h1>
@@ -577,14 +571,11 @@
             </div>
         </div>
 
-        <!-- ============================== -->
-        <!-- TXRF TAB -->
-        <!-- ============================== -->
-        <div id="txrf-tab" class="tab-content">
+                                <div id="txrf-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
                     <h1>Mobile Lab Report Builder: TXRF Heavy Metals</h1>
-                    <p>Total Reflection X-Ray Fluorescence Analysis & Regulatory Compliance</p>
+                    <p>Total Reflection X-Ray Fluorescence Analysis & General Results</p>
                     <div id="txrf-save-msg" class="save-indicator">✓ Saved</div>
                 </div>
 
@@ -658,7 +649,7 @@
 
                 <div id="txrf-summary" style="display: none;">
                     <div class="report-summary-box">
-                        <h3>Batch Compliance Summary</h3>
+                        <h3>Batch Result Summary</h3>
                         <div class="summary-grid">
                             <div><strong>Analyst:</strong> <span id="txrf-rep-analyst">-</span></div>
                             <div><strong>Total Samples:</strong> <span id="txrf-rep-total">-</span></div>
@@ -678,10 +669,7 @@
             </div>
         </div>
 
-        <!-- ============================== -->
-        <!-- MICRO TAB -->
-        <!-- ============================== -->
-        <div id="micro-tab" class="tab-content">
+                                <div id="micro-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
                     <h1>Mobile Lab Report Builder: Micro Ridacycler</h1>
@@ -744,7 +732,7 @@
                                     <th style="width: 25%;">Sample ID</th>
                                     <th style="width: 20%;">Target CT Value</th>
                                     <th style="width: 20%;">Internal Control (IC) CT</th>
-                                    <th style="width: 30%;">Assessment</th>
+                                    <th style="width: 30%;">Result</th>
                                     <th style="width: 5%;" class="no-print"></th>
                                 </tr>
                             </thead>
@@ -780,8 +768,7 @@
 
     </div>
     
-    <!-- Footer embedded at the end of the container, becomes fixed bottom-right during print -->
-    <div class="print-footer"><span class="reportDateStr"></span></div>
+        <div class="print-footer"><span class="reportDateStr"></span></div>
 </div>
 
 <div id="ptable-modal" class="modal-overlay">
@@ -1261,7 +1248,7 @@
         const thead = document.getElementById('txrf-thead');
         let headerHtml = `<tr><th style="width: 15%;">Sample ID</th><th style="width: 15%;">Matrix</th>`;
         activeElements.forEach(el => { headerHtml += `<th>${el} (mg/kg)</th>`; });
-        headerHtml += `<th style="width: 15%;">Compliance</th><th style="width: 3%;" class="no-print"></th></tr>`;
+        headerHtml += `<th style="width: 15%;">Result</th><th style="width: 3%;" class="no-print"></th></tr>`;
         thead.innerHTML = headerHtml;
 
         const currentData = getTableData('txrf');
