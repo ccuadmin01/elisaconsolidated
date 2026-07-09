@@ -1270,7 +1270,7 @@
         const thead = document.getElementById('txrf-thead');
         let headerHtml = `<tr><th style="width: 15%;">Sample ID</th><th style="width: 15%;">Matrix</th>`;
         activeElements.forEach(el => { 
-            headerHtml += `<th>${elementNames[el] || el} (${el})<br><span style="font-size: 0.85em; font-weight: normal;">(mg/kg)</span></th>`; 
+            headerHtml += `<th>${elementNames[el] || el} (${el})<br><span style="font-size: 0.85em; font-weight: normal;"></span></th>`; 
         });
         headerHtml += `<th style="width: 15%;">Compliance</th><th style="width: 3%;" class="no-print"></th></tr>`;
         thead.innerHTML = headerHtml;
