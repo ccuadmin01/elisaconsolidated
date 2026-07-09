@@ -161,10 +161,10 @@
         }
 
         table { width: 100%; border-collapse: collapse; min-width: 750px; }
-        th, td { padding: 4px 6px; text-align: left; border: 1px solid #d5d5d5; vertical-align: middle;}
+        th, td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #ededed; border-right: 1px solid #ededed; vertical-align: middle;}
         td.num-col, .input-group input[type="number"] { font-variant-numeric: tabular-nums; }
         th { 
-            font-weight: bold; color: #000; border-right: 1px solid #a0a0a0; border-bottom: 1px solid #a0a0a0;
+            font-weight: bold; color: #000; border-right: 1px solid #d5d5d5; border-bottom: 1px solid #d5d5d5;
             background: linear-gradient(to bottom, #ffffff 0%, #f1f2f4 49%, #e2e4e7 50%, #d0d3d9 100%);
             box-shadow: inset 0 1px 0 #fff; cursor: default; white-space: nowrap;
         }
@@ -208,6 +208,7 @@
         .banner-valid { background-color: #e4f4fb; color: #000; border-color: #a6d9f4; }
         .banner-invalid { background-color: #ffffe1; color: #000; border-color: #e5c365; }
         
+        /* Formatted the summary box to strictly wrap its grid */
         .report-summary-box { 
             display: none; padding: 15px 20px; border-radius: 4px; margin-top: 20px; 
             background-color: #fcfcfc; border: 1px solid #a0a0a0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -232,17 +233,13 @@
         .pt-empty { visibility: hidden; }
         .pt-disabled { background: #e0e0e0; color: #a0a0a0; border-color: #d0d0d0; cursor: not-allowed; }
 
-        /* --- HIGH QUALITY PROFESSIONAL PDF EXPORT CSS --- */
+        /* --- CONDENSED AESTHETIC PRINT SETTINGS (Segoe UI 9pt) --- */
         @media print {
-            @page { margin: 15mm; size: A4 portrait; }
-            body { 
-                background: white; padding: 0; color: #000; font-size: 9pt !important; 
-                font-family: 'Segoe UI', Tahoma, sans-serif !important; 
-                -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-            }
-            
+            @page { margin: 12mm; size: A4 portrait; }
+            body { background: white; padding: 0; color: black; font-size: 9pt !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
             .app-container { max-width: 100%; margin: 0; border: none; box-shadow: none; background: white; padding: 0;}
             .aero-titlebar, .no-print, button, .header-controls, .header, .validation-banner, .batch-controls, .tab-content:not(.active), #fill-handle { display: none !important; }
+            
             .aero-content, .tab-content-area { border: none; padding: 0; background: white; box-shadow: none;}
             
             /* Professional Document Header */
@@ -259,10 +256,10 @@
             
             /* Inputs transformed to clean text fields */
             .grid-settings { margin-bottom: 10px !important; gap: 10px !important;}
-            .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; }
+            .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; text-transform: uppercase;}
             .input-group input, .input-group select, .input-group textarea {
-                border: none !important; border-radius: 0 !important;
-                background: transparent !important; padding: 2px 0 !important; margin: 0 !important;
+                border: none !important; border-bottom: 1px dashed #aaa !important; border-radius: 0 !important;
+                background: transparent !important; padding: 1px 0 !important; margin: 0 !important;
                 font-family: inherit !important; font-size: 9pt !important; font-weight: bold !important; color: black; box-shadow: none; outline: none !important;
             }
 
@@ -272,7 +269,7 @@
             .table-responsive { border: none; overflow: visible; margin-bottom: 10px; box-shadow: none;}
             table { border: 1px solid #000 !important; min-width: 100%; font-size: 9pt !important; border-collapse: collapse !important; }
             th, td { padding: 4px 6px !important; border: 1px solid #999 !important; height: auto !important;}
-            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; font-size: 8pt;}
+            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; text-transform: uppercase; font-size: 8pt;}
             td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; text-align: inherit; color: #000 !important;}
             
             /* Hide the X column in print */
@@ -307,14 +304,16 @@
 
 <div class="app-container">
     
+    <!-- Title Bar -->
     <div class="aero-titlebar no-print">
-        <div style="display: flex; align-items: center; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 6px;" id="aero-title-text">
             <span style="font-size: 14px;">🔬</span>
-            Mobile Lab Report Builder
+            Mobile Lab Report Builder: Organophosphates / Carbamates
         </div>
     </div>
 
     <div class="aero-content">
+        <!-- Top Controls & Native Tabs -->
         <div class="header-controls no-print">
             <div class="tab-controls">
                 <button class="tab-btn active-tab" onclick="switchTab('opc')" id="btn-tab-opc">Organophosphates / Carbamates</button>
@@ -322,10 +321,13 @@
                 <button class="tab-btn" onclick="switchTab('txrf')" id="btn-tab-txrf">TXRF Heavy Metals</button>
                 <button class="tab-btn" onclick="switchTab('micro')" id="btn-tab-micro">Micro Ridacycler</button>
             </div>
-            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Application</button>
+            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Entire Suite</button>
         </div>
 
-                                <div id="opc-tab" class="tab-content active">
+        <!-- ========================================== -->
+        <!-- TAB 1: ORGANOPHOSPHATES & CARBAMATES (OPC) -->
+        <!-- ========================================== -->
+        <div id="opc-tab" class="tab-content active">
             <div class="tab-content-area">
                 <div class="header">
                     <h1>Mobile Lab Report Builder: Organophosphate & Carbamate</h1>
@@ -336,8 +338,12 @@
                 <div class="report-header">
                     <div class="report-header-left">
                         <h2>Analytical Laboratory Report</h2>
-                        <p>Mobile Laboratory</p>
-                        <p>Organophosphates & Carbamates (Competitive ELISA)</p>
+                        <p><strong>Section:</strong> Mobile Laboratory</p>
+                        <p><strong>Assay:</strong> Organophosphates & Carbamates (Competitive ELISA)</p>
+                    </div>
+                    <div class="report-header-right">
+                        <p class="reportDateStr"></p>
+                        <p class="reportIdStr"></p>
                     </div>
                 </div>
 
@@ -388,7 +394,7 @@
                     <div class="batch-controls no-print">
                         <input type="text" id="opc-batch-prefix" value="ML-" style="width: 80px;">
                         <input type="number" id="opc-batch-start" value="1" style="width: 60px;">
-                        <input type="number" id="opc-batch-count" value="10" min="1" style="width: 60px;">
+                        <input type="number" id="opc-batch-count" value="1" min="1" style="width: 60px;">
                         <button type="button" onclick="generateBatch('opc')">Generate</button>
                         <button type="button" onclick="triggerUndo('opc')">Undo</button>
                         <span style="flex-grow: 1;"></span>
@@ -406,12 +412,13 @@
                                     <th style="width: 20%;">OD₄₅₀</th>
                                     <th style="width: 15%;">B/B₀ (%)</th>
                                     <th style="width: 15%;">Inhibition</th>
-                                    <th style="width: 20%;">Result</th>
+                                    <th style="width: 20%;">Assessment</th>
                                     <th style="width: 5%;" class="no-print"></th>
                                 </tr>
                             </thead>
                             <tbody id="opc-body">
-                                </tbody>
+                                <!-- JS Injected Rows -->
+                            </tbody>
                         </table>
                     </div>
 
@@ -419,7 +426,7 @@
                     <button type="submit" class="btn-run no-print">Run OPC Analysis</button>
                 </form>
 
-                <div id="opc-summary" style="display: none;">
+                <div id="opc-summary" style="display: none; margin-top: 20px;">
                     <div class="report-summary-box">
                         <h3>Batch Summary</h3>
                         <div class="summary-grid">
@@ -439,7 +446,10 @@
             </div>
         </div>
 
-                                <div id="pyr-tab" class="tab-content">
+        <!-- ========================================== -->
+        <!-- TAB 2: PYRETHROIDS (PYR)                   -->
+        <!-- ========================================== -->
+        <div id="pyr-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
                     <h1>Mobile Lab Report Builder: Pyrethroids</h1>
@@ -450,8 +460,12 @@
                 <div class="report-header">
                     <div class="report-header-left">
                         <h2>Analytical Laboratory Report</h2>
-                        <p>Mobile Laboratory</p>
-                        <p>Pyrethroids (Quantitative Logit-Log ELISA)</p>
+                        <p><strong>Section:</strong> Mobile Laboratory</p>
+                        <p><strong>Assay:</strong> Pyrethroids (Quantitative Logit-Log ELISA)</p>
+                    </div>
+                    <div class="report-header-right">
+                        <p class="reportDateStr"></p>
+                        <p class="reportIdStr"></p>
                     </div>
                 </div>
 
@@ -514,7 +528,7 @@
                     <div class="batch-controls no-print">
                         <input type="text" id="pyr-batch-prefix" value="ML-" style="width: 80px;">
                         <input type="number" id="pyr-batch-start" value="1" style="width: 60px;">
-                        <input type="number" id="pyr-batch-count" value="10" min="1" style="width: 60px;">
+                        <input type="number" id="pyr-batch-count" value="1" min="1" style="width: 60px;">
                         <button type="button" onclick="generateBatch('pyr')">Generate</button>
                         <button type="button" onclick="triggerUndo('pyr')">Undo</button>
                         <span style="flex-grow: 1;"></span>
@@ -537,7 +551,8 @@
                                 </tr>
                             </thead>
                             <tbody id="pyr-body">
-                                </tbody>
+                                <!-- JS Injected Rows -->
+                            </tbody>
                         </table>
                     </div>
 
@@ -545,7 +560,7 @@
                     <button type="submit" class="btn-run no-print">Calculate & Graph</button>
                 </form>
 
-                <div id="pyr-summary" style="display: none;">
+                <div id="pyr-summary" style="display: none; margin-top: 20px;">
                     <div class="report-summary-box">
                         <h3>Calibration & Run Summary</h3>
                         <div class="summary-grid">
@@ -571,7 +586,10 @@
             </div>
         </div>
 
-                                <div id="txrf-tab" class="tab-content">
+        <!-- ========================================== -->
+        <!-- TAB 3: TXRF HEAVY METALS                   -->
+        <!-- ========================================== -->
+        <div id="txrf-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
                     <h1>Mobile Lab Report Builder: TXRF Heavy Metals</h1>
@@ -582,8 +600,12 @@
                 <div class="report-header">
                     <div class="report-header-left">
                         <h2>Analytical Laboratory Report</h2>
-                        <p>Mobile Laboratory</p>
-                        <p>Total Reflection X-Ray Fluorescence (TXRF)</p>
+                        <p><strong>Section:</strong> Mobile Laboratory</p>
+                        <p><strong>Methodology:</strong> Total Reflection X-Ray Fluorescence (TXRF)</p>
+                    </div>
+                    <div class="report-header-right">
+                        <p class="reportDateStr"></p>
+                        <p class="reportIdStr"></p>
                     </div>
                 </div>
 
@@ -625,7 +647,7 @@
                     <div class="batch-controls no-print">
                         <input type="text" id="txrf-batch-prefix" value="ML-" style="width: 80px;">
                         <input type="number" id="txrf-batch-start" value="1" style="width: 60px;">
-                        <input type="number" id="txrf-batch-count" value="10" min="1" style="width: 60px;">
+                        <input type="number" id="txrf-batch-count" value="1" min="1" style="width: 60px;">
                         <button type="button" onclick="generateBatch('txrf')">Generate</button>
                         <button type="button" onclick="triggerUndo('txrf')">Undo</button>
                         <span style="flex-grow: 1;"></span>
@@ -639,7 +661,8 @@
                         <table id="txrf-table">
                             <thead id="txrf-thead"></thead>
                             <tbody id="txrf-body">
-                                </tbody>
+                                <!-- JS Injected Rows -->
+                            </tbody>
                         </table>
                     </div>
 
@@ -647,7 +670,7 @@
                     <button type="submit" class="btn-run no-print">Validate & Generate Report</button>
                 </form>
 
-                <div id="txrf-summary" style="display: none;">
+                <div id="txrf-summary" style="display: none; margin-top: 20px;">
                     <div class="report-summary-box">
                         <h3>Batch Result Summary</h3>
                         <div class="summary-grid">
@@ -657,8 +680,8 @@
                             <div><strong>Method:</strong> <span id="txrf-repMethod">-</span></div>
                             <div><strong>Internal Standard:</strong> <span id="txrf-rep-is">-</span></div>
                             <div><strong>Matrices Analyzed:</strong> <span id="txrf-rep-matrix">-</span></div>
-                            <div><strong class="status-low">NOT DETECTED:</strong> <span id="txrf-rep-nd">-</span></div>
                             <div><strong class="status-high">DETECTED:</strong> <span id="txrf-rep-d">-</span></div>
+                            <div><strong class="status-low">NOT DETECTED:</strong> <span id="txrf-rep-nd">-</span></div>
                             <div class="full-width"><strong>Remarks:</strong> <span id="txrf-repRemarks">-</span></div>
                         </div>
                     </div>
@@ -669,7 +692,10 @@
             </div>
         </div>
 
-                                <div id="micro-tab" class="tab-content">
+        <!-- ========================================== -->
+        <!-- TAB 4: MICRO RIDACYCLER                    -->
+        <!-- ========================================== -->
+        <div id="micro-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
                     <h1>Mobile Lab Report Builder: Micro Ridacycler</h1>
@@ -680,8 +706,12 @@
                 <div class="report-header">
                     <div class="report-header-left">
                         <h2>Analytical Laboratory Report</h2>
-                        <p>Mobile Laboratory</p>
-                        <p>qPCR Pathogen Detection (Micro Ridacycler)</p>
+                        <p><strong>Section:</strong> Mobile Laboratory</p>
+                        <p><strong>Methodology:</strong> qPCR Pathogen Detection (Micro Ridacycler)</p>
+                    </div>
+                    <div class="report-header-right">
+                        <p class="reportDateStr"></p>
+                        <p class="reportIdStr"></p>
                     </div>
                 </div>
 
@@ -715,7 +745,7 @@
                     <div class="batch-controls no-print">
                         <input type="text" id="micro-batch-prefix" value="ML-" style="width: 80px;">
                         <input type="number" id="micro-batch-start" value="1" style="width: 60px;">
-                        <input type="number" id="micro-batch-count" value="10" min="1" style="width: 60px;">
+                        <input type="number" id="micro-batch-count" value="1" min="1" style="width: 60px;">
                         <button type="button" onclick="generateBatch('micro')">Generate</button>
                         <button type="button" onclick="triggerUndo('micro')">Undo</button>
                         <span style="flex-grow: 1;"></span>
@@ -732,12 +762,13 @@
                                     <th style="width: 25%;">Sample ID</th>
                                     <th style="width: 20%;">Target CT Value</th>
                                     <th style="width: 20%;">Internal Control (IC) CT</th>
-                                    <th style="width: 30%;">Result</th>
+                                    <th style="width: 30%;">Assessment</th>
                                     <th style="width: 5%;" class="no-print"></th>
                                 </tr>
                             </thead>
                             <tbody id="micro-body">
-                                </tbody>
+                                <!-- JS Injected Rows -->
+                            </tbody>
                         </table>
                     </div>
 
@@ -745,7 +776,7 @@
                     <button type="submit" class="btn-run no-print">Run Micro Analysis</button>
                 </form>
 
-                <div id="micro-summary" style="display: none;">
+                <div id="micro-summary" style="display: none; margin-top: 20px;">
                     <div class="report-summary-box">
                         <h3>Batch Summary</h3>
                         <div class="summary-grid">
@@ -767,10 +798,9 @@
         </div>
 
     </div>
-    
-        <div class="print-footer"><span class="reportDateStr"></span></div>
 </div>
 
+<!-- PERIODIC TABLE MODAL -->
 <div id="ptable-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -785,13 +815,14 @@
     </div>
 </div>
 
+<!-- GLOBAL EXCEL DRAG HANDLE -->
 <div id="fill-handle" class="no-print"></div>
 
 <script>
     // ==========================================
     // GLOBALS & CACHE STATE
     // ==========================================
-    const CACHE_KEY = "MobileLabBuilder_V12";
+    const CACHE_KEY = "MobileLabBuilder_V14";
     let activeTab = 'opc';
     let saveTimeout = null;
     let elisaChart = null; 
@@ -989,12 +1020,20 @@
     // ==========================================
     // UI & TAB LOGIC
     // ==========================================
+    const tabTitles = {
+        'opc': 'Organophosphates / Carbamates',
+        'pyr': 'Pyrethroids',
+        'txrf': 'TXRF Heavy Metals',
+        'micro': 'Micro Ridacycler'
+    };
+
     function switchTab(target) {
         activeTab = target;
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.getElementById(target + '-tab').classList.add('active');
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
         document.getElementById(`btn-tab-${target}`).classList.add('active-tab');
+        document.getElementById('aero-title-text').innerHTML = `<span style="font-size: 14px;">🔬</span> Mobile Lab Report Builder: ${tabTitles[target]}`;
         scheduleSave();
     }
 
@@ -1121,22 +1160,22 @@
             if (type === 'opc') {
                 tr.innerHTML = `
                     <td><input type="text" class="opc-id" value="${idToUse}" required></td>
-                    <td><input type="number" step="any" class="opc-od" value="0.000"></td>
+                    <td><input type="number" step="any" class="opc-od" placeholder="0.000"></td>
                     <td class="num-col res-binding">-</td><td class="num-col res-inhibition">-</td><td class="res-status">-</td>
                     <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'opc')">✕</button></td>
                 `;
             } else if (type === 'pyr') {
                 tr.innerHTML = `
                     <td><input type="text" class="pyr-id" value="${idToUse}" required></td>
-                    <td><input type="number" step="any" class="pyr-od" value="0.000"></td>
+                    <td><input type="number" step="any" class="pyr-od" placeholder="0.000"></td>
                     <td class="num-col res-binding">-</td><td class="num-col res-conc">-</td><td class="res-interp">-</td>
                     <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'pyr')">✕</button></td>
                 `;
             } else if (type === 'micro') {
                 tr.innerHTML = `
                     <td><input type="text" class="micro-id" value="${idToUse}" required></td>
-                    <td><input type="number" step="any" class="micro-ct" value="0.0"></td>
-                    <td><input type="number" step="any" class="micro-ic" value="0.0"></td>
+                    <td><input type="number" step="any" class="micro-ct" placeholder="CT"></td>
+                    <td><input type="number" step="any" class="micro-ic" placeholder="IC"></td>
                     <td class="res-status">-</td>
                     <td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'micro')">✕</button></td>
                 `;
@@ -1184,8 +1223,10 @@
 
     function updateDates() {
         const now = new Date();
-        const dStr = `Date Generated: ${now.toLocaleString()}`;
+        const dStr = `<strong>Date Generated:</strong> ${now.toLocaleString()}`;
+        const idStr = `<strong>Report ID:</strong> ML-${now.getTime().toString().slice(-6)}`;
         document.querySelectorAll('.reportDateStr').forEach(el => el.innerHTML = dStr);
+        document.querySelectorAll('.reportIdStr').forEach(el => el.innerHTML = idStr);
     }
 
     // ==========================================
@@ -1248,7 +1289,7 @@
         const thead = document.getElementById('txrf-thead');
         let headerHtml = `<tr><th style="width: 15%;">Sample ID</th><th style="width: 15%;">Matrix</th>`;
         activeElements.forEach(el => { headerHtml += `<th>${el} (mg/kg)</th>`; });
-        headerHtml += `<th style="width: 15%;">Result</th><th style="width: 3%;" class="no-print"></th></tr>`;
+        headerHtml += `<th style="width: 15%;">Compliance</th><th style="width: 3%;" class="no-print"></th></tr>`;
         thead.innerHTML = headerHtml;
 
         const currentData = getTableData('txrf');
@@ -1272,7 +1313,7 @@
             <td><input type="text" class="txrf-matrix-row" list="matrix-options" placeholder="Select or type..." value="${escapeHTML(matrix)}"></td>
         `;
         activeElements.forEach(el => {
-            let v = valsObj[el] !== undefined ? escapeHTML(valsObj[el]) : '0.00';
+            let v = valsObj[el] !== undefined ? escapeHTML(valsObj[el]) : '';
             html += `<td><input type="number" step="any" class="txrf-val-${el} num-col" value="${v}"></td>`;
         });
         html += `<td class="res-status">-</td><td class="no-print" style="text-align: center;"><button type="button" class="btn-remove" tabindex="-1" onclick="removeRow(this, 'txrf')">✕</button></td>`;
@@ -1415,7 +1456,6 @@
         document.getElementById('opc-repPos').innerText = posCount;
         document.getElementById('opc-repNeg').innerText = negCount;
         document.getElementById('opc-summary').style.display = 'block';
-        document.getElementById('opc-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1532,8 +1572,6 @@
                 }
             }
         });
-        
-        document.getElementById('pyr-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1600,7 +1638,6 @@
         document.getElementById('txrf-rep-d').innerText = detectedCount;
         
         document.getElementById('txrf-summary').style.display = 'block';
-        document.getElementById('txrf-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1643,7 +1680,6 @@
         document.getElementById('micro-repNeg').innerText = negCount;
         
         document.getElementById('micro-summary').style.display = 'block';
-        document.getElementById('micro-export').style.display = 'block';
         saveStateToCache(); 
     });
 
