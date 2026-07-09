@@ -259,7 +259,7 @@
             .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; text-transform: uppercase;}
             .input-group input, .input-group select, .input-group textarea {
                 border: none !important; border-bottom: 1px dashed #aaa !important; border-radius: 0 !important;
-                background: transparent !important; padding: 2px 0 !important; margin: 0 !important;
+                background: transparent !important; padding: 1px 0 !important; margin: 0 !important;
                 font-family: inherit !important; font-size: 9pt !important; font-weight: bold !important; color: black; box-shadow: none; outline: none !important;
             }
 
@@ -321,7 +321,7 @@
                 <button class="tab-btn" onclick="switchTab('txrf')" id="btn-tab-txrf">TXRF Heavy Metals</button>
                 <button class="tab-btn" onclick="switchTab('micro')" id="btn-tab-micro">Micro Ridacycler</button>
             </div>
-            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Application</button>
+            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Entire Suite</button>
         </div>
 
         <!-- ========================================== -->
@@ -445,7 +445,6 @@
                 <button type="button" id="opc-export" class="btn-export no-print" onclick="exportToPDF('OPC')">Export to PDF</button>
             </div>
         </div>
-
 
         <!-- ========================================== -->
         <!-- TAB 2: PYRETHROIDS (PYR)                   -->
@@ -799,9 +798,6 @@
         </div>
 
     </div>
-    
-    <!-- Footer embedded at the end of the container, becomes fixed bottom-right during print -->
-    <div class="print-footer"><span class="reportDateStr"></span></div>
 </div>
 
 <!-- PERIODIC TABLE MODAL -->
@@ -826,7 +822,7 @@
     // ==========================================
     // GLOBALS & CACHE STATE
     // ==========================================
-    const CACHE_KEY = "MobileLabBuilder_V15";
+    const CACHE_KEY = "MobileLabBuilder_V14";
     let activeTab = 'opc';
     let saveTimeout = null;
     let elisaChart = null; 
@@ -1293,15 +1289,14 @@
         const thead = document.getElementById('txrf-thead');
         let headerHtml = `<tr><th style="width: 15%;">Sample ID</th><th style="width: 15%;">Matrix</th>`;
         activeElements.forEach(el => { headerHtml += `<th>${el} (mg/kg)</th>`; });
-        headerHtml += `<th style="width: 15%;">Result</th><th style="width: 3%;" class="no-print"></th></tr>`;
+        headerHtml += `<th style="width: 15%;">Compliance</th><th style="width: 3%;" class="no-print"></th></tr>`;
         thead.innerHTML = headerHtml;
 
         const currentData = getTableData('txrf');
         const tbody = document.getElementById('txrf-body');
         tbody.innerHTML = '';
-        if (currentData.length > 0) {
-            currentData.forEach(row => insertTxrfRowHTML(row.id, row.matrix, row.vals));
-        }
+        if (currentData.length === 0) { insertTxrfRowHTML(''); } 
+        else { currentData.forEach(row => insertTxrfRowHTML(row.id, row.matrix, row.vals)); }
     }
 
     function updateMRL(el, val) {
