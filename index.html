@@ -273,7 +273,7 @@
             .table-responsive { border: none; overflow: visible; margin-bottom: 10px; box-shadow: none;}
             table { border: 1px solid #000 !important; min-width: 100%; font-size: 9pt !important; border-collapse: collapse !important; }
             th, td { padding: 3px 5px !important; border: 1px solid #999 !important; height: auto !important;}
-            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; text-transform: uppercase; font-size: 8pt;}
+            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; font-size: 8pt;}
             td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; text-align: inherit; color: #000 !important;}
             
             /* Hide the X column in print */
@@ -323,7 +323,7 @@
                 <button class="tab-btn" onclick="switchTab('txrf')" id="btn-tab-txrf">TXRF Heavy Metals</button>
                 <button class="tab-btn" onclick="switchTab('micro')" id="btn-tab-micro">Micro Ridacycler</button>
             </div>
-            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Application</button>
+            <button class="btn-reset" onclick="clearCacheAndReset()">Reset Entire Suite</button>
         </div>
 
         <div id="opc-tab" class="tab-content active">
@@ -439,7 +439,7 @@
                     <div class="sig-line">Reviewed & Verified By:</div>
                 </div>
 
-                <button type="button" id="opc-export" class="btn-export no-print" onclick="exportToPDF('OPC')">Export to PDF</button>
+                <button type="button" id="opc-export" class="btn-export no-print" onclick="exportToPDF('OPC')">Export to High Quality PDF</button>
             </div>
         </div>
 
@@ -574,7 +574,7 @@
                     <canvas id="logitChart"></canvas>
                 </div>
 
-                <button type="button" id="pyr-export" class="btn-export no-print" onclick="exportToPDF('PYR')">Export to PDF</button>
+                <button type="button" id="pyr-export" class="btn-export no-print" onclick="exportToPDF('PYR')">Export to High Quality PDF</button>
             </div>
         </div>
 
@@ -675,7 +675,7 @@
                     <div class="sig-line">Reviewed & Verified By:</div>
                 </div>
 
-                <button type="button" id="txrf-export" class="btn-export no-print" onclick="exportToPDF('TXRF')">Export to PDF</button>
+                <button type="button" id="txrf-export" class="btn-export no-print" onclick="exportToPDF('TXRF')">Export to High Quality PDF</button>
             </div>
         </div>
 
@@ -775,13 +775,11 @@
                     <div class="sig-line">Reviewed & Verified By:</div>
                 </div>
 
-                <button type="button" id="micro-export" class="btn-export no-print" onclick="exportToPDF('MICRO')">Export to PDF</button>
+                <button type="button" id="micro-export" class="btn-export no-print" onclick="exportToPDF('MICRO')">Export to High Quality PDF</button>
             </div>
         </div>
 
     </div>
-    
-    <div class="print-footer"><span class="reportDateStr"></span></div>
 </div>
 
 <div id="ptable-modal" class="modal-overlay">
@@ -1659,7 +1657,7 @@
                     const mrl = mrlValues[el];
 
                     if (val > mrl) { 
-                        detectedElements.push(elementNames[el] ? `${elementNames[el]} (${el})` : el); 
+                        detectedElements.push(el); 
                         input.style.color = '#cc0000'; input.style.fontWeight = 'bold'; 
                     } else { 
                         input.style.color = 'black'; input.style.fontWeight = 'normal';
