@@ -256,10 +256,10 @@
             
             /* Inputs transformed to clean text fields */
             .grid-settings { margin-bottom: 10px !important; gap: 10px !important;}
-            .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; text-transform: uppercase;}
+            .input-group label { color: #555; font-size: 8pt !important; font-weight: bold; margin-bottom: 1px !important; }
             .input-group input, .input-group select, .input-group textarea {
-                border: none !important; border-bottom: 1px dashed #aaa !important; border-radius: 0 !important;
-                background: transparent !important; padding: 1px 0 !important; margin: 0 !important;
+                border: none !important; border-radius: 0 !important;
+                background: transparent !important; padding: 2px 0 !important; margin: 0 !important;
                 font-family: inherit !important; font-size: 9pt !important; font-weight: bold !important; color: black; box-shadow: none; outline: none !important;
             }
 
@@ -269,7 +269,7 @@
             .table-responsive { border: none; overflow: visible; margin-bottom: 10px; box-shadow: none;}
             table { border: 1px solid #000 !important; min-width: 100%; font-size: 9pt !important; border-collapse: collapse !important; }
             th, td { padding: 4px 6px !important; border: 1px solid #999 !important; height: auto !important;}
-            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; text-transform: uppercase; font-size: 8pt;}
+            th { border-bottom: 2px solid #000 !important; border-top: 1px solid #000 !important; background: #003399 !important; color: white !important; font-weight: bold; box-shadow: none; font-size: 8pt;}
             td input { border: none !important; background: transparent !important; padding: 0 !important; outline: none !important; width: 100%; text-align: inherit; color: #000 !important;}
             
             /* Hide the X column in print */
@@ -304,7 +304,6 @@
 
 <div class="app-container">
     
-    <!-- Title Bar -->
     <div class="aero-titlebar no-print">
         <div style="display: flex; align-items: center; gap: 6px;" id="aero-title-text">
             <span style="font-size: 14px;">🔬</span>
@@ -313,7 +312,6 @@
     </div>
 
     <div class="aero-content">
-        <!-- Top Controls & Native Tabs -->
         <div class="header-controls no-print">
             <div class="tab-controls">
                 <button class="tab-btn active-tab" onclick="switchTab('opc')" id="btn-tab-opc">Organophosphates / Carbamates</button>
@@ -324,9 +322,6 @@
             <button class="btn-reset" onclick="clearCacheAndReset()">Reset Entire Suite</button>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 1: ORGANOPHOSPHATES & CARBAMATES (OPC) -->
-        <!-- ========================================== -->
         <div id="opc-tab" class="tab-content active">
             <div class="tab-content-area">
                 <div class="header">
@@ -338,12 +333,8 @@
                 <div class="report-header">
                     <div class="report-header-left">
                         <h2>Analytical Laboratory Report</h2>
-                        <p><strong>Section:</strong> Mobile Laboratory</p>
-                        <p><strong>Assay:</strong> Organophosphates & Carbamates (Competitive ELISA)</p>
-                    </div>
-                    <div class="report-header-right">
-                        <p class="reportDateStr"></p>
-                        <p class="reportIdStr"></p>
+                        <p>Mobile Laboratory</p>
+                        <p>Organophosphates & Carbamates (Competitive ELISA)</p>
                     </div>
                 </div>
 
@@ -417,8 +408,7 @@
                                 </tr>
                             </thead>
                             <tbody id="opc-body">
-                                <!-- JS Injected Rows -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
 
@@ -446,9 +436,6 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 2: PYRETHROIDS (PYR)                   -->
-        <!-- ========================================== -->
         <div id="pyr-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -460,12 +447,8 @@
                 <div class="report-header">
                     <div class="report-header-left">
                         <h2>Analytical Laboratory Report</h2>
-                        <p><strong>Section:</strong> Mobile Laboratory</p>
-                        <p><strong>Assay:</strong> Pyrethroids (Quantitative Logit-Log ELISA)</p>
-                    </div>
-                    <div class="report-header-right">
-                        <p class="reportDateStr"></p>
-                        <p class="reportIdStr"></p>
+                        <p>Mobile Laboratory</p>
+                        <p>Pyrethroids (Quantitative Logit-Log ELISA)</p>
                     </div>
                 </div>
 
@@ -551,8 +534,7 @@
                                 </tr>
                             </thead>
                             <tbody id="pyr-body">
-                                <!-- JS Injected Rows -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
 
@@ -586,9 +568,6 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 3: TXRF HEAVY METALS                   -->
-        <!-- ========================================== -->
         <div id="txrf-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -600,12 +579,8 @@
                 <div class="report-header">
                     <div class="report-header-left">
                         <h2>Analytical Laboratory Report</h2>
-                        <p><strong>Section:</strong> Mobile Laboratory</p>
-                        <p><strong>Methodology:</strong> Total Reflection X-Ray Fluorescence (TXRF)</p>
-                    </div>
-                    <div class="report-header-right">
-                        <p class="reportDateStr"></p>
-                        <p class="reportIdStr"></p>
+                        <p>Mobile Laboratory</p>
+                        <p>Total Reflection X-Ray Fluorescence (TXRF)</p>
                     </div>
                 </div>
 
@@ -661,8 +636,7 @@
                         <table id="txrf-table">
                             <thead id="txrf-thead"></thead>
                             <tbody id="txrf-body">
-                                <!-- JS Injected Rows -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
 
@@ -692,9 +666,6 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 4: MICRO RIDACYCLER                    -->
-        <!-- ========================================== -->
         <div id="micro-tab" class="tab-content">
             <div class="tab-content-area">
                 <div class="header">
@@ -706,12 +677,8 @@
                 <div class="report-header">
                     <div class="report-header-left">
                         <h2>Analytical Laboratory Report</h2>
-                        <p><strong>Section:</strong> Mobile Laboratory</p>
-                        <p><strong>Methodology:</strong> qPCR Pathogen Detection (Micro Ridacycler)</p>
-                    </div>
-                    <div class="report-header-right">
-                        <p class="reportDateStr"></p>
-                        <p class="reportIdStr"></p>
+                        <p>Mobile Laboratory</p>
+                        <p>qPCR Pathogen Detection (Micro Ridacycler)</p>
                     </div>
                 </div>
 
@@ -767,8 +734,7 @@
                                 </tr>
                             </thead>
                             <tbody id="micro-body">
-                                <!-- JS Injected Rows -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
 
@@ -798,9 +764,10 @@
         </div>
 
     </div>
+    
+    <div class="print-footer"><span class="reportDateStr"></span></div>
 </div>
 
-<!-- PERIODIC TABLE MODAL -->
 <div id="ptable-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -815,14 +782,13 @@
     </div>
 </div>
 
-<!-- GLOBAL EXCEL DRAG HANDLE -->
 <div id="fill-handle" class="no-print"></div>
 
 <script>
     // ==========================================
     // GLOBALS & CACHE STATE
     // ==========================================
-    const CACHE_KEY = "MobileLabBuilder_V14";
+    const CACHE_KEY = "MobileLabBuilder_V13";
     let activeTab = 'opc';
     let saveTimeout = null;
     let elisaChart = null; 
@@ -1223,10 +1189,8 @@
 
     function updateDates() {
         const now = new Date();
-        const dStr = `<strong>Date Generated:</strong> ${now.toLocaleString()}`;
-        const idStr = `<strong>Report ID:</strong> ML-${now.getTime().toString().slice(-6)}`;
+        const dStr = `Date Generated: ${now.toLocaleString()}`;
         document.querySelectorAll('.reportDateStr').forEach(el => el.innerHTML = dStr);
-        document.querySelectorAll('.reportIdStr').forEach(el => el.innerHTML = idStr);
     }
 
     // ==========================================
@@ -1289,14 +1253,15 @@
         const thead = document.getElementById('txrf-thead');
         let headerHtml = `<tr><th style="width: 15%;">Sample ID</th><th style="width: 15%;">Matrix</th>`;
         activeElements.forEach(el => { headerHtml += `<th>${el} (mg/kg)</th>`; });
-        headerHtml += `<th style="width: 15%;">Compliance</th><th style="width: 3%;" class="no-print"></th></tr>`;
+        headerHtml += `<th style="width: 15%;">Result</th><th style="width: 3%;" class="no-print"></th></tr>`;
         thead.innerHTML = headerHtml;
 
         const currentData = getTableData('txrf');
         const tbody = document.getElementById('txrf-body');
         tbody.innerHTML = '';
-        if (currentData.length === 0) { insertTxrfRowHTML(''); } 
-        else { currentData.forEach(row => insertTxrfRowHTML(row.id, row.matrix, row.vals)); }
+        if (currentData.length > 0) {
+            currentData.forEach(row => insertTxrfRowHTML(row.id, row.matrix, row.vals));
+        }
     }
 
     function updateMRL(el, val) {
@@ -1456,6 +1421,7 @@
         document.getElementById('opc-repPos').innerText = posCount;
         document.getElementById('opc-repNeg').innerText = negCount;
         document.getElementById('opc-summary').style.display = 'block';
+        document.getElementById('opc-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1572,6 +1538,7 @@
                 }
             }
         });
+        document.getElementById('pyr-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1638,6 +1605,7 @@
         document.getElementById('txrf-rep-d').innerText = detectedCount;
         
         document.getElementById('txrf-summary').style.display = 'block';
+        document.getElementById('txrf-export').style.display = 'block';
         saveStateToCache(); 
     });
 
@@ -1680,6 +1648,7 @@
         document.getElementById('micro-repNeg').innerText = negCount;
         
         document.getElementById('micro-summary').style.display = 'block';
+        document.getElementById('micro-export').style.display = 'block';
         saveStateToCache(); 
     });
 
