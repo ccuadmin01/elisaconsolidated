@@ -8,22 +8,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* BPI Theme Color Palette */
-            --win-desktop: radial-gradient(circle at center, #2e7d32 0%, #004d00 100%);
-            --win-glass: rgba(200, 230, 201, 0.4);
+            /* Windows 7 Theme Color Palette */
+            --win-desktop: radial-gradient(circle at center, #3a75c4 0%, #061125 100%);
+            --win-glass: rgba(220, 235, 252, 0.4);
             --win-glass-border: rgba(255, 255, 255, 0.6);
-            --win-bg: #f5f5f5;
-            --win-border: #66bb6a;
+            --win-bg: #f0f0f0;
+            --win-border: #a0a0a0;
             --win-text: #000000;
             --win-text-muted: #555555;
             --win-input-bg: #ffffff;
-            --win-input-border: #81c784;
-            --win-input-focus: #fbc02d;
+            --win-input-border: #abadb3;
+            --win-input-focus: #3399ff;
 
             /* Status Colors */
-            --success: #2e7d32;
-            --warning: #d32f2f;
-            --neutral: #f57f17;
+            --success: #003399;
+            --warning: #cc0000;
+            --neutral: #666666;
         }
 
         body {
@@ -164,7 +164,7 @@
             margin: 0;
             font-size: 18px;
             font-weight: bold;
-            color: #2e7d32;
+            color: #003399;
         }
 
         .header p {
@@ -185,7 +185,7 @@
         .section-title {
             font-size: 13px;
             font-weight: bold;
-            color: #2e7d32;
+            color: #003399;
             border-bottom: 1px solid #a0a0a0;
             padding-bottom: 3px;
             margin: 20px 0 10px;
@@ -513,18 +513,21 @@
         .full-width {
             grid-column: span 2;
         }
+        .signatures {
+            display: none;
+            justify-content: space-between;
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
 
         .sig-line {
-            display: none;
-            margin-top: 30px;
-            margin-left: auto;
-            margin-right: 0;
             padding-top: 5px;
             border-top: 1px solid #000;
             width: 250px;
             text-align: center;
             font-weight: bold;
             font-size: 11px;
+            margin: 0;
         }
 
         .report-header {
@@ -843,17 +846,21 @@
             .full-width {
                 grid-column: span 3 !important;
             }
+            .signatures {
+                display: flex !important;
+                justify-content: space-between;
+                margin-top: 30px !important;
+                page-break-inside: avoid;
+            }
 
             .sig-line {
                 display: block;
-                margin-top: 30px !important;
                 padding-top: 3px !important;
                 border-top: 1px solid #000;
                 width: 220px;
                 text-align: center;
                 font-weight: bold;
                 font-size: 9pt !important;
-                page-break-inside: avoid;
             }
 
             .chart-wrapper {
@@ -885,7 +892,7 @@
             transform: translateY(-50%) translateX(100%);
             width: 320px;
             background: #ffffff;
-            border: 2px solid #2e7d32;
+            border: 2px solid #003399;
             border-right: none;
             border-radius: 8px 0 0 8px;
             box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
@@ -905,9 +912,9 @@
             top: 20px;
             width: 32px;
             height: 40px;
-            background: #2e7d32;
-            color: #fbc02d;
-            border: 2px solid #2e7d32;
+            background: #003399;
+            color: #ffffff;
+            border: 2px solid #003399;
             border-right: none;
             border-radius: 8px 0 0 8px;
             cursor: pointer;
@@ -926,10 +933,10 @@
         }
 
         .sidebar-content h3 {
-            color: #2e7d32;
+            color: #003399;
             margin-top: 0;
             margin-bottom: 15px;
-            border-bottom: 2px solid #fbc02d;
+            border-bottom: 2px solid #003399;
             padding-bottom: 5px;
             font-size: 14px;
         }
@@ -1033,7 +1040,7 @@
                         <div class="grid-settings">
                             <div class="input-group">
                                 <label>Analyst Name</label>
-                                <input type="text" id="opc-analyst" value="Lab Technician 1" required>
+                                <input type="text" id="opc-analyst" value="Analyst" required>
                             </div>
                             <div class="input-group">
                                 <label>Equipment Used</label>
@@ -1129,7 +1136,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="sig-line">Reviewed & Verified By:</div>
+                        <div class="signatures">
+                            <div class="sig-line">Analyzed By:<br><span id="opc-sigAnalyst"></span></div>
+                            <div class="sig-line"><br>Reviewed & Verified By:</div>
+                        </div>
                     </div>
 
                     <button type="button" id="opc-export" class="btn-export no-print"
@@ -1166,7 +1176,7 @@
                         <div class="grid-settings">
                             <div class="input-group">
                                 <label>Analyst Name</label>
-                                <input type="text" id="pyr-analyst" value="Lab Technician 1" required>
+                                <input type="text" id="pyr-analyst" value="Analyst" required>
                             </div>
                             <div class="input-group">
                                 <label>Equipment Used</label>
@@ -1275,7 +1285,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="sig-line">Reviewed & Verified By:</div>
+                        <div class="signatures">
+                            <div class="sig-line">Analyzed By:<br><span id="pyr-sigAnalyst"></span></div>
+                            <div class="sig-line"><br>Reviewed & Verified By:</div>
+                        </div>
                     </div>
 
                     <div id="chartContainer" class="chart-wrapper">
@@ -1316,7 +1329,7 @@
                         <div class="grid-settings">
                             <div class="input-group">
                                 <label>Analyst Name</label>
-                                <input type="text" id="txrf-analyst" value="Lab Technician 1" required>
+                                <input type="text" id="txrf-analyst" value="Analyst" required>
                             </div>
                             <div class="input-group">
                                 <label>Internal Standard (IS)</label>
@@ -1398,7 +1411,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="sig-line">Reviewed & Verified By:</div>
+                        <div class="signatures">
+                            <div class="sig-line">Analyzed By:<br><span id="txrf-sigAnalyst"></span></div>
+                            <div class="sig-line"><br>Reviewed & Verified By:</div>
+                        </div>
                     </div>
 
                     <button type="button" id="txrf-export" class="btn-export no-print"
@@ -1435,7 +1451,7 @@
                         <div class="grid-settings">
                             <div class="input-group">
                                 <label>Analyst Name</label>
-                                <input type="text" id="micro-analyst" value="Lab Technician 1" required>
+                                <input type="text" id="micro-analyst" value="Analyst" required>
                             </div>
                             <div class="input-group">
                                 <label>Equipment Used</label>
@@ -1521,7 +1537,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="sig-line">Reviewed & Verified By:</div>
+                        <div class="signatures">
+                            <div class="sig-line">Analyzed By:<br><span id="micro-sigAnalyst"></span></div>
+                            <div class="sig-line"><br>Reviewed & Verified By:</div>
+                        </div>
                     </div>
 
                     <button type="button" id="micro-export" class="btn-export no-print"
@@ -1688,7 +1707,7 @@
         function loadStateFromCache() {
             const saved = localStorage.getItem(CACHE_KEY);
             if (!saved) {
-                rebuildDynamicUI(); addRow('opc'); addRow('pyr'); addRow('txrf'); addRow('micro');
+                rebuildDynamicUI(); addRow('opc'); addRow('pyr'); addRow('micro');
                 return;
             }
 
@@ -2196,6 +2215,7 @@
             document.getElementById('opc-repDateRec').innerText = document.getElementById('opc-date-rec').value || 'Not Specified';
             document.getElementById('opc-repDateAna').innerText = document.getElementById('opc-date-ana').value || 'Not Specified';
             document.getElementById('opc-repAnalyst').innerText = document.getElementById('opc-analyst').value || 'Not Specified';
+            document.getElementById('opc-sigAnalyst').innerText = document.getElementById('opc-analyst').value || 'Not Specified';
             document.getElementById('opc-repEquip').innerText = document.getElementById('opc-equip').value || 'Not Specified';
             document.getElementById('opc-repMethod').innerText = document.getElementById('opc-method').value || 'Competitive ELISA';
             document.getElementById('opc-repRemarks').innerText = document.getElementById('opc-remarks').value || 'None';
@@ -2279,6 +2299,7 @@
             document.getElementById('pyr-repDateRec').innerText = document.getElementById('pyr-date-rec').value || 'Not Specified';
             document.getElementById('pyr-repDateAna').innerText = document.getElementById('pyr-date-ana').value || 'Not Specified';
             document.getElementById('pyr-repAnalyst').innerText = document.getElementById('pyr-analyst').value || 'Not Specified';
+            document.getElementById('pyr-sigAnalyst').innerText = document.getElementById('pyr-analyst').value || 'Not Specified';
             document.getElementById('pyr-repEquip').innerText = document.getElementById('pyr-equip').value || 'Not Specified';
             document.getElementById('pyr-repMethod').innerText = document.getElementById('pyr-method').value || 'Quantitative Logit-Log ELISA';
             document.getElementById('pyr-repRemarks').innerText = document.getElementById('pyr-remarks').value || 'None';
@@ -2422,6 +2443,7 @@
             document.getElementById('txrf-repDateRec').innerText = document.getElementById('txrf-date-rec').value || 'Not Specified';
             document.getElementById('txrf-repDateAna').innerText = document.getElementById('txrf-date-ana').value || 'Not Specified';
             document.getElementById('txrf-rep-analyst').innerText = document.getElementById('txrf-analyst').value || 'Not Specified';
+            document.getElementById('txrf-sigAnalyst').innerText = document.getElementById('txrf-analyst').value || 'Not Specified';
             document.getElementById('txrf-repEquip').innerText = document.getElementById('txrf-equip').value || 'Not Specified';
             document.getElementById('txrf-repMethod').innerText = document.getElementById('txrf-method').value || 'TXRF Element Profiling';
             document.getElementById('txrf-repRemarks').innerText = document.getElementById('txrf-remarks').value || 'None';
@@ -2514,6 +2536,7 @@
             document.getElementById('micro-repDateRec').innerText = document.getElementById('micro-date-rec').value || 'Not Specified';
             document.getElementById('micro-repDateAna').innerText = document.getElementById('micro-date-ana').value || 'Not Specified';
             document.getElementById('micro-repAnalyst').innerText = document.getElementById('micro-analyst').value || 'Not Specified';
+            document.getElementById('micro-sigAnalyst').innerText = document.getElementById('micro-analyst').value || 'Not Specified';
             document.getElementById('micro-repEquip').innerText = document.getElementById('micro-equip').value || 'Not Specified';
             document.getElementById('micro-repMethod').innerText = document.getElementById('micro-method').value || 'Real-Time PCR (qPCR)';
             document.getElementById('micro-repRemarks').innerText = document.getElementById('micro-remarks').value || 'None';
