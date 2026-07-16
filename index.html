@@ -796,6 +796,14 @@
                 color: #000 !important;
             }
 
+            /* Hide browser calendar icon in printed reports */
+            input[type="date"]::-webkit-calendar-picker-indicator,
+            input[type="time"]::-webkit-calendar-picker-indicator,
+            input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+                display: none !important;
+                -webkit-appearance: none !important;
+            }
+
             /* Hide the X column in print */
             th:last-child,
             td:last-child {
