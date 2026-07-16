@@ -965,10 +965,66 @@
                 display: none !important;
             }
         }
+
+        /* --- LOADING OVERLAY --- */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-box {
+            background: white;
+            padding: 20px 40px;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 300px;
+            border: 2px solid #003399;
+        }
+
+        .loading-box h3 {
+            margin-top: 0;
+            color: #003399;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #003399, #0059b3);
+            transition: width 1.5s ease-in-out;
+        }
     </style>
 </head>
 
 <body>
+
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-box">
+            <h3 id="loading-text">Generating Report...</h3>
+            <div class="progress-bar-container">
+                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+            </div>
+        </div>
+    </div>
 
     <div id="txrf-sidebar" class="collapsible-sidebar no-print">
         <div class="sidebar-toggle" onclick="toggleSidebar()">
@@ -2295,9 +2351,12 @@
             document.getElementById('opc-repTotal').innerText = total;
             document.getElementById('opc-repPos').innerText = posCount;
             document.getElementById('opc-repNeg').innerText = negCount;
-            document.getElementById('opc-summary').style.display = 'block';
-            document.getElementById('opc-export').style.display = 'block';
-            saveStateToCache();
+
+            simulateLoading(() => {
+                document.getElementById('opc-summary').style.display = 'block';
+                document.getElementById('opc-export').style.display = 'block';
+                saveStateToCache();
+            });
         });
 
         // --- PYRETHROID LOGIC ---
@@ -2399,49 +2458,50 @@
 
             document.getElementById('pyr-repLOQ').innerText = loq;
             document.getElementById('pyr-repTotal').innerText = total;
-            document.getElementById('pyr-repStatus').innerText = rStatus;
             document.getElementById('pyr-repR2').innerText = r2.toFixed(4);
             document.getElementById('pyr-repSlope').innerText = m.toFixed(4);
 
-            document.getElementById('pyr-summary').style.display = 'block';
-            document.getElementById('chartContainer').style.display = 'block';
+            simulateLoading(() => {
+                document.getElementById('pyr-summary').style.display = 'block';
+                document.getElementById('chartContainer').style.display = 'block';
 
-            const ctx = document.getElementById('logitChart').getContext('2d');
-            if (elisaChart) elisaChart.destroy();
-            const lineStart = Math.log(0.0005); const lineEnd = Math.log(0.03);
-            const lineData = [{ x: lineStart, y: m * lineStart + c }, { x: lineEnd, y: m * lineEnd + c }];
-            elisaChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        { label: 'Standard Curve (Logit-Log)', data: lineData, type: 'line', borderColor: '#003399', borderWidth: 2, pointRadius: 0, fill: false },
-                        { label: 'Standards', data: stdPoints, backgroundColor: '#008000', borderColor: '#006400', pointRadius: 6, pointHoverRadius: 8 },
-                        { label: 'Samples', data: samplePoints, backgroundColor: '#cc0000', borderColor: '#8b0000', pointRadius: 5, pointHoverRadius: 7 }
-                    ]
-                },
-                options: {
-                    devicePixelRatio: 4, responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    let label = context.dataset.label || '';
-                                    if (label === 'Samples') return context.raw.label + ': [ln(x): ' + context.parsed.x.toFixed(2) + ', logit: ' + context.parsed.y.toFixed(2) + ']';
-                                    return label + ': [' + context.parsed.x.toFixed(2) + ', ' + context.parsed.y.toFixed(2) + ']';
-                                }
-                            }
-                        },
-                        legend: { position: 'top', labels: { font: { family: "Tahoma, 'Segoe UI', sans-serif" } } }
+                const ctx = document.getElementById('logitChart').getContext('2d');
+                if (window.elisaChart) window.elisaChart.destroy();
+                const lineStart = Math.log(0.0005); const lineEnd = Math.log(0.03);
+                const lineData = [{ x: lineStart, y: m * lineStart + c }, { x: lineEnd, y: m * lineEnd + c }];
+                window.elisaChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [
+                            { label: 'Standard Curve (Logit-Log)', data: lineData, type: 'line', borderColor: '#003399', borderWidth: 2, pointRadius: 0, fill: false },
+                            { label: 'Standards', data: stdPoints, backgroundColor: '#008000', borderColor: '#006400', pointRadius: 6, pointHoverRadius: 8 },
+                            { label: 'Samples', data: samplePoints, backgroundColor: '#cc0000', borderColor: '#8b0000', pointRadius: 5, pointHoverRadius: 7 }
+                        ]
                     },
-                    scales: {
-                        x: { title: { display: true, text: 'ln(Concentration)', font: { family: "Tahoma, 'Segoe UI', sans-serif", weight: 'bold' } } },
-                        y: { title: { display: true, text: 'Logit (B/B₀)', font: { family: "Tahoma, 'Segoe UI', sans-serif", weight: 'bold' } } }
+                    options: {
+                        devicePixelRatio: 4, responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.dataset.label || '';
+                                        if (label === 'Samples') return context.raw.label + ': [ln(x): ' + context.parsed.x.toFixed(2) + ', logit: ' + context.parsed.y.toFixed(2) + ']';
+                                        return label + ': [' + context.parsed.x.toFixed(2) + ', ' + context.parsed.y.toFixed(2) + ']';
+                                    }
+                                }
+                            },
+                            legend: { position: 'top', labels: { font: { family: "Tahoma, 'Segoe UI', sans-serif" } } }
+                        },
+                        scales: {
+                            x: { title: { display: true, text: 'ln(Concentration)', font: { family: "Tahoma, 'Segoe UI', sans-serif", weight: 'bold' } } },
+                            y: { title: { display: true, text: 'Logit (B/B0)', font: { family: "Tahoma, 'Segoe UI', sans-serif", weight: 'bold' } } }
+                        }
                     }
-                }
-            });
+                });
 
-            document.getElementById('pyr-export').style.display = 'block';
-            saveStateToCache();
+                document.getElementById('pyr-export').style.display = 'block';
+                saveStateToCache();
+            });
         });
 
         // --- TXRF LOGIC ---
@@ -2530,9 +2590,11 @@
             document.getElementById('txrf-rep-nd').innerText = notDetectedCount;
             document.getElementById('txrf-rep-d').innerText = detectedCount;
 
-            document.getElementById('txrf-summary').style.display = 'block';
-            document.getElementById('txrf-export').style.display = 'block';
-            saveStateToCache();
+            simulateLoading(() => {
+                document.getElementById('txrf-summary').style.display = 'block';
+                document.getElementById('txrf-export').style.display = 'block';
+                saveStateToCache();
+            });
         });
 
         // --- MICRO RIDACYCLER LOGIC ---
@@ -2609,9 +2671,11 @@
             document.getElementById('micro-repNeg').innerText = negCount;
             document.getElementById('micro-repInv').innerText = invalidCount;
 
-            document.getElementById('micro-summary').style.display = 'block';
-            document.getElementById('micro-export').style.display = 'block';
-            saveStateToCache();
+            simulateLoading(() => {
+                document.getElementById('micro-summary').style.display = 'block';
+                document.getElementById('micro-export').style.display = 'block';
+                saveStateToCache();
+            });
         });
 
         function toggleSidebar() {
@@ -2624,6 +2688,24 @@
             } else {
                 toggleBtn.innerHTML = '&#9664;'; // left arrow
             }
+        }
+
+        function simulateLoading(callback) {
+            const overlay = document.getElementById('loading-overlay');
+            const fill = document.getElementById('progress-bar-fill');
+            overlay.style.display = 'flex';
+            fill.style.width = '0%';
+
+            // Force browser reflow to ensure the transition restarts
+            void fill.offsetWidth;
+
+            // Set the width to 100% to trigger the 1.5s CSS transition
+            fill.style.width = '100%';
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                if (callback) callback();
+            }, 1500);
         }
 
         window.onload = loadStateFromCache;
